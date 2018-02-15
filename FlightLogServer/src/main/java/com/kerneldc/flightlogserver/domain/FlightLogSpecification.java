@@ -33,7 +33,7 @@ public class FlightLogSpecification implements Specification<FlightLog> {
             return builder.lessThanOrEqualTo(
               root.<String> get(criteria.getKey()), criteria.getValue().toString());
         } 
-        else if (criteria.getOperation().equalsIgnoreCase(":")) {
+        else if (criteria.getOperation().equalsIgnoreCase("=")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
                 return builder.like(builder.upper(
                   root.<String>get(criteria.getKey())), "%" + criteria.getValue().toString().toUpperCase() + "%");
