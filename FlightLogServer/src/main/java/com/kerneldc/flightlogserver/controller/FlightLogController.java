@@ -49,6 +49,7 @@ public class FlightLogController {
     	LOGGER.info("search: {}", search);
     	LOGGER.info("pageable: {}", pageable);
     	pageable = handleLastPageRequest(pageable);
+    	LOGGER.info("After handleLastPageRequest(pageable), pageable: {}", pageable);
     	List<SearchCriteria> searchCriteriaList = searchStringToSearchCriteriaList(search);
     	FlightLogSpecificationsBuilder flightLogSpecificationsBuilder = new FlightLogSpecificationsBuilder();
         Page<FlightLog> flightLogPage = flightLogRepository.findAll(flightLogSpecificationsBuilder.with(searchCriteriaList).build(), pageable);
@@ -60,7 +61,6 @@ public class FlightLogController {
     
     private Pageable handleLastPageRequest(Pageable pageable) {
     	if (pageable.getPageNumber() == LAST_PAGE) {
-    		LOGGER.debug("pageable.getPageNumber() == {}", LAST_PAGE);
         	long count = flightLogRepository.count();
         	long lastPage = count % pageable.getPageSize() == 0 ? count / pageable.getPageSize() -1 : count / pageable.getPageSize();
         	return new PageRequest((int)lastPage, pageable.getPageSize());
