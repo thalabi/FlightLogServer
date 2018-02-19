@@ -59,6 +59,14 @@ public class FlightLogController {
         return pagedResourcesAssembler.toResource(flightLogPage, flightLogResourceAssembler, link);
     }
     
+	/**
+	 * Checks if the pageNumber passed by client equals LAST_PAGE and sets it to the
+	 * true last page by checking the count of rows in table
+	 * 
+	 * @param pageable
+	 * @return The modified pageable object with the correct pageNumber of the last
+	 *         page
+	 */
     private Pageable handleLastPageRequest(Pageable pageable) {
     	if (pageable.getPageNumber() == LAST_PAGE) {
         	long count = flightLogRepository.count();
