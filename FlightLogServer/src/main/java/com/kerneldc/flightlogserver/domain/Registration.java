@@ -3,9 +3,7 @@ package com.kerneldc.flightlogserver.domain;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -13,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@SequenceGenerator(name = "sequence_generator", sequenceName = "registration_seq")
 @Getter @Setter
 public class Registration extends AbstractPersistableEntity {
 
@@ -21,10 +20,7 @@ public class Registration extends AbstractPersistableEntity {
 	public Registration() {
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String name;
+	private String registration;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created;
 	@Temporal(TemporalType.TIMESTAMP)

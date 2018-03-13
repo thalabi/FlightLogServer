@@ -1,10 +1,6 @@
 package com.kerneldc.flightlogserver;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +19,8 @@ public class FlightLogServerApplication {
 	}
 
     @Bean
-    ApplicationRunner initCars(CarRepository carSepository, ColorRepository colorRepository) {
-    	if (colorRepository.findAll().isEmpty()) {
+    ApplicationRunner initCars() {
+/*    	if (colorRepository.findAll().isEmpty()) {
 	    	Stream.of("Red", "Green", "Blue").forEach(name -> {
 	    		Color color = new Color();
 	                color.setName(name);
@@ -33,19 +29,19 @@ public class FlightLogServerApplication {
     	}
         List<Color> colorList = colorRepository.findAll();
         colorList.forEach(color -> LOGGER.debug("{}",color));
-        
+*/        
     	// If repository is empty, create cars
-    	if (carSepository.findAll().isEmpty()) {
-    		AtomicInteger i = new AtomicInteger();
-	    	Stream.of("Ferrari", "Jaguar", "Porsche", "Lamborghini", "Bugatti",
-	                "AMC Gremlin", "Triumph Stag", "Ford Pinto", "Yugo GV").forEach(name -> {
-	                Car car = new Car();
-	                car.setName(name);
-	                car.setDateCreated(new Date());
-	                car.setColor(colorList.get(i.getAndIncrement()%3));
-	                carSepository.save(car);
-	    	});
-    	}
+//    	if (carSepository.findAll().isEmpty()) {
+//    		AtomicInteger i = new AtomicInteger();
+//	    	Stream.of("Ferrari", "Jaguar", "Porsche", "Lamborghini", "Bugatti",
+//	                "AMC Gremlin", "Triumph Stag", "Ford Pinto", "Yugo GV").forEach(name -> {
+//	                Car car = new Car();
+//	                car.setName(name);
+//	                car.setDateCreated(new Date());
+//	                car.setColor(colorList.get(i.getAndIncrement()%3));
+//	                carSepository.save(car);
+//	    	});
+//    	}
 //        carSepository.findAll().forEach(car -> {
 //        	LOGGER.debug("{}",car);
 //        	});

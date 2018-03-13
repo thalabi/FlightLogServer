@@ -4,9 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -14,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@SequenceGenerator(name = "sequence_generator", sequenceName = "flight_log_seq")
 @Getter @Setter
 public class FlightLog extends AbstractPersistableEntity {
 
@@ -22,9 +21,6 @@ public class FlightLog extends AbstractPersistableEntity {
 	public FlightLog() {
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 	@Temporal(TemporalType.DATE)
 	private Date flightDate;
 	private String makeModel;

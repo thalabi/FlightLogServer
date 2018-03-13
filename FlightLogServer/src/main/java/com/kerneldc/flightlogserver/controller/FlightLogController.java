@@ -28,6 +28,9 @@ import com.kerneldc.flightlogserver.domain.FlightLogSpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
 import com.kerneldc.flightlogserver.repository.FlightLogRepository;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @RestController
 @RequestMapping("flightLogController")
 public class FlightLogController {
@@ -42,13 +45,20 @@ public class FlightLogController {
         this.flightLogResourceAssembler = flightLogResourceAssembler;
     }
 
+    @GetMapping("/count")
+    @CrossOrigin(origins = "http://localhost:4200")
+	public Count findAll() {
+    	return new Count(flightLogRepository.count());
+    }
+
+    // TODO remove handleLastPageRequest()
     @GetMapping("/findAll")
     @CrossOrigin(origins = "http://localhost:4200")
 	public PagedResources<FlightLogResource> findAll(@RequestParam(value = "search") String search,
 			Pageable pageable, PagedResourcesAssembler<FlightLog> pagedResourcesAssembler) {
     	LOGGER.info("search: {}", search);
     	LOGGER.info("pageable: {}", pageable);
-    	pageable = handleLastPageRequest(pageable);
+    	//pageable = handleLastPageRequest(pageable);
     	LOGGER.info("After handleLastPageRequest(pageable), pageable: {}", pageable);
     	List<SearchCriteria> searchCriteriaList = searchStringToSearchCriteriaList(search);
     	FlightLogSpecificationsBuilder flightLogSpecificationsBuilder = new FlightLogSpecificationsBuilder();
@@ -76,6 +86,7 @@ public class FlightLogController {
     		return pageable;
     	}
     }
+    
     protected List<SearchCriteria> searchStringToSearchCriteriaList(String search) {
     	List<SearchCriteria> searchCriteriaList = new ArrayList<>();
     	Pattern pattern = Pattern.compile("(\\w+?)(<=|>=|=|<|>)(.+?),");
@@ -85,5 +96,13 @@ public class FlightLogController {
         	searchCriteriaList.add(new SearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3)));
         }
     	return searchCriteriaList;
+    }
+    
+    @Getter @Setter
+    class Count {
+    	Long count;
+    	Count(Long count) {
+    		this.count = count;
+    	}
     }
 }

@@ -12,5 +12,5 @@ import com.kerneldc.flightlogserver.domain.Pilot;
 @RepositoryRestResource
 @CrossOrigin(origins = "http://localhost:4200")
 public interface PilotRepository extends JpaRepository<Pilot, Long>, JpaSpecificationExecutor<Pilot> {
-	List<Pilot> findAllByOrderByName();
+	List<Pilot> findAllByOrderByPilot();
 }

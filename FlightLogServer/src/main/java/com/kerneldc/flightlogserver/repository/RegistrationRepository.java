@@ -12,5 +12,5 @@ import com.kerneldc.flightlogserver.domain.Registration;
 @RepositoryRestResource
 @CrossOrigin(origins = "http://localhost:4200")
 public interface RegistrationRepository extends JpaRepository<Registration, Long>, JpaSpecificationExecutor<Registration> {
-	List<Registration> findAllByOrderByName();
+	List<Registration> findAllByOrderByRegistration();
 }
