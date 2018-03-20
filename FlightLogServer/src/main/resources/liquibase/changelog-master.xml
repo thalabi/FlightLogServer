@@ -7,6 +7,8 @@
 
   <include file="liquibase/flight-log-monthly-total-v/create-view.xml"/> 
   <include file="liquibase/flight-log-yearly-total-v/create-view.xml"/> 
+  <include file="liquibase/flight-log/create-idx-1.xml"/> 
+  <include file="liquibase/flight-log-last-x-days-total-v/create-view.xml"/> 
 <!--   <include file="liquibase/changelog-note.xml"/>  -->
 <!--   <include file="liquibase/changelog-student-note.xml"/>  -->
   

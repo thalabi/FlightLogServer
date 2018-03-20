@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.8"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.8
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.8.xsd">
+
+    <changeSet id="create-idx-1" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE">
+	        <dbms type="h2" />
+	    </preConditions>
+        <comment>Create index on flight_date</comment>
+
+	    <createIndex indexName="flight_log_idx_1" tableName="flight_log">
+	        <column name="flight_date"/>
+	    </createIndex>
+    
+    </changeSet>
+</databaseChangeLog>

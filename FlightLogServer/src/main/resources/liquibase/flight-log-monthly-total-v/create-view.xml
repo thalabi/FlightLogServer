@@ -7,7 +7,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.8.xsd">
 
     <changeSet id="create-view" author="Tarif Halabi">
-	    <preConditions>
+	    <preConditions onFail="CONTINUE">
 	        <dbms type="h2" />
 	    </preConditions>
         <comment>Create flight_log_monthly_total_v</comment>

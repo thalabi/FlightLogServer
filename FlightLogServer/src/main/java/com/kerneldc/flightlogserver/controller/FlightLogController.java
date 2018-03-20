@@ -1,16 +1,25 @@
 package com.kerneldc.flightlogserver.controller;
 
 import java.lang.invoke.MethodHandles;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
+import org.hibernate.Session;
+import org.hibernate.jdbc.Work;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaContext;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
@@ -37,12 +46,17 @@ public class FlightLogController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int LAST_PAGE = 999999;
 
+	private JpaContext jpaContext;
 	private FlightLogRepository flightLogRepository;
 	private FlightLogResourceAssembler flightLogResourceAssembler;
+	
+	private EntityManager flightLogEntityManager;
 
-    public FlightLogController(FlightLogRepository repository, FlightLogResourceAssembler flightLogResourceAssembler) {
+    public FlightLogController(JpaContext jpaContext, FlightLogRepository repository, FlightLogResourceAssembler flightLogResourceAssembler) {
+    	this.jpaContext = jpaContext;
         this.flightLogRepository = repository;
         this.flightLogResourceAssembler = flightLogResourceAssembler;
+        flightLogEntityManager = jpaContext.getEntityManagerByManagedType(FlightLog.class);
     }
 
     @GetMapping("/count")
@@ -50,6 +64,21 @@ public class FlightLogController {
 	public Count findAll() {
     	return new Count(flightLogRepository.count());
     }
+
+    @GetMapping("/getLastXDaysSum")
+    @CrossOrigin(origins = "http://localhost:4200")
+    @Transactional
+	public Count getLastXDaysSum() throws SQLException {
+		Session session = flightLogEntityManager.unwrap(Session.class);
+		session.doWork(new Work() {
+			@Override
+			public void execute(Connection connection) throws SQLException {
+				PreparedStatement preparedStatement = connection.prepareStatement("set @day_dual_sum = 0.0");
+				preparedStatement.execute();
+			}
+		});
+		return new Count(flightLogRepository.count());
+	}
 
     // TODO remove handleLastPageRequest()
     @GetMapping("/findAll")

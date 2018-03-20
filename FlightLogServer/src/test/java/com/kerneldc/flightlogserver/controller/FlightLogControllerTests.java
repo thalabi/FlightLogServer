@@ -17,14 +17,14 @@ public class FlightLogControllerTests {
 
 	@Test
 	public void testSearchStringToSearchCriteriaList_GreaterOrEqual_Success() {
-		FlightLogController fixture = new FlightLogController(null, null);
+		FlightLogController fixture = new FlightLogController(null, null, null);
 		String search = "daySolo>=7,";
     	List<SearchCriteria> searchCriteriaList = fixture.searchStringToSearchCriteriaList(search);
 		assertThat(searchCriteriaList.size(), equalTo(1));
 	}
 	@Test
 	public void testSearchStringToSearchCriteriaList_Equal_Success() {
-		FlightLogController fixture = new FlightLogController(null, null);
+		FlightLogController fixture = new FlightLogController(null, null, null);
 		String search = "routeTo=CYHU,";
     	List<SearchCriteria> searchCriteriaList = fixture.searchStringToSearchCriteriaList(search);
 		assertThat(searchCriteriaList.size(), equalTo(1));
