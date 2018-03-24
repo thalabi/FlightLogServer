@@ -3,6 +3,9 @@ package com.kerneldc.flightlogserver.domain;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -11,7 +14,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@SequenceGenerator(name = "sequence_generator", sequenceName = "airport_seq")
 @Getter @Setter
 public class Airport extends AbstractPersistableEntity {
 
@@ -19,6 +21,11 @@ public class Airport extends AbstractPersistableEntity {
 
 	public Airport() {
 	}
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "airport_seq_gen")
+	@SequenceGenerator(name = "airport_seq_gen", sequenceName = "airport_seq")
+	private Long id;
 
 	private String identifier;
 	private String name;

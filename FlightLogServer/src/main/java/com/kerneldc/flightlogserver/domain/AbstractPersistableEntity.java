@@ -25,22 +25,22 @@ public abstract class AbstractPersistableEntity implements Serializable {
         super();
     }
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence_generator")
-	private Long id;
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence_generator")
+//	private Long id;
 
 	@Version
 	@Column(name = "version")
 	@XmlTransient
 	private Long version;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+//	public Long getId() {
+//		return id;
+//	}
+//
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
 
 	public Long getVersion() {
 		return version;
