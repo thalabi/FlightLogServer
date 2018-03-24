@@ -46,14 +46,12 @@ public class FlightLogController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int LAST_PAGE = 999999;
 
-	private JpaContext jpaContext;
 	private FlightLogRepository flightLogRepository;
 	private FlightLogResourceAssembler flightLogResourceAssembler;
 	
 	private EntityManager flightLogEntityManager;
 
     public FlightLogController(JpaContext jpaContext, FlightLogRepository repository, FlightLogResourceAssembler flightLogResourceAssembler) {
-    	this.jpaContext = jpaContext;
         this.flightLogRepository = repository;
         this.flightLogResourceAssembler = flightLogResourceAssembler;
         flightLogEntityManager = jpaContext.getEntityManagerByManagedType(FlightLog.class);
