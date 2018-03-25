@@ -24,7 +24,6 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,13 +57,13 @@ public class FlightLogController {
     }
 
     @GetMapping("/count")
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = {"http://localhost:4200", " http://localhost:7999"})
 	public Count findAll() {
     	return new Count(flightLogRepository.count());
     }
 
     @GetMapping("/getLastXDaysSum")
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = {"http://localhost:4200", " http://localhost:7999"})
     @Transactional
 	public Count getLastXDaysSum() throws SQLException {
 		Session session = flightLogEntityManager.unwrap(Session.class);
@@ -80,7 +79,7 @@ public class FlightLogController {
 
     // TODO remove handleLastPageRequest()
     @GetMapping("/findAll")
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = {"http://localhost:4200", " http://localhost:7999"})
 	public PagedResources<FlightLogResource> findAll(@RequestParam(value = "search") String search,
 			Pageable pageable, PagedResourcesAssembler<FlightLog> pagedResourcesAssembler) {
     	LOGGER.info("search: {}", search);
