@@ -67,25 +67,25 @@ public class CopyRegistrationTableJob {
     
 // tag::jobstep[]
     @Bean
-    public Job copyRegistrationTable(Step step1, Step step2) {
+    public Job copyRegistrationTable(Step registrationTableStep1, Step registrationTableStep2) {
         return jobBuilderFactory.get("copyRegistrationTable")
             .incrementer(new RunIdIncrementer())
-            .flow(step1)
-            .next(step2)
+            .flow(registrationTableStep1)
+            .next(registrationTableStep2)
             .end()
             .build();
     }
 
     @Bean
-    public Step step1() {
-        return stepBuilderFactory.get("step1")
+    public Step registrationTableStep1() {
+        return stepBuilderFactory.get("registrationTableStep1")
         	.tasklet(new DeleteTable(outputDataSource, "registration"))
             .build();
     }
 
     @Bean
-    public Step step2(JdbcCursorItemReader<Registration> registrationReader, JdbcBatchItemWriter<Registration> registrationWriter) {
-        return stepBuilderFactory.get("step2")
+    public Step registrationTableStep2(JdbcCursorItemReader<Registration> registrationReader, JdbcBatchItemWriter<Registration> registrationWriter) {
+        return stepBuilderFactory.get("registrationTableStep2")
             .<Registration, Registration> chunk(10)
             .reader(registrationReader)
             .processor(new RegistrationItemProcessor())

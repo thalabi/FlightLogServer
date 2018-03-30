@@ -66,25 +66,25 @@ public class CopyFlightLogTableJob {
     }
 // tag::jobstep[]
     @Bean
-    public Job copyFlightLogTable(Step step1, Step step2) {
+    public Job copyFlightLogTable(Step flightLogTableStep1, Step flightLogTableStep2) {
         return jobBuilderFactory.get("copyFlightLogTable")
             .incrementer(new RunIdIncrementer())
-            .flow(step1)
-            .next(step2)
+            .flow(flightLogTableStep1)
+            .next(flightLogTableStep2)
             .end()
             .build();
     }
 
     @Bean
-    public Step step1() {
-        return stepBuilderFactory.get("step1")
+    public Step flightLogTableStep1() {
+        return stepBuilderFactory.get("flightLogTableStep1")
         	.tasklet(new DeleteTable(outputDataSource, "flight_log"))
             .build();
     }
 
     @Bean
-    public Step step2(JdbcCursorItemReader<FlightLog> flightLogReader, JdbcBatchItemWriter<FlightLog> flightLogWriter) {
-        return stepBuilderFactory.get("step2")
+    public Step flightLogTableStep2(JdbcCursorItemReader<FlightLog> flightLogReader, JdbcBatchItemWriter<FlightLog> flightLogWriter) {
+        return stepBuilderFactory.get("flightLogTableStep2")
             .<FlightLog, FlightLog> chunk(500)
             .reader(flightLogReader)
             .processor(new FlightLogItemProcessor())
