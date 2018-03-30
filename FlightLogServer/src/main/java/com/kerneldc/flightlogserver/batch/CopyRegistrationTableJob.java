@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.springBootConfig;
+package com.kerneldc.flightlogserver.batch;
 
 import javax.sql.DataSource;
 
@@ -14,22 +14,25 @@ import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
-import com.kerneldc.flightlogserver.batch.RegistrationItemProcessor;
-import com.kerneldc.flightlogserver.batch.RegistrationRowMapper;
 import com.kerneldc.flightlogserver.domain.Registration;
 
 @Configuration
 @EnableBatchProcessing
-public class BatchConfiguration {
+public class CopyRegistrationTableJob {
+	
+	//private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Autowired
+	@Qualifier("inputDataSource")
 	public DataSource inputDataSource;
 	
 	@Autowired
+	@Qualifier("outputDataSource")
 	public DataSource outputDataSource;
 	
     @Autowired
@@ -40,8 +43,11 @@ public class BatchConfiguration {
     @Lazy
     public StepBuilderFactory stepBuilderFactory;
     
+    //
+    // registration
+    //
     @Bean
-    public JdbcCursorItemReader<Registration> reader(DataSource inputDataSource) {
+    public JdbcCursorItemReader<Registration> registrationReader() {
     	return new JdbcCursorItemReaderBuilder<Registration>()
                 .dataSource(inputDataSource)
                 .name("registrationReader")
@@ -49,16 +55,11 @@ public class BatchConfiguration {
                 .rowMapper(new RegistrationRowMapper())
                 .build();
     }
-    
+       
     @Bean
-    public RegistrationItemProcessor processor() {
-        return new RegistrationItemProcessor();
-    }
-    
-    @Bean
-    public JdbcBatchItemWriter<Registration> writer(DataSource outputDataSource) {
+    public JdbcBatchItemWriter<Registration> registrationWriter() {
         return new JdbcBatchItemWriterBuilder<Registration>()
-            .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+            .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Registration>())
             .sql("insert into registration (id, registration, created, modified, version) values (:id, :registration, :created, :modified, :version)")
             .dataSource(outputDataSource)
             .build();
@@ -66,21 +67,29 @@ public class BatchConfiguration {
     
 // tag::jobstep[]
     @Bean
-    public Job copyFlightLogTable(Step step1, JobBuilderFactory jobBuilderFactory) {
-        return jobBuilderFactory.get("copyFlightLogTable")
+    public Job copyRegistrationTable(Step step1, Step step2) {
+        return jobBuilderFactory.get("copyRegistrationTable")
             .incrementer(new RunIdIncrementer())
             .flow(step1)
+            .next(step2)
             .end()
             .build();
     }
 
     @Bean
-    public Step step1(JdbcBatchItemWriter<Registration> writer, StepBuilderFactory stepBuilderFactory) {
+    public Step step1() {
         return stepBuilderFactory.get("step1")
+        	.tasklet(new DeleteTable(outputDataSource, "registration"))
+            .build();
+    }
+
+    @Bean
+    public Step step2(JdbcCursorItemReader<Registration> registrationReader, JdbcBatchItemWriter<Registration> registrationWriter) {
+        return stepBuilderFactory.get("step2")
             .<Registration, Registration> chunk(10)
-            .reader(reader(inputDataSource))
-            .processor(processor())
-            .writer(writer)
+            .reader(registrationReader)
+            .processor(new RegistrationItemProcessor())
+            .writer(registrationWriter)
             .build();
     }
     // end::jobstep[]
