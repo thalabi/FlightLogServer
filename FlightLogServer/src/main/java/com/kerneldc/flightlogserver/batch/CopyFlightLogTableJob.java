@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
+import com.kerneldc.flightlogserver.batch.tasklet.DeleteTableTasklet;
 import com.kerneldc.flightlogserver.domain.FlightLog;
 
 @Configuration
@@ -78,7 +79,7 @@ public class CopyFlightLogTableJob {
     @Bean
     public Step flightLogTableStep1() {
         return stepBuilderFactory.get("flightLogTableStep1")
-        	.tasklet(new DeleteTable(outputDataSource, "flight_log"))
+        	.tasklet(new DeleteTableTasklet(outputDataSource, "flight_log"))
             .build();
     }
 

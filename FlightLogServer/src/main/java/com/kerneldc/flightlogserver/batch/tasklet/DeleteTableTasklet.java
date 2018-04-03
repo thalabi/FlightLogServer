@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.batch;
+package com.kerneldc.flightlogserver.batch.tasklet;
 
 import javax.sql.DataSource;
 
@@ -8,12 +8,12 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-public class DeleteTable implements Tasklet {
+public class DeleteTableTasklet implements Tasklet {
 
 	private DataSource outputDataSource;
 	private String tableName;
 
-	public DeleteTable(DataSource outputDataSource, String tableName) {
+	public DeleteTableTasklet(DataSource outputDataSource, String tableName) {
 		this.outputDataSource = outputDataSource;
 		this.tableName = tableName;
 	}
