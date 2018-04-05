@@ -18,17 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Lazy;
 
 import com.kerneldc.flightlogserver.batch.tasklet.DeleteTableTasklet;
 import com.kerneldc.flightlogserver.batch.tasklet.ResetSequenceTasklet;
-import com.kerneldc.flightlogserver.domain.Registration;
+import com.kerneldc.flightlogserver.domain.SignificantEvent;
 
 @Configuration
 @EnableBatchProcessing
-@ImportResource(value={"classpath*:applicationContext.xml"})
-public class CopyRegistrationTableJob {
+public class CopySignificantEventTableJob {
 	
 	//private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
@@ -49,23 +47,23 @@ public class CopyRegistrationTableJob {
     public StepBuilderFactory stepBuilderFactory;
     
     //
-    // registration
+    // significantEvent
     //
     @Bean
-    public JdbcCursorItemReader<Registration> registrationReader() {
-    	return new JdbcCursorItemReaderBuilder<Registration>()
+    public JdbcCursorItemReader<SignificantEvent> significantEventReader() {
+    	return new JdbcCursorItemReaderBuilder<SignificantEvent>()
                 .dataSource(inputDataSource)
-                .name("registrationReader")
-                .sql("select id, registration, created, modified, version from registration")
-                .rowMapper(new RegistrationRowMapper())
+                .name("significantEventReader")
+                .sql("select id, event_date, event_description, created, modified, version from significant_event")
+                .rowMapper(new SignificantEventRowMapper())
                 .build();
     }
        
     @Bean
-    public JdbcBatchItemWriter<Registration> registrationWriter() {
-        return new JdbcBatchItemWriterBuilder<Registration>()
-            .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Registration>())
-            .sql("insert into registration (id, registration, created, modified, version) values (:id, :registration, :created, :modified, :version)")
+    public JdbcBatchItemWriter<SignificantEvent> significantEventWriter() {
+        return new JdbcBatchItemWriterBuilder<SignificantEvent>()
+            .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<SignificantEvent>())
+            .sql("insert into significant_event (id, event_date, event_description, created, modified, version) values (:id, :eventDate, :eventDescription, :created, :modified, :version)")
             .dataSource(outputDataSource)
             .build();
     }
@@ -80,40 +78,39 @@ public class CopyRegistrationTableJob {
     
 // tag::jobstep[]
     @Bean
-    public Job copyRegistrationTable(Step registrationTableStep1, Step registrationTableStep2, Step registrationTableStep3) {
-        return jobBuilderFactory.get("copyRegistrationTable")
+    public Job copySignificantEventTable(Step significantEventTableStep1, Step significantEventTableStep2, Step significantEventTableStep3) {
+        return jobBuilderFactory.get("copySignificantEventTable")
             .incrementer(new RunIdIncrementer())
-            .flow(registrationTableStep1)
-            .next(registrationTableStep2)
-            .next(registrationTableStep3)
+            .flow(significantEventTableStep1)
+            .next(significantEventTableStep2)
+            .next(significantEventTableStep3)
             .end()
             .build();
     }
     
     @Bean
-    public Step registrationTableStep1() {
-        return stepBuilderFactory.get("registrationTableStep1")
-        	.tasklet(new DeleteTableTasklet(outputDataSource, "registration"))
+    public Step significantEventTableStep1() {
+        return stepBuilderFactory.get("significantEventTableStep1")
+        	.tasklet(new DeleteTableTasklet(outputDataSource, "significant_event"))
             .build();
     }
 
-    //@StepScope
     @Bean
-    public Step registrationTableStep2(JdbcCursorItemReader<Registration> registrationReader, JdbcBatchItemWriter<Registration> registrationWriter) {
-        return stepBuilderFactory.get("registrationTableStep2")
-            .<Registration, Registration> chunk(10)
-            .reader(registrationReader)
-            .processor(new RegistrationItemProcessor())
-            .writer(registrationWriter)
+    public Step significantEventTableStep2(JdbcCursorItemReader<SignificantEvent> significantEventReader, JdbcBatchItemWriter<SignificantEvent> significantEventWriter) {
+        return stepBuilderFactory.get("significantEventTableStep2")
+            .<SignificantEvent, SignificantEvent> chunk(10)
+            .reader(significantEventReader)
+            .processor(new SignificantEventItemProcessor())
+            .writer(significantEventWriter)
             .listener(executionContextPromotionListener())
             .listener(new SaveWriteCountStepExecutionListener())
             .build();
     }
 
     @Bean
-    public Step registrationTableStep3() {
-        return stepBuilderFactory.get("registrationTableStep3")
-        	.tasklet(new ResetSequenceTasklet(outputDataSource, "registration_seq"))
+    public Step significantEventTableStep3() {
+        return stepBuilderFactory.get("significantEventTableStep3")
+        	.tasklet(new ResetSequenceTasklet(outputDataSource, "significant_event_seq"))
             .build();
     }
 

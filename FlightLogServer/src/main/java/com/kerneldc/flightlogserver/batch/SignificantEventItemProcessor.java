@@ -7,17 +7,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 
-import com.kerneldc.flightlogserver.domain.Registration;
+import com.kerneldc.flightlogserver.domain.SignificantEvent;
 
-public class RegistrationItemProcessor implements ItemProcessor<Registration, Registration> {
+public class SignificantEventItemProcessor implements ItemProcessor<SignificantEvent, SignificantEvent> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private int count;
 	
 	@Override
-	public Registration process(Registration item) throws Exception {
-		Registration result = new Registration();
+	public SignificantEvent process(SignificantEvent item) throws Exception {
+		SignificantEvent result = new SignificantEvent();
 		BeanUtils.copyProperties(/* destination */result, /* source */item);
 		count++;
 		LOGGER.debug("count: {}", count);
