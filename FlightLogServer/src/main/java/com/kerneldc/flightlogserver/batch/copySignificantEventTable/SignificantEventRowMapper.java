@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.batch;
+package com.kerneldc.flightlogserver.batch.copySignificantEventTable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.batch;
+package com.kerneldc.flightlogserver.batch.copyFlightLogTable;
 
 import javax.sql.DataSource;
 
@@ -19,14 +19,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
-import com.kerneldc.flightlogserver.batch.tasklet.DeleteTableTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.InitCopyTasklet;
 import com.kerneldc.flightlogserver.domain.FlightLog;
 
 @Configuration
 @EnableBatchProcessing
 public class CopyFlightLogTableJob {
-	
-	//private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Autowired
 	@Qualifier("inputDataSource")
@@ -61,7 +59,7 @@ public class CopyFlightLogTableJob {
     public JdbcBatchItemWriter<FlightLog> flightLogWriter() {
         return new JdbcBatchItemWriterBuilder<FlightLog>()
             .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<FlightLog>())
-            .sql("insert into flight_log (id, version, co_pilot, created, day_dual, day_solo, flight_date, instrument_flight_sim, instrument_imc, instrument_no_ifr_appr, instrument_simulated, make_model, modified, night_dual, night_solo, pic, registration, remarks, route_from, route_to, tos_ldgs_day, tos_ldgs_night, x_country_day, x_country_night) values (:id, :version, :coPilot, :created, :dayDual, :daySolo, :flightDate, :instrumentFlightSim, :instrumentImc, :instrumentNoIfrAppr, :instrumentSimulated, :makeModel, :modified, :nightDual, :nightSolo, :pic, :registration, :remarks, :routeFrom, :routeTo, :tosLdgsDay, :tosLdgsNight, :xcountryDay, :xcountryNight)")
+            .sql("insert into flight_log (id, version, co_pilot, created, day_dual, day_solo, flight_date, instrument_flight_sim, instrument_imc, instrument_no_ifr_appr, instrument_simulated, make_model, modified, night_dual, night_solo, pic, registration, remarks, route_from, route_to, tos_ldgs_day, tos_ldgs_night, x_country_day, x_country_night) values (flight_log_seq.nextval, :version, :coPilot, :created, :dayDual, :daySolo, :flightDate, :instrumentFlightSim, :instrumentImc, :instrumentNoIfrAppr, :instrumentSimulated, :makeModel, :modified, :nightDual, :nightSolo, :pic, :registration, :remarks, :routeFrom, :routeTo, :tosLdgsDay, :tosLdgsNight, :xcountryDay, :xcountryNight)")
             .dataSource(outputDataSource)
             .build();
     }
@@ -79,7 +77,7 @@ public class CopyFlightLogTableJob {
     @Bean
     public Step flightLogTableStep1() {
         return stepBuilderFactory.get("flightLogTableStep1")
-        	.tasklet(new DeleteTableTasklet(outputDataSource, "flight_log"))
+        	.tasklet(new InitCopyTasklet(outputDataSource, "flight_log"))
             .build();
     }
 

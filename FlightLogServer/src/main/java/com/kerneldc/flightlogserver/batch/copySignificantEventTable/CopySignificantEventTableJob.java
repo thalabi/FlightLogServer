@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.batch;
+package com.kerneldc.flightlogserver.batch.copySignificantEventTable;
 
 import javax.sql.DataSource;
 
@@ -8,7 +8,6 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.listener.ExecutionContextPromotionListener;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
@@ -20,15 +19,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
-import com.kerneldc.flightlogserver.batch.tasklet.DeleteTableTasklet;
-import com.kerneldc.flightlogserver.batch.tasklet.ResetSequenceTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.InitCopyTasklet;
 import com.kerneldc.flightlogserver.domain.SignificantEvent;
 
 @Configuration
 @EnableBatchProcessing
 public class CopySignificantEventTableJob {
-	
-	//private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Autowired
 	@Qualifier("inputDataSource")
@@ -63,27 +59,18 @@ public class CopySignificantEventTableJob {
     public JdbcBatchItemWriter<SignificantEvent> significantEventWriter() {
         return new JdbcBatchItemWriterBuilder<SignificantEvent>()
             .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<SignificantEvent>())
-            .sql("insert into significant_event (id, event_date, event_description, created, modified, version) values (:id, :eventDate, :eventDescription, :created, :modified, :version)")
+            .sql("insert into significant_event (id, event_date, event_description, created, modified, version) values (significant_event_seq.nextval, :eventDate, :eventDescription, :created, :modified, :version)")
             .dataSource(outputDataSource)
             .build();
     }
        	
-    @Bean
-    public ExecutionContextPromotionListener executionContextPromotionListener() {
-        ExecutionContextPromotionListener executionContextPromotionListener = new ExecutionContextPromotionListener();
-        executionContextPromotionListener.setKeys(new String[] {"writeCount"});
-        return executionContextPromotionListener;   
-
-    }
-    
 // tag::jobstep[]
     @Bean
-    public Job copySignificantEventTable(Step significantEventTableStep1, Step significantEventTableStep2, Step significantEventTableStep3) {
+    public Job copySignificantEventTable(Step significantEventTableStep1, Step significantEventTableStep2) {
         return jobBuilderFactory.get("copySignificantEventTable")
             .incrementer(new RunIdIncrementer())
             .flow(significantEventTableStep1)
             .next(significantEventTableStep2)
-            .next(significantEventTableStep3)
             .end()
             .build();
     }
@@ -91,7 +78,7 @@ public class CopySignificantEventTableJob {
     @Bean
     public Step significantEventTableStep1() {
         return stepBuilderFactory.get("significantEventTableStep1")
-        	.tasklet(new DeleteTableTasklet(outputDataSource, "significant_event"))
+        	.tasklet(new InitCopyTasklet(outputDataSource, "significant_event"))
             .build();
     }
 
@@ -102,17 +89,7 @@ public class CopySignificantEventTableJob {
             .reader(significantEventReader)
             .processor(new SignificantEventItemProcessor())
             .writer(significantEventWriter)
-            .listener(executionContextPromotionListener())
-            .listener(new SaveWriteCountStepExecutionListener())
             .build();
     }
-
-    @Bean
-    public Step significantEventTableStep3() {
-        return stepBuilderFactory.get("significantEventTableStep3")
-        	.tasklet(new ResetSequenceTasklet(outputDataSource, "significant_event_seq"))
-            .build();
-    }
-
 // end::jobstep[]
 }

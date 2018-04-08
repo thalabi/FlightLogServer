@@ -18,6 +18,7 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,7 @@ public class JobLauncherController {
     private Job copyFlightLogTableJob;
 
     @Autowired
+    @Lazy
     @Qualifier("copyRegistrationTable")
     private Job copyRegistrationTableJob;
 

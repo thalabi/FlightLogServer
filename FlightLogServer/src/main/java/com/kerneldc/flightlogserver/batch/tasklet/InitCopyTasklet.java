@@ -8,12 +8,12 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-public class DeleteTableTasklet implements Tasklet {
+public class InitCopyTasklet implements Tasklet {
 
 	private DataSource outputDataSource;
 	private String tableName;
 
-	public DeleteTableTasklet(DataSource outputDataSource, String tableName) {
+	public InitCopyTasklet(DataSource outputDataSource, String tableName) {
 		this.outputDataSource = outputDataSource;
 		this.tableName = tableName;
 	}
@@ -21,6 +21,7 @@ public class DeleteTableTasklet implements Tasklet {
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 		new JdbcTemplate(outputDataSource).execute("truncate table " + tableName);
+		new JdbcTemplate(outputDataSource).execute("alter sequence " + tableName + "_seq restart with 1 increment by 1");
 		return RepeatStatus.FINISHED;
 	}
 

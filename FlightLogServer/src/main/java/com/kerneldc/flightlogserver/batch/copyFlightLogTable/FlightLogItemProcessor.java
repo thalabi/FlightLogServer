@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.batch;
+package com.kerneldc.flightlogserver.batch.copyFlightLogTable;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -16,10 +16,10 @@ public class FlightLogItemProcessor implements ItemProcessor<FlightLog, FlightLo
 	
 	private static final List<String> EXCLUDED_PROPERTY_NAMES = Arrays.asList("id", "version");
 	
-	private PropertyDescriptor[] pds;
+	private PropertyDescriptor[] propertyDescriptorArray;
 	
 	public FlightLogItemProcessor() {
-		pds =  PropertyUtils.getPropertyDescriptors(FlightLog.class);
+		propertyDescriptorArray =  PropertyUtils.getPropertyDescriptors(FlightLog.class);
 	}
 
 	@Override
@@ -31,12 +31,12 @@ public class FlightLogItemProcessor implements ItemProcessor<FlightLog, FlightLo
 	}
 
 	private void setZeroPropertiesToNull (FlightLog flightLog) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		for (PropertyDescriptor pd: pds) {
-			if (! /* not */ EXCLUDED_PROPERTY_NAMES.contains(pd.getName())) {
-				String propertyName = pd.getName();
+		for (PropertyDescriptor proprtyDescriptor: propertyDescriptorArray) {
+			if (! /* not */ EXCLUDED_PROPERTY_NAMES.contains(proprtyDescriptor.getName())) {
+				String propertyName = proprtyDescriptor.getName();
 				Object propertyValue = PropertyUtils.getSimpleProperty(flightLog, propertyName);
-				if (pd.getPropertyType().equals(Integer.class) && propertyValue.equals(Integer.valueOf(0)) || 
-					pd.getPropertyType().equals(Float.class) && propertyValue.equals(Float.valueOf(0))) {
+				if (proprtyDescriptor.getPropertyType().equals(Integer.class) && propertyValue.equals(Integer.valueOf(0)) || 
+					proprtyDescriptor.getPropertyType().equals(Float.class) && propertyValue.equals(Float.valueOf(0))) {
 					PropertyUtils.setSimpleProperty(flightLog, propertyName, null);
 				}
 			}
