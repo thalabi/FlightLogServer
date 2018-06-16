@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@SequenceGenerator(name = "sequence_generator", sequenceName = "registration_seq")
 @Getter @Setter
 public class Registration extends AbstractPersistableEntity {
 
