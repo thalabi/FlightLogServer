@@ -12,5 +12,6 @@ import com.kerneldc.flightlogserver.domain.Airport;
 @RepositoryRestResource
 public interface AirportRepository extends JpaRepository<Airport, Long>, JpaSpecificationExecutor<Airport> {
 	List<Airport> findAllByOrderByIdentifier();
+	List<Airport> findAllByOrderByName();
 	List<Airport> findByIdentifierContainingIgnoreCaseOrNameContainingIgnoreCase(@Param("identifier") String identifier, @Param("name") String name);
 }
