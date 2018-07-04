@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+  <include file="liquibase/flight-log/create-table.xml"/> 
+   
+  <include file="liquibase/pilot/create-table.xml"/> 
+   
+  <include file="liquibase/registration/create-table.xml"/> 
+
+  <include file="liquibase/make-model/create-table.xml"/> 
+
+  <include file="liquibase/airport/create-table.xml"/> 
+
+  <include file="liquibase/significant-event/create-table.xml"/> 
+   
+  <include file="liquibase/flight-log-monthly-total-v/create-view.xml"/> 
+  <include file="liquibase/flight-log-yearly-total-v/create-view.xml"/> 
+  <include file="liquibase/flight-log/create-idx-1.xml"/> 
+  <include file="liquibase/flight-log-last-x-days-total-v/create-view.xml"/> 
+<!--   <include file="liquibase/changelog-note.xml"/>  -->
+<!--   <include file="liquibase/changelog-student-note.xml"/>  -->
+  
+<!--   <include file="liquibase/changelog-student-data-convert.xml"/> -->
+  
+
+<!--   <include file="liquibase/changelog-school-year.xml"/> -->
+<!--   <include file="liquibase/changelog-student-school-year.xml"/> -->
+<!--   <include file="liquibase/changelog-school-year-add-start-and-end-dates.xml"/> -->
+<!--   <include file="liquibase/changelog-user-preference.xml"/> -->
+<!--   <include file="liquibase/changelog-grade.xml"/> -->
+<!--   <include file="liquibase/changelog-student-grade.xml"/> -->
+  
+<!--   <include file="liquibase/changelog-student-graph.xml"/> -->
+  
+<!--   <include file="liquibase/data/changelog-school-year-data.xml"/> -->
+<!--   <include file="liquibase/data/changelog-user-preference-data.xml"/> -->
+  
+<!--   <include file="liquibase/changelog-migrate-to-multi-school-year.xml"/> -->
+  
+<!--   <include file="liquibase/changelog-student-drop-grade-column.xml"/> -->
+  
+</databaseChangeLog>

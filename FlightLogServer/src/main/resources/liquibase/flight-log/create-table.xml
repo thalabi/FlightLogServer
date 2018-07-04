@@ -1,0 +1,49 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog-ext
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+	<!-- Tables -->
+    <changeSet author="thalabi" id="table">
+	    <createSequence sequenceName="flight_log_seq"/>
+        <createTable tableName="flight_log">
+            <column name="id" type="long">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="version" type="long">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="co_pilot" type="varchar(255)"/>
+            <column name="created" type="timestamp"/>
+            <column name="day_dual" type="float"/>
+            <column name="day_solo" type="float"/>
+            <column name="flight_date" type="date"/>
+            <column name="instrument_flight_sim" type="float"/>
+            <column name="instrument_imc" type="float"/>
+            <column name="instrument_no_ifr_appr" type="integer"/>
+            <column name="instrument_simulated" type="float"/>
+            <column name="make_model" type="varchar(255)"/>
+            <column name="modified" type="timestamp"/>
+            <column name="night_dual" type="float"/>
+            <column name="night_solo" type="float"/>
+            <column name="pic" type="varchar(255)"/>
+            <column name="registration" type="varchar(255)"/>
+            <column name="remarks" type="varchar(255)"/>
+            <column name="route_from" type="varchar(255)"/>
+            <column name="route_to" type="varchar(255)"/>
+            <column name="tos_ldgs_day" type="integer"/>
+            <column name="tos_ldgs_night" type="integer"/>
+            <column name="x_country_day" type="float"/>
+            <column name="x_country_night" type="float"/>
+            
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

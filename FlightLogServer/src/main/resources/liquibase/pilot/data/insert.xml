@@ -1,0 +1,66 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="thalabi" id="insert">
+		<sql>
+		<![CDATA[
+INSERT INTO PUBLIC.PILOT(id, VERSION, CREATED, MODIFIED, PILOT) VALUES
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Andrew Miller'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Anita Persaud & Andrew Farench'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Anita Persaud & Matt Kerimoglu'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Behzad Shroff'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Bill Hughes'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Brian Last'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Brian Last and Laila Frank'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Carlos Aquino'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Chris Trudeau'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Dave Hutzel'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'David Arksy'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'David Hamilton'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'David Jr McDevitt'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'David Sheppard'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Desmond Lightbody'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Douglas Gilbert'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Family'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Frank Duah & Xavier Duah'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'G.Leblanc'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'G.Nelson'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Gaetan Belanger'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'J.Downton'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Jan Szczygielski'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'John Van Lieshout & Kevin Archba'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'John VanLieshout'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Kareem Halabi'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Kevin Archbald'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'L and K Halabi'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Layla Halabi'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Lutz Weichmann'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'M and K Halabi'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'M and L Halabi'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Maher Succar'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Matt Kerimoglu and his friend'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'May Halabi'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'May Halabi & Prince Duah'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Mazen Saghir'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Morris Nesbitt'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Naresh Persaud'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Niel Alfonso'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'One Passenger'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Prince Duah & Natasha Duah'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'S.Letto'),   
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Self'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Three Passengers'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Tom Coward'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Two Passengers'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Tyler Ferguson'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Waren Holt'),
+(pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Wes Staddon');
+		]]>         
+		</sql>
+		<rollback>
+			<sql>
+delete from pilot;
+			</sql>
+		</rollback>
+	</changeSet>
+</databaseChangeLog>	

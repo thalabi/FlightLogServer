@@ -1,0 +1,31 @@
+package com.kerneldc.flightlogserver.domain;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityLinks;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.stereotype.Component;
+
+import com.kerneldc.flightlogserver.controller.GenericEntityController;
+
+
+
+@Component
+public class AirportResourceAssembler extends ResourceAssemblerSupport<Airport, AirportResource> {
+	
+	@Autowired
+	private EntityLinks repositoryEntityLinks;
+	
+	public AirportResourceAssembler() {
+		super(GenericEntityController.class, AirportResource.class);
+	}
+
+	@Override
+	public AirportResource toResource(Airport airport) {
+		Link link = repositoryEntityLinks.linkToSingleResource(Airport.class, airport.getId());
+		AirportResource airportResource = new AirportResource();
+		airportResource.add(link);
+		airportResource.setAirport(airport);
+		return airportResource;
+	}
+}

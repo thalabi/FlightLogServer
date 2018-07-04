@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class FlightLogSpecification implements Specification<FlightLog> {
 
+	private static final long serialVersionUID = 1L;
 	private SearchCriteria criteria;
 	
 	public FlightLogSpecification(SearchCriteria criteria) {

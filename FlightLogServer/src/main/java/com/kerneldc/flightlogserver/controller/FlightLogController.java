@@ -29,10 +29,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.FlightLog;
 import com.kerneldc.flightlogserver.domain.FlightLogResource;
 import com.kerneldc.flightlogserver.domain.FlightLogResourceAssembler;
-import com.kerneldc.flightlogserver.domain.FlightLogSpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
 import com.kerneldc.flightlogserver.repository.FlightLogRepository;
 
@@ -79,7 +79,6 @@ public class FlightLogController {
 
     // TODO remove handleLastPageRequest()
     @GetMapping("/findAll")
-    //@CrossOrigin(origins = {"http://localhost:4200", " http://localhost:7999"})
 	public PagedResources<FlightLogResource> findAll(@RequestParam(value = "search") String search,
 			Pageable pageable, PagedResourcesAssembler<FlightLog> pagedResourcesAssembler) {
     	LOGGER.info("search: {}", search);
@@ -87,7 +86,7 @@ public class FlightLogController {
     	//pageable = handleLastPageRequest(pageable);
     	LOGGER.info("After handleLastPageRequest(pageable), pageable: {}", pageable);
     	List<SearchCriteria> searchCriteriaList = searchStringToSearchCriteriaList(search);
-    	FlightLogSpecificationsBuilder flightLogSpecificationsBuilder = new FlightLogSpecificationsBuilder();
+    	EntitySpecificationsBuilder<FlightLog> flightLogSpecificationsBuilder = new EntitySpecificationsBuilder<>();
         Page<FlightLog> flightLogPage = flightLogRepository.findAll(flightLogSpecificationsBuilder.with(searchCriteriaList).build(), pageable);
         LOGGER.debug("flightLogPage.getSize(): {}", flightLogPage.getSize());
 		Link link = ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(FlightLogController.class)

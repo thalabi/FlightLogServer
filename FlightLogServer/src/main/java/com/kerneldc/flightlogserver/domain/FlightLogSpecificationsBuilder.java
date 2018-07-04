@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 
 public class FlightLogSpecificationsBuilder {
 
@@ -25,18 +24,18 @@ public class FlightLogSpecificationsBuilder {
     }
 
     public Specification<FlightLog> build() {
-        if (params.size() == 0) {
+        if (params.isEmpty()) {
             return null;
         }
  
-        List<Specification<FlightLog>> specs = new ArrayList<Specification<FlightLog>>();
+        List<Specification<FlightLog>> specs = new ArrayList<>();
         for (SearchCriteria param : params) {
             specs.add(new FlightLogSpecification(param));
         }
  
         Specification<FlightLog> result = specs.get(0);
         for (int i = 1; i < specs.size(); i++) {
-            result = Specifications.where(result).and(specs.get(i));
+            result = Specification.where(result).and(specs.get(i));
         }
         return result;
     }
