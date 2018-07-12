@@ -18,9 +18,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.kerneldc.flightlogserver.domain.EntitySpecification;
 import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.FlightLog;
-import com.kerneldc.flightlogserver.domain.FlightLogSpecification;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
 
 @RunWith(SpringRunner.class)
@@ -56,7 +56,7 @@ public class FlightLogRepositoryTest {
 	@Test
 	public void testFindAll_DaySolo_Success() {
 		FlightLog savedFlightLog = entityManager.persist(FLIGHT_LOG2);
-		FlightLogSpecification spec = new FlightLogSpecification(new SearchCriteria("daySolo", ">", "4"));
+		EntitySpecification<FlightLog> spec = new EntitySpecification<>(new SearchCriteria("daySolo", ">", "4"));
 		List<FlightLog> results = flightLogRepository.findAll(Specification.where(spec));
 		assertThat(results, hasSize(1));
 		assertThat(results, hasItem(allOf(

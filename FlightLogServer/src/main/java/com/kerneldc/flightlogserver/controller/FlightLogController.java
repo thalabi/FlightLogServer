@@ -17,13 +17,16 @@ import org.hibernate.jdbc.Work;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaContext;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,31 +44,31 @@ import lombok.Setter;
 
 @RestController
 @RequestMapping("flightLogController")
+@ExposesResourceFor(FlightLog.class) // needed for unit test to create entity links
 public class FlightLogController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int LAST_PAGE = 999999;
 
-	private FlightLogRepository flightLogRepository;
+    private FlightLogRepository flightLogRepository;
+    
 	private FlightLogResourceAssembler flightLogResourceAssembler;
 	
 	private EntityManager flightLogEntityManager;
 
-    public FlightLogController(JpaContext jpaContext, FlightLogRepository repository, FlightLogResourceAssembler flightLogResourceAssembler) {
-        this.flightLogRepository = repository;
+    public FlightLogController(JpaContext jpaContext, FlightLogRepository flightLogRepository, FlightLogResourceAssembler flightLogResourceAssembler) {
+        this.flightLogRepository = flightLogRepository;
         this.flightLogResourceAssembler = flightLogResourceAssembler;
         flightLogEntityManager = jpaContext.getEntityManagerByManagedType(FlightLog.class);
     }
 
     @GetMapping("/count")
-    //@CrossOrigin(origins = {"http://localhost:4200", " http://localhost:7999"})
-	public Count findAll() {
+	public Count count() {
     	return new Count(flightLogRepository.count());
     }
 
     @GetMapping("/getLastXDaysSum")
-    //@CrossOrigin(origins = {"http://localhost:4200", " http://localhost:7999"})
     @Transactional
-	public Count getLastXDaysSum() throws SQLException {
+	public Count getLastXDaysSum() {
 		Session session = flightLogEntityManager.unwrap(Session.class);
 		session.doWork(new Work() {
 			@Override
@@ -77,39 +80,26 @@ public class FlightLogController {
 		return new Count(flightLogRepository.count());
 	}
 
-    // TODO remove handleLastPageRequest()
     @GetMapping("/findAll")
-	public PagedResources<FlightLogResource> findAll(@RequestParam(value = "search") String search,
-			Pageable pageable, PagedResourcesAssembler<FlightLog> pagedResourcesAssembler) {
+	public HttpEntity<PagedResources<FlightLogResource>> findAll(
+			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<FlightLog> pagedResourcesAssembler) {
     	LOGGER.info("search: {}", search);
     	LOGGER.info("pageable: {}", pageable);
-    	//pageable = handleLastPageRequest(pageable);
-    	LOGGER.info("After handleLastPageRequest(pageable), pageable: {}", pageable);
     	List<SearchCriteria> searchCriteriaList = searchStringToSearchCriteriaList(search);
-    	EntitySpecificationsBuilder<FlightLog> flightLogSpecificationsBuilder = new EntitySpecificationsBuilder<>();
-        Page<FlightLog> flightLogPage = flightLogRepository.findAll(flightLogSpecificationsBuilder.with(searchCriteriaList).build(), pageable);
-        LOGGER.debug("flightLogPage.getSize(): {}", flightLogPage.getSize());
-		Link link = ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(FlightLogController.class)
-				.findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
-        return pagedResourcesAssembler.toResource(flightLogPage, flightLogResourceAssembler, link);
-    }
-    
-	/**
-	 * Checks if the pageNumber passed by client equals LAST_PAGE and sets it to the
-	 * true last page by checking the count of rows in table
-	 * 
-	 * @param pageable
-	 * @return The modified pageable object with the correct pageNumber of the last
-	 *         page
-	 */
-    private Pageable handleLastPageRequest(Pageable pageable) {
-    	if (pageable.getPageNumber() == LAST_PAGE) {
-        	long count = flightLogRepository.count();
-        	long lastPage = count % pageable.getPageSize() == 0 ? count / pageable.getPageSize() -1 : count / pageable.getPageSize();
-        	return new PageRequest((int)lastPage, pageable.getPageSize());
-    	} else {
-    		return pageable;
-    	}
+    	EntitySpecificationsBuilder<FlightLog> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
+        Page<FlightLog> flightLogPage = flightLogRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);
+		Link link = ControllerLinkBuilder
+				.linkTo(ControllerLinkBuilder.methodOn(FlightLogController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
+		
+		PagedResources<FlightLogResource> flightLogPagedResources =
+				pagedResourcesAssembler.toResource(flightLogPage, flightLogResourceAssembler, link);
+		
+		LOGGER.debug("flightLogPagedResources: {}", flightLogPagedResources);
+		
+		HttpEntity<PagedResources<FlightLogResource>> r = ResponseEntity.status(HttpStatus.OK).body(flightLogPagedResources);
+		
+		LOGGER.debug("r: {}", r);
+		return r;
     }
     
     protected List<SearchCriteria> searchStringToSearchCriteriaList(String search) {

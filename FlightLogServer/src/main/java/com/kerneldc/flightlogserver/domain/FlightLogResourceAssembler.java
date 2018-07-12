@@ -10,7 +10,7 @@ import com.kerneldc.flightlogserver.controller.FlightLogController;
 
 @Component
 public class FlightLogResourceAssembler extends ResourceAssemblerSupport<FlightLog, FlightLogResource> {
-	
+
 	@Autowired
 	private EntityLinks repositoryEntityLinks;
 	
@@ -20,11 +20,15 @@ public class FlightLogResourceAssembler extends ResourceAssemblerSupport<FlightL
 
 	@Override
 	public FlightLogResource toResource(FlightLog flightLog) {
-		Link link = repositoryEntityLinks.linkToSingleResource(FlightLog.class, flightLog.getId());
-		//FlightLogResource flightLogResource = createResourceWithId(flightLog.getId(), flightLog);
+		Link link = repositoryEntityLinks.linkToSingleResource(FlightLog.class, flightLog);
 		FlightLogResource flightLogResource = new FlightLogResource();
 		flightLogResource.add(link);
 		flightLogResource.setFlightLog(flightLog);
 		return flightLogResource;
+	}
+	
+	@Override
+	public FlightLogResource instantiateResource(FlightLog flightLog) {
+		return new FlightLogResource();
 	}
 }
