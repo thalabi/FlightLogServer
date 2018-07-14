@@ -24,6 +24,7 @@ public class AirportResourceAssembler extends ResourceAssemblerSupport<Airport, 
 		AirportResource airportResource = new AirportResource();
 		airportResource.setAirport(airport);
 		airportResource.add(link);
+		airportResource.add(link.withSelfRel());
 		return airportResource;
 	}
 	

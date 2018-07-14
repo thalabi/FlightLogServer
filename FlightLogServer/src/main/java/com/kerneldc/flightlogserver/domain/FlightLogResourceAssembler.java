@@ -24,6 +24,7 @@ public class FlightLogResourceAssembler extends ResourceAssemblerSupport<FlightL
 		FlightLogResource flightLogResource = new FlightLogResource();
 		flightLogResource.setFlightLog(flightLog);
 		flightLogResource.add(link);
+		flightLogResource.add(link.withSelfRel());
 		return flightLogResource;
 	}
 	
