@@ -20,10 +20,10 @@ public class FlightLogResourceAssembler extends ResourceAssemblerSupport<FlightL
 
 	@Override
 	public FlightLogResource toResource(FlightLog flightLog) {
-		Link link = repositoryEntityLinks.linkToSingleResource(FlightLog.class, flightLog);
+		Link link = repositoryEntityLinks.linkToSingleResource(flightLog);
 		FlightLogResource flightLogResource = new FlightLogResource();
-		flightLogResource.add(link);
 		flightLogResource.setFlightLog(flightLog);
+		flightLogResource.add(link);
 		return flightLogResource;
 	}
 	

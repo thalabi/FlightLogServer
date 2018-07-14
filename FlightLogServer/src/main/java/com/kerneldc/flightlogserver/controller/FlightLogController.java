@@ -4,10 +4,7 @@ import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -47,7 +44,6 @@ import lombok.Setter;
 @ExposesResourceFor(FlightLog.class) // needed for unit test to create entity links
 public class FlightLogController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int LAST_PAGE = 999999;
 
     private FlightLogRepository flightLogRepository;
     
@@ -85,7 +81,7 @@ public class FlightLogController {
 			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<FlightLog> pagedResourcesAssembler) {
     	LOGGER.info("search: {}", search);
     	LOGGER.info("pageable: {}", pageable);
-    	List<SearchCriteria> searchCriteriaList = searchStringToSearchCriteriaList(search);
+    	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
     	EntitySpecificationsBuilder<FlightLog> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
         Page<FlightLog> flightLogPage = flightLogRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);
 		Link link = ControllerLinkBuilder
@@ -100,17 +96,6 @@ public class FlightLogController {
 		
 		LOGGER.debug("r: {}", r);
 		return r;
-    }
-    
-    protected List<SearchCriteria> searchStringToSearchCriteriaList(String search) {
-    	List<SearchCriteria> searchCriteriaList = new ArrayList<>();
-    	Pattern pattern = Pattern.compile("(\\w+?)(<=|>=|=|<|>)(.+?),");
-    	Matcher matcher = pattern.matcher(search + ",");
-        while (matcher.find()) {
-        	LOGGER.debug("matcher.group(1): {} matcher.group(2): {} matcher.group(3): {}", matcher.group(1), matcher.group(2), matcher.group(3));
-        	searchCriteriaList.add(new SearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3)));
-        }
-    	return searchCriteriaList;
     }
     
     @Getter @Setter

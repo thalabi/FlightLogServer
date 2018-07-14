@@ -1,7 +1,5 @@
 package com.kerneldc.flightlogserver.controller;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -37,21 +35,16 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.kerneldc.flightlogserver.FlightLogServerApplication;
-import com.kerneldc.flightlogserver.domain.FlightLog;
-import com.kerneldc.flightlogserver.repository.FlightLogRepository;
+import com.kerneldc.flightlogserver.domain.Airport;
+import com.kerneldc.flightlogserver.repository.AirportRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = FlightLogServerApplication.class)
-//@WebMvcTest(FlightLogController.class)
-//@AutoConfigureTestDatabase
-//@AutoConfigureMockMvc
-//@EnableSpringDataWebSupport
-//@Import({FlightLogResourceAssembler.class})
 
-public class FlightLogControllerTests {
+public class AirportControllerTests {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	private static final String BASE_URI = "/flightLogController";
+	private static final String BASE_URI = "/airportController";
 	
 	private MockMvc mockMvc;
 	
@@ -59,7 +52,7 @@ public class FlightLogControllerTests {
 	private JpaContext jpaContext;
 
 	@MockBean
-	private FlightLogRepository flightLogRepository;
+	private AirportRepository airportRepository;
 
 	@Autowired
     private WebApplicationContext webApplicationContext;
@@ -74,54 +67,48 @@ public class FlightLogControllerTests {
 
 	@Test
 	public void testCount( ) throws Exception {
-		Mockito.when(flightLogRepository.count())
+		Mockito.when(airportRepository.count())
 			.thenReturn(1l);
 		
 		mockMvc.perform(get(BASE_URI + "/count"))
         .andExpect(status().isOk())
         .andExpect(content().contentType(jsonContentType))
-        .andExpect(jsonPath("$.count", is(1)))
-//        .andExpect(jsonPath("$.uri", is("http://bookmark.com/1/" + userName)))
-//        .andExpect(jsonPath("$.description", is("A description")))
-        ;
+        .andExpect(jsonPath("$.count", is(1)));
 	}
 	
 	@Test
 	public void testFindAll( ) throws Exception {
-		FlightLog flightLog = new FlightLog();
-		flightLog.setId(7l);
-		flightLog.setVersion(0l);
-		flightLog.setRouteFrom("CYOO");
-		flightLog.setRouteTo("CYPQ");
-		flightLog.setPic("Tarif Halabi");
-		flightLog.setDaySolo(1f);
-		flightLog.setTosLdgsDay(1);
-		List<FlightLog> returnList = new ArrayList<>();
-		returnList.add(flightLog);
+		Airport airport = new Airport();
+		airport.setId(7l);
+		airport.setVersion(0l);
+		airport.setIdentifier("CYOO");
+		airport.setName("Oshawa Executive Airport");
+		List<Airport> returnList = new ArrayList<>();
+		returnList.add(airport);
 		LOGGER.debug("returnList.getSize(): {}", returnList.size());
-		Page<FlightLog> returnPage = new PageImpl<>(returnList, PageRequest.of(0, 20), 1);
+		Page<Airport> returnPage = new PageImpl<>(returnList, PageRequest.of(0, 20), 1);
 		//returnPage.setPage
 		LOGGER.debug("returnPage.getTotalElements(): {}", returnPage.getTotalElements());
 		LOGGER.debug("returnPage.getSize(): {}", returnPage.getSize());
 		
 		
-		// TODO create a pass a FlightLogSpecification object to the findAll method
+		// TODO create a pass a AirportSpecification object to the findAll method
 		
-		Mockito.when(flightLogRepository.findAll(ArgumentMatchers.<Specification<FlightLog>>any(), ArgumentMatchers.<Pageable>any()))
+		Mockito.when(airportRepository.findAll(ArgumentMatchers.<Specification<Airport>>any(), ArgumentMatchers.<Pageable>any()))
 			.thenReturn(returnPage);
 
-		//Mockito.when(flightLogResourceAssembler.toResource(flightLog)
+		//Mockito.when(airportResourceAssembler.toResource(airport)
 
 		
-		MvcResult mvcResult = mockMvc.perform(get(BASE_URI + "/findAll").param("search", "routeFrom=CYOO"))
+		MvcResult mvcResult = mockMvc.perform(get(BASE_URI + "/findAll").param("search", "name=CYOO"))
         .andExpect(status().isOk())
         .andExpect(content().contentType(halAndJsonContentType))
-        .andExpect(jsonPath("$._embedded.flightLogs[0].routeFrom", is(flightLog.getRouteFrom())))
-        .andExpect(jsonPath("$._embedded.flightLogs[0].routeTo", is(flightLog.getRouteTo())))
-        .andExpect(jsonPath("$._embedded.flightLogs[0].pic", is(flightLog.getPic())))
-        .andExpect(jsonPath("$._embedded.flightLogs[0].daySolo", closeTo(flightLog.getDaySolo(), 0.0)))
-        .andExpect(jsonPath("$._embedded.flightLogs[0].tosLdgsDay", equalTo(flightLog.getTosLdgsDay())))
-        .andExpect(jsonPath("$._links.self.href", is("http://localhost/flightLogController/findAll?search=routeFrom%3DCYOO")))
+//        .andExpect(jsonPath("$._embedded.airports[0].routeFrom", is(airport.getRouteFrom())))
+//        .andExpect(jsonPath("$._embedded.airports[0].routeTo", is(airport.getRouteTo())))
+//        .andExpect(jsonPath("$._embedded.airports[0].pic", is(airport.getPic())))
+//        .andExpect(jsonPath("$._embedded.airports[0].daySolo", closeTo(airport.getDaySolo(), 0.0)))
+//        .andExpect(jsonPath("$._embedded.airports[0].tosLdgsDay", equalTo(airport.getTosLdgsDay())))
+//        .andExpect(jsonPath("$._links.self.href", is("http://localhost/airportController/findAll?search=routeFrom%3DCYOO")))
         .andReturn()
         ;
 		LOGGER.debug("mvcResult.getResponse().getContentAsString(): {}", mvcResult.getResponse().getContentAsString());
