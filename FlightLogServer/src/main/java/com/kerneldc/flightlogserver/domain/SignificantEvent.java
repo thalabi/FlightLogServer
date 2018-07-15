@@ -20,7 +20,7 @@ public class SignificantEvent extends AbstractPersistableEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "significant_event_seq_gen")
-	@SequenceGenerator(name = "significant_event_seq_gen", sequenceName = "significant_event_seq")
+	@SequenceGenerator(name = "significant_event_seq_gen", sequenceName = "significant_event_seq", allocationSize = 1)
 	private Long id;
 
 	//@Temporal(TemporalType.DATE)

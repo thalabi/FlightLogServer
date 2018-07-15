@@ -21,7 +21,7 @@ public class Registration extends AbstractPersistableEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "registration_seq_gen")
-	@SequenceGenerator(name = "registration_seq_gen", sequenceName = "registration_seq")
+	@SequenceGenerator(name = "registration_seq_gen", sequenceName = "registration_seq", allocationSize = 1)
 	private Long id;
 
 	private String registration;

@@ -21,7 +21,7 @@ public class Pilot extends AbstractPersistableEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pilot_seq_gen")
-	@SequenceGenerator(name = "pilot_seq_gen", sequenceName = "pilot_seq")
+	@SequenceGenerator(name = "pilot_seq_gen", sequenceName = "pilot_seq", allocationSize = 1)
 	private Long id;
 
 	private String pilot;

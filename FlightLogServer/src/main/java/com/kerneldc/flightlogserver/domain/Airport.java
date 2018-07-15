@@ -26,7 +26,7 @@ public class Airport extends AbstractPersistableEntity implements Identifiable<L
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "airport_seq_gen")
-	@SequenceGenerator(name = "airport_seq_gen", sequenceName = "airport_seq")
+	@SequenceGenerator(name = "airport_seq_gen", sequenceName = "airport_seq", allocationSize = 1)
 	private Long id;
 
 	private String identifier;

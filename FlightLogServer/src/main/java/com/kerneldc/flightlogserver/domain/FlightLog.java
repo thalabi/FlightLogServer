@@ -24,7 +24,7 @@ public class FlightLog extends AbstractPersistableEntity implements Identifiable
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "flight_log_seq_gen")
-	@SequenceGenerator(name = "flight_log_seq_gen", sequenceName = "flight_log_seq")
+	@SequenceGenerator(name = "flight_log_seq_gen", sequenceName = "flight_log_seq", allocationSize = 1)
 	private Long id;
 	
 	@Temporal(TemporalType.DATE)

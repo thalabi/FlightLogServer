@@ -21,7 +21,7 @@ public class MakeModel extends AbstractPersistableEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "make_model_seq_gen")
-	@SequenceGenerator(name = "make_model_seq_gen", sequenceName = "make_model_seq")
+	@SequenceGenerator(name = "make_model_seq_gen", sequenceName = "make_model_seq", allocationSize = 1)
 	private Long id;
 
 	private String makeModel;
