@@ -10,7 +10,7 @@ public class EntitySpecificationsBuilder<T> {
 	private final List<SearchCriteria> params;
 	 
     public EntitySpecificationsBuilder() {
-        params = new ArrayList<SearchCriteria>();
+        params = new ArrayList<>();
     }
  
     public EntitySpecificationsBuilder<T> with(String key, String operation, Object value) {
