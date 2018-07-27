@@ -22,6 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<deploy.folder>c:/temp</deploy.folder>
 	</properties>
 
 	<dependencies>
@@ -160,5 +161,12 @@
 		</pluginRepository>
 
 	</pluginRepositories>
+
+	<distributionManagement>
+		<repository>
+			<id>localRepo</id>
+			<url>file:${deploy.folder}</url>
+		</repository>
+	</distributionManagement>
 
 </project>
