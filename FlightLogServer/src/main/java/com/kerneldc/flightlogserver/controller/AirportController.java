@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaContext;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
@@ -28,9 +27,6 @@ import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
 import com.kerneldc.flightlogserver.repository.AirportRepository;
 
-import lombok.Getter;
-import lombok.Setter;
-
 @RestController
 @RequestMapping("airportController")
 @ExposesResourceFor(Airport.class) // needed for unit test to create entity links
@@ -41,18 +37,24 @@ public class AirportController {
     
 	private AirportResourceAssembler airportResourceAssembler;
 	
-    public AirportController(JpaContext jpaContext, AirportRepository airportRepository, AirportResourceAssembler airportResourceAssembler) {
+    public AirportController(AirportRepository airportRepository, AirportResourceAssembler airportResourceAssembler) {
         this.airportRepository = airportRepository;
         this.airportResourceAssembler = airportResourceAssembler;
     }
 
-    @GetMapping("/count")
-	public Count count() {
-    	return new Count(airportRepository.count());
+    @GetMapping("/findAll")
+	public PagedResources<AirportResource> findAll(
+			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<Airport> pagedResourcesAssembler) {
+    	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
+    	EntitySpecificationsBuilder<Airport> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
+        Page<Airport> airportPage = airportRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);
+		Link link = ControllerLinkBuilder
+				.linkTo(ControllerLinkBuilder.methodOn(AirportController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
+		return pagedResourcesAssembler.toResource(airportPage, airportResourceAssembler, link);
     }
 
-    @GetMapping("/findAll")
-	public HttpEntity<PagedResources<AirportResource>> findAll(
+    @GetMapping("/findAll2")
+	public HttpEntity<PagedResources<AirportResource>> findAll2(
 			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<Airport> pagedResourcesAssembler) {
     	LOGGER.info("search: {}", search);
     	LOGGER.info("pageable: {}", pageable);
@@ -71,13 +73,5 @@ public class AirportController {
 		
 		LOGGER.debug("r: {}", r);
 		return r;
-    }
-    
-    @Getter @Setter
-    class Count {
-    	Long count;
-    	Count(Long count) {
-    		this.count = count;
-    	}
     }
 }

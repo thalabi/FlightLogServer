@@ -1,9 +1,7 @@
 package com.kerneldc.flightlogserver.controller;
 
-import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.lang.invoke.MethodHandles;
@@ -25,7 +23,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.JpaContext;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -49,9 +46,6 @@ public class AirportControllerTests {
 	private MockMvc mockMvc;
 	
 	@MockBean
-	private JpaContext jpaContext;
-
-	@MockBean
 	private AirportRepository airportRepository;
 
 	@Autowired
@@ -65,17 +59,6 @@ public class AirportControllerTests {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
 
-	@Test
-	public void testCount( ) throws Exception {
-		Mockito.when(airportRepository.count())
-			.thenReturn(1l);
-		
-		mockMvc.perform(get(BASE_URI + "/count"))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(jsonContentType))
-        .andExpect(jsonPath("$.count", is(1)));
-	}
-	
 	@Test
 	public void testFindAll( ) throws Exception {
 		Airport airport = new Airport();
