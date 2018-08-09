@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("versionController")
-public class VersionController {
+@RequestMapping("appInfoController")
+public class AppInfoController {
 
 	@Value("${build.timestamp}")
 	private String buildTimestamp;
 
-    @GetMapping("/getVersion")
-	public String getVersion() {
+    @GetMapping("/getBuildTimestamp")
+	public String getBuildTimestamp() {
 		return buildTimestamp;
 	}
 }

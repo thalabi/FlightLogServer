@@ -28,11 +28,11 @@ import com.kerneldc.flightlogserver.FlightLogServerApplication;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = FlightLogServerApplication.class)
 
-public class VersionControllerTests {
+public class AppInfoControllerTests {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private static final String BASE_URI = "/versionController";
+	private static final String BASE_URI = "/appInfoController";
 	
 	private MockMvc mockMvc;
 	
@@ -50,8 +50,8 @@ public class VersionControllerTests {
 	}
 
 	@Test
-	public void testGetVersion( ) throws Exception {
-		MvcResult mvcResult = mockMvc.perform(get(BASE_URI + "/getVersion"))
+	public void testGetBuildTimestamp( ) throws Exception {
+		MvcResult mvcResult = mockMvc.perform(get(BASE_URI + "/getBuildTimestamp"))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(contentType))
 			.andExpect(content().string(equalTo(buildTimestamp)))
