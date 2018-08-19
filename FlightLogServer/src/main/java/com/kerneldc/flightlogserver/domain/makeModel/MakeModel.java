@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.domain;
+package com.kerneldc.flightlogserver.domain.makeModel;
 
 import java.util.Date;
 
@@ -10,12 +10,16 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.hateoas.Identifiable;
+
+import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class MakeModel extends AbstractPersistableEntity {
+public class MakeModel extends AbstractPersistableEntity implements Identifiable<Long>{
 
 	private static final long serialVersionUID = 1L;
 
