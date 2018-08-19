@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
-import com.kerneldc.flightlogserver.domain.Pilot;
-import com.kerneldc.flightlogserver.domain.PilotResource;
-import com.kerneldc.flightlogserver.domain.PilotResourceAssembler;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
+import com.kerneldc.flightlogserver.domain.pilot.Pilot;
+import com.kerneldc.flightlogserver.domain.pilot.PilotResource;
+import com.kerneldc.flightlogserver.domain.pilot.PilotResourceAssembler;
 import com.kerneldc.flightlogserver.repository.PilotRepository;
 
 @RestController

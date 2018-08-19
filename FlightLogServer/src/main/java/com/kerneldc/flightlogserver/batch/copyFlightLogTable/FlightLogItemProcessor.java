@@ -9,7 +9,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.batch.item.ItemProcessor;
 
-import com.kerneldc.flightlogserver.domain.FlightLog;
+import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
 
 public class FlightLogItemProcessor implements ItemProcessor<FlightLog, FlightLog> {
 

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import com.kerneldc.flightlogserver.domain.FlightLog;
+import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
 
 @RepositoryRestResource
 public interface FlightLogRepository extends JpaRepository<FlightLog, Long>, JpaSpecificationExecutor<FlightLog> {

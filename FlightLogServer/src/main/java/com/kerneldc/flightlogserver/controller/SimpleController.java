@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kerneldc.flightlogserver.domain.Pilot;
+import com.kerneldc.flightlogserver.domain.pilot.Pilot;
 import com.kerneldc.flightlogserver.repository.PilotRepository;
 
 @RestController

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.kerneldc.flightlogserver.domain.Registration;
+import com.kerneldc.flightlogserver.domain.registration.Registration;
 
 public class RegistrationRowMapper implements RowMapper<Registration> {
 

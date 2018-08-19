@@ -30,10 +30,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
-import com.kerneldc.flightlogserver.domain.FlightLog;
-import com.kerneldc.flightlogserver.domain.FlightLogResource;
-import com.kerneldc.flightlogserver.domain.FlightLogResourceAssembler;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
+import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
+import com.kerneldc.flightlogserver.domain.flightLog.FlightLogResource;
+import com.kerneldc.flightlogserver.domain.flightLog.FlightLogResourceAssembler;
 import com.kerneldc.flightlogserver.repository.FlightLogRepository;
 
 import lombok.Getter;

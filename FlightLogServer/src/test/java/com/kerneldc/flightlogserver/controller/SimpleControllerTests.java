@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.kerneldc.flightlogserver.FlightLogServerApplication;
-import com.kerneldc.flightlogserver.domain.Pilot;
+import com.kerneldc.flightlogserver.domain.pilot.Pilot;
 import com.kerneldc.flightlogserver.repository.PilotRepository;
 
 @RunWith(SpringRunner.class)

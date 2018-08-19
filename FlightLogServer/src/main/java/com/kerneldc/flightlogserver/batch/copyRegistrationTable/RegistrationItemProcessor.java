@@ -3,7 +3,7 @@ package com.kerneldc.flightlogserver.batch.copyRegistrationTable;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.batch.item.ItemProcessor;
 
-import com.kerneldc.flightlogserver.domain.Registration;
+import com.kerneldc.flightlogserver.domain.registration.Registration;
 
 public class RegistrationItemProcessor implements ItemProcessor<Registration, Registration> {
 

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.kerneldc.flightlogserver.domain.SignificantEvent;
+import com.kerneldc.flightlogserver.domain.significantEvent.SignificantEvent;
 
 public class SignificantEventRowMapper implements RowMapper<SignificantEvent> {
 

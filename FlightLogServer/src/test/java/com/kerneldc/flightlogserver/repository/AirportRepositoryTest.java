@@ -20,9 +20,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.kerneldc.flightlogserver.domain.Airport;
 import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
+import com.kerneldc.flightlogserver.domain.airport.Airport;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest

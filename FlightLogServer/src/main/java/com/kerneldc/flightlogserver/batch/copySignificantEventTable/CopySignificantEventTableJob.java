@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
 import com.kerneldc.flightlogserver.batch.tasklet.InitCopyTasklet;
-import com.kerneldc.flightlogserver.domain.SignificantEvent;
+import com.kerneldc.flightlogserver.domain.significantEvent.SignificantEvent;
 
 @Configuration
 @EnableBatchProcessing

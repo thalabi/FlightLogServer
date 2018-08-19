@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.kerneldc.flightlogserver.domain.FlightLog;
+import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
 
 public class FlightLogRowMapper implements RowMapper<FlightLog> {
 

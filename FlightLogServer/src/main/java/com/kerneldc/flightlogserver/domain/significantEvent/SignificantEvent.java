@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.domain;
+package com.kerneldc.flightlogserver.domain.significantEvent;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+
+import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
 
 import lombok.Getter;
 import lombok.Setter;

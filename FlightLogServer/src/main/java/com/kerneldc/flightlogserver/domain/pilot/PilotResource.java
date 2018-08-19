@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.domain;
+package com.kerneldc.flightlogserver.domain.pilot;
 
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.hateoas.core.Relation;
@@ -9,10 +9,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@Relation(collectionRelation = "airports")
-public class AirportResource extends ResourceSupport {
+@Relation(collectionRelation = "pilots")
+public class PilotResource extends ResourceSupport {
 
 	@JsonUnwrapped
-	private Airport airport;
+	private Pilot pilot;
 	
 }

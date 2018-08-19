@@ -32,7 +32,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.kerneldc.flightlogserver.FlightLogServerApplication;
-import com.kerneldc.flightlogserver.domain.Airport;
+import com.kerneldc.flightlogserver.domain.airport.Airport;
 import com.kerneldc.flightlogserver.repository.AirportRepository;
 
 @RunWith(SpringRunner.class)

@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.domain;
+package com.kerneldc.flightlogserver.domain.registration;
 
 import java.util.Date;
 
@@ -11,6 +11,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.hateoas.Identifiable;
+
+import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.domain;
+package com.kerneldc.flightlogserver.domain.flightLog;
 
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.hateoas.core.Relation;

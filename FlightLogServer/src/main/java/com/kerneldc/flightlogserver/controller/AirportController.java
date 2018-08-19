@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kerneldc.flightlogserver.domain.Airport;
-import com.kerneldc.flightlogserver.domain.AirportResource;
-import com.kerneldc.flightlogserver.domain.AirportResourceAssembler;
 import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
+import com.kerneldc.flightlogserver.domain.airport.Airport;
+import com.kerneldc.flightlogserver.domain.airport.AirportResource;
+import com.kerneldc.flightlogserver.domain.airport.AirportResourceAssembler;
 import com.kerneldc.flightlogserver.repository.AirportRepository;
 
 @RestController

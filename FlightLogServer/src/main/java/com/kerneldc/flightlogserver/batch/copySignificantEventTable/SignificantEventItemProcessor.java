@@ -3,7 +3,7 @@ package com.kerneldc.flightlogserver.batch.copySignificantEventTable;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.batch.item.ItemProcessor;
 
-import com.kerneldc.flightlogserver.domain.SignificantEvent;
+import com.kerneldc.flightlogserver.domain.significantEvent.SignificantEvent;
 
 public class SignificantEventItemProcessor implements ItemProcessor<SignificantEvent, SignificantEvent> {
 	
