@@ -1,10 +1,7 @@
 package com.kerneldc.flightlogserver.controller;
 
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -28,7 +25,6 @@ import com.kerneldc.flightlogserver.repository.PilotRepository;
 @RequestMapping("pilotController")
 @ExposesResourceFor(Pilot.class) // needed for unit test to create entity links
 public class PilotController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private PilotRepository pilotRepository;
     
