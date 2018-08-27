@@ -1,6 +1,5 @@
 package com.kerneldc.flightlogserver.domain.significantEvent;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -8,6 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.hateoas.Identifiable;
 
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
 
@@ -16,7 +19,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class SignificantEvent extends AbstractPersistableEntity {
+public class SignificantEvent extends AbstractPersistableEntity implements Identifiable<Long>{
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,23 +28,9 @@ public class SignificantEvent extends AbstractPersistableEntity {
 	@SequenceGenerator(name = "significant_event_seq_gen", sequenceName = "significant_event_seq", allocationSize = 1)
 	private Long id;
 
-	//@Temporal(TemporalType.DATE)
-	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+	@Temporal(TemporalType.DATE)
 	private Date eventDate;
 	private String eventDescription;
-	//@Temporal(TemporalType.TIMESTAMP)
 	private Date created;
-	//@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
-	
-	public void setEventDate(Date eventDate) {
-		Calendar cal = Calendar.getInstance(); // locale-specific
-		cal.setTime(eventDate);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		this.eventDate = new Date(cal.getTimeInMillis());
-	}
-
 }
