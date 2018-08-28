@@ -43,6 +43,11 @@ public class JobLauncherController {
     private Job copyRegistrationTableJob;
 
     @Autowired
+    @Lazy
+    @Qualifier("copyMakeModelTable")
+    private Job copyMakeModelTableJob;
+
+    @Autowired
     @Qualifier("copySignificantEventTable")
     private Job copySignificantEventTableJob;
 
@@ -54,6 +59,11 @@ public class JobLauncherController {
     @GetMapping("/copyRegistrationTable")
     public JobExecutionBean copyRegistrationTable() throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException {
         return runJob(copyRegistrationTableJob);
+    }
+    
+    @GetMapping("/copyMakeModelTable")
+    public JobExecutionBean copyMakeModelTable() throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException {
+        return runJob(copyMakeModelTableJob);
     }
     
     @GetMapping("/copySignificantEventTable")
