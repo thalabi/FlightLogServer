@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class FlightlogApplicationTests {
+public class FlightlogApplicationTests extends AbstractBaseTest {
 
 	@Test
 	public void contextLoads() {

@@ -9,10 +9,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
 
 @RunWith(SpringRunner.class)
-public class ControllerHelperTests {
+public class ControllerHelperTests extends AbstractBaseTest {
 
 	@Test
 	public void testSearchStringToSearchCriteriaList_GreaterOrEqual_Success() {

@@ -36,6 +36,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.FlightLogServerApplication;
 import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
 import com.kerneldc.flightlogserver.repository.FlightLogRepository;
@@ -48,7 +49,7 @@ import com.kerneldc.flightlogserver.repository.FlightLogRepository;
 //@EnableSpringDataWebSupport
 //@Import({FlightLogResourceAssembler.class})
 
-public class FlightLogControllerTests {
+public class FlightLogControllerTests extends AbstractBaseTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private static final String BASE_URI = "/flightLogController";

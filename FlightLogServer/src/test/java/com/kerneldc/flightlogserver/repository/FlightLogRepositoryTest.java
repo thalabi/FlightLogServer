@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.domain.EntitySpecification;
 import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
@@ -25,7 +26,7 @@ import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class FlightLogRepositoryTest {
+public class FlightLogRepositoryTest extends AbstractBaseTest {
 
 	@Autowired
     private TestEntityManager entityManager;

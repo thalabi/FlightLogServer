@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.FlightLogServerApplication;
 import com.kerneldc.flightlogserver.domain.pilot.Pilot;
 import com.kerneldc.flightlogserver.repository.PilotRepository;
@@ -33,7 +34,7 @@ import com.kerneldc.flightlogserver.repository.PilotRepository;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = FlightLogServerApplication.class)
 
-public class SimpleControllerTests {
+public class SimpleControllerTests extends AbstractBaseTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

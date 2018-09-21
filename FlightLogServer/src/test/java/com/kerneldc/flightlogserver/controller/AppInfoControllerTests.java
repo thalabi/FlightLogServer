@@ -23,12 +23,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.FlightLogServerApplication;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = FlightLogServerApplication.class)
 
-public class AppInfoControllerTests {
+public class AppInfoControllerTests extends AbstractBaseTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
