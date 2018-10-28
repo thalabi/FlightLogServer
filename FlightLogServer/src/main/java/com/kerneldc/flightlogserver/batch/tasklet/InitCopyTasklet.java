@@ -21,7 +21,9 @@ public class InitCopyTasklet implements Tasklet {
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 		new JdbcTemplate(outputDataSource).execute("truncate table " + tableName);
-		new JdbcTemplate(outputDataSource).execute("alter sequence " + tableName + "_seq restart with 1 increment by 1");
+		//new JdbcTemplate(outputDataSource).execute("alter sequence " + tableName + "_seq restart with 1 increment by 1");
+		new JdbcTemplate(outputDataSource).execute("drop sequence " + tableName + "_seq");
+		new JdbcTemplate(outputDataSource).execute("create sequence " + tableName + "_seq");
 		return RepeatStatus.FINISHED;
 	}
 

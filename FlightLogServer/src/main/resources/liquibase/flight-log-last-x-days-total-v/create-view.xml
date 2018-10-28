@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <databaseChangeLog
-  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.8"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.8
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.8.xsd">
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <changeSet id="create-view" author="Tarif Halabi">
-	    <preConditions onFail="CONTINUE">
+    <changeSet id="create-view-h2" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE" onFailMessage="">
 	        <dbms type="h2" />
 	    </preConditions>
         <comment>Create flight_log_monthly_total_v</comment>
@@ -103,6 +104,108 @@ select
     round(sum(x_country_night), 1) as x_country_night
 from public.flight_log 
 where flight_date >= truncate(sysdate)-360
+			]]>    
+		</createView>
+
+    </changeSet>
+
+    <changeSet id="create-view-oracle" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE">
+	        <dbms type="oracle" />
+	    </preConditions>
+        <comment>Create flight_log_monthly_total_v</comment>
+
+    	<createView viewName="flight_log_last_x_days_total_v" replaceIfExists="true">
+			<![CDATA[
+select
+	1 id, 
+    30 as days, 
+    round(sum(day_dual), 1) as day_dual, 
+    round(sum(day_solo), 1) as day_solo, 
+    round(sum(instrument_flight_sim), 1) as instrument_flight_sim, 
+    round(sum(instrument_imc), 1) as instrument_imc, 
+    sum(instrument_no_ifr_appr) as instrument_no_ifr_appr, 
+    round(sum(instrument_simulated), 1) as instrument_simulated, 
+    round(sum(night_dual), 1) as night_dual, 
+    round(sum(night_solo), 1) as night_solo, 
+    sum(tos_ldgs_day) as tos_ldgs_day, 
+    sum(tos_ldgs_night) as tos_ldgs_night, 
+    round(sum(x_country_day), 1) as x_country_day, 
+    round(sum(x_country_night), 1) as x_country_night
+from flight_log 
+where flight_date >= trunc(sysdate)-30
+union
+select 
+	2 id, 
+    60 as days, 
+    round(sum(day_dual), 1) as day_dual, 
+    round(sum(day_solo), 1) as day_solo, 
+    round(sum(instrument_flight_sim), 1) as instrument_flight_sim, 
+    round(sum(instrument_imc), 1) as instrument_imc, 
+    sum(instrument_no_ifr_appr) as instrument_no_ifr_appr, 
+    round(sum(instrument_simulated), 1) as instrument_simulated, 
+    round(sum(night_dual), 1) as night_dual, 
+    round(sum(night_solo), 1) as night_solo, 
+    sum(tos_ldgs_day) as tos_ldgs_day, 
+    sum(tos_ldgs_night) as tos_ldgs_night, 
+    round(sum(x_country_day), 1) as x_country_day, 
+    round(sum(x_country_night), 1) as x_country_night
+from flight_log 
+where flight_date >= trunc(sysdate)-60
+union
+select 
+	3 id, 
+    90 as days, 
+    round(sum(day_dual), 1) as day_dual, 
+    round(sum(day_solo), 1) as day_solo, 
+    round(sum(instrument_flight_sim), 1) as instrument_flight_sim, 
+    round(sum(instrument_imc), 1) as instrument_imc, 
+    sum(instrument_no_ifr_appr) as instrument_no_ifr_appr, 
+    round(sum(instrument_simulated), 1) as instrument_simulated, 
+    round(sum(night_dual), 1) as night_dual, 
+    round(sum(night_solo), 1) as night_solo, 
+    sum(tos_ldgs_day) as tos_ldgs_day, 
+    sum(tos_ldgs_night) as tos_ldgs_night, 
+    round(sum(x_country_day), 1) as x_country_day, 
+    round(sum(x_country_night), 1) as x_country_night
+from flight_log 
+where flight_date >= trunc(sysdate)-90
+union
+select 
+	4 id, 
+    180 as days, 
+    round(sum(day_dual), 1) as day_dual, 
+    round(sum(day_solo), 1) as day_solo, 
+    round(sum(instrument_flight_sim), 1) as instrument_flight_sim, 
+    round(sum(instrument_imc), 1) as instrument_imc, 
+    sum(instrument_no_ifr_appr) as instrument_no_ifr_appr, 
+    round(sum(instrument_simulated), 1) as instrument_simulated, 
+    round(sum(night_dual), 1) as night_dual, 
+    round(sum(night_solo), 1) as night_solo, 
+    sum(tos_ldgs_day) as tos_ldgs_day, 
+    sum(tos_ldgs_night) as tos_ldgs_night, 
+    round(sum(x_country_day), 1) as x_country_day, 
+    round(sum(x_country_night), 1) as x_country_night
+from flight_log 
+where flight_date >= trunc(sysdate)-180
+union
+select 
+	5 id, 
+    360 as days, 
+    round(sum(day_dual), 1) as day_dual, 
+    round(sum(day_solo), 1) as day_solo, 
+    round(sum(instrument_flight_sim), 1) as instrument_flight_sim, 
+    round(sum(instrument_imc), 1) as instrument_imc, 
+    sum(instrument_no_ifr_appr) as instrument_no_ifr_appr, 
+    round(sum(instrument_simulated), 1) as instrument_simulated, 
+    round(sum(night_dual), 1) as night_dual, 
+    round(sum(night_solo), 1) as night_solo, 
+    sum(tos_ldgs_day) as tos_ldgs_day, 
+    sum(tos_ldgs_night) as tos_ldgs_night, 
+    round(sum(x_country_day), 1) as x_country_day, 
+    round(sum(x_country_night), 1) as x_country_night
+from flight_log 
+where flight_date >= trunc(sysdate)-360
 			]]>    
 		</createView>
 

@@ -1,10 +1,16 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet author="thalabi" id="insert">
 		<sql>
 		<![CDATA[
-INSERT INTO PUBLIC.SIGNIFICANT_EVENT(ID, VERSION, CREATED, EVENT_DATE, EVENT_DESCRIPTION, MODIFIED) VALUES
+INSERT into SIGNIFICANT_EVENT(ID, VERSION, CREATED, EVENT_DATE, EVENT_DESCRIPTION, MODIFIED) VALUES
 (significant_event_seq.nextval, 0, TIMESTAMP '2018-04-04 08:56:24', date '2000-03-25', 'Commence flying lessons at Canadian Flight Academy in Oshawa', TIMESTAMP '2018-04-04 08:56:24'),
 (significant_event_seq.nextval, 0, TIMESTAMP '2018-04-04 08:56:24', date '2000-08-28', 'First solo circuit GYYG', TIMESTAMP '2018-04-04 08:56:24'),
 (significant_event_seq.nextval, 0, TIMESTAMP '2018-04-04 08:56:24', date '2001-02-03', 'First solo cross country. CYOO - CNF4 - CYPQ - CYOO in GZJS', TIMESTAMP '2018-04-04 08:56:24'),
@@ -30,7 +36,7 @@ INSERT INTO PUBLIC.SIGNIFICANT_EVENT(ID, VERSION, CREATED, EVENT_DATE, EVENT_DES
 (significant_event_seq.nextval, 0, TIMESTAMP '2018-04-04 08:56:24', date '2005-06-18', 'First IFR flight from CYOO to CYOW', TIMESTAMP '2018-04-04 08:56:24'),
 (significant_event_seq.nextval, 0, TIMESTAMP '2018-04-04 08:56:24', date '2007-02-24', 'First time in KBUF. Fisrt time crossing the border in GQGD', TIMESTAMP '2018-04-04 08:56:24'),
 (significant_event_seq.nextval, 0, TIMESTAMP '2018-04-04 08:56:24', date '2007-06-15', 'Passed IFR renewal test', TIMESTAMP '2018-04-04 08:56:24');             
-INSERT INTO PUBLIC.SIGNIFICANT_EVENT(ID, VERSION, CREATED, EVENT_DATE, EVENT_DESCRIPTION, MODIFIED) VALUES
+INSERT into SIGNIFICANT_EVENT(ID, VERSION, CREATED, EVENT_DATE, EVENT_DESCRIPTION, MODIFIED) VALUES
 (significant_event_seq.nextval, 0, TIMESTAMP '2018-04-04 08:56:24', date '2007-08-04', 'First time to Teterboro. Routing from BUF to TEB, was V36 ULW(Elmira) V147 LVZ(Wilkes Barre) V226 STW(Stillwater) DCT TEB(Teterb', TIMESTAMP '2018-04-04 08:56:24'),
 (significant_event_seq.nextval, 0, TIMESTAMP '2018-04-04 08:56:24', date '2007-08-05', 'Back from Teterboro. Routing was Teterboro Five Depaturer, LANNA BOPLY V30 ETX(East Texas) V164 FQM(Williamsport) SFK(Stoneyfork) ELZ(Wellsville) BUF(Buffalo)', TIMESTAMP '2018-04-04 08:56:24'),
 (significant_event_seq.nextval, 0, TIMESTAMP '2018-04-04 08:56:24', date '2009-06-14', 'Passed IFR renewal test. Scored 61 out of 64 points', TIMESTAMP '2018-04-04 08:56:24'),

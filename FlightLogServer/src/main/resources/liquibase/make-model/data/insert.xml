@@ -1,10 +1,16 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet author="thalabi" id="insert">
 		<sql>
 		<![CDATA[
-INSERT INTO PUBLIC.MAKE_MODEL(ID, VERSION, CREATED, MODIFIED, MAKE_MODEL) VALUES
+INSERT into MAKE_MODEL(ID, VERSION, CREATED, MODIFIED, MAKE_MODEL) VALUES
 (make_model_seq.nextval, 0, TIMESTAMP '2018-01-18 22:15:00', TIMESTAMP '2018-01-18 22:15:00', 'C-172'),
 (make_model_seq.nextval, 2, TIMESTAMP '2018-01-18 22:15:00', TIMESTAMP '2018-02-27 08:55:41.165', 'C-172RG'),
 (make_model_seq.nextval, 0, TIMESTAMP '2018-01-18 22:15:00', TIMESTAMP '2018-01-18 22:15:00', 'PA28-180'),

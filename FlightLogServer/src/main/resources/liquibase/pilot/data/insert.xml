@@ -1,10 +1,16 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet author="thalabi" id="insert">
 		<sql>
 		<![CDATA[
-INSERT INTO PUBLIC.PILOT(id, VERSION, CREATED, MODIFIED, PILOT) VALUES
+INSERT into PILOT(id, VERSION, CREATED, MODIFIED, PILOT) VALUES
 (pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Andrew Miller'),
 (pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Anita Persaud & Andrew Farench'),
 (pilot_seq.nextval, 0, TIMESTAMP '2018-02-19 11:30:00', TIMESTAMP '2018-02-19 11:30:00', 'Anita Persaud & Matt Kerimoglu'),

@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <databaseChangeLog
-  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
   <include file="liquibase/flight-log/create-table.xml"/> 
-  <include file="liquibase/flight-log/data/insert.xml"/>
+<!--   <include file="liquibase/flight-log/data/insert.xml"/> -->
    
   <include file="liquibase/pilot/create-table.xml"/> 
-  <include file="liquibase/pilot/data/insert.xml"/>
+<!--   <include file="liquibase/pilot/data/insert.xml"/> -->
    
   <include file="liquibase/registration/create-table.xml"/> 
-  <include file="liquibase/registration/data/insert.xml"/>
+<!--   <include file="liquibase/registration/data/insert.xml"/> -->
    
   <include file="liquibase/make-model/create-table.xml"/> 
-  <include file="liquibase/make-model/data/insert.xml"/> 
+<!--   <include file="liquibase/make-model/data/insert.xml"/>  -->
 
   <include file="liquibase/airport/create-table.xml"/> 
-  <include file="liquibase/airport/data/insert.xml"/> 
+<!--   <include file="liquibase/airport/data/insert.xml"/>  -->
 
   <include file="liquibase/significant-event/create-table.xml"/> 
-  <include file="liquibase/significant-event/data/insert.xml"/> 
+<!--   <include file="liquibase/significant-event/data/insert.xml"/>  -->
 
   <include file="liquibase/flight-log-monthly-total-v/create-view.xml"/> 
   <include file="liquibase/flight-log-yearly-total-v/create-view.xml"/> 
