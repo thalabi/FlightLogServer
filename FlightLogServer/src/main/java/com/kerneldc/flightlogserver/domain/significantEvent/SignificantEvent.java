@@ -31,6 +31,8 @@ public class SignificantEvent extends AbstractPersistableEntity implements Ident
 	@Temporal(TemporalType.DATE)
 	private Date eventDate;
 	private String eventDescription;
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date created;
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
 }
