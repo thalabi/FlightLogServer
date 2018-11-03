@@ -19,7 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
-import com.kerneldc.flightlogserver.batch.tasklet.InitCopyTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.AfterCopyTableTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.BeforeCopyTableTasklet;
 import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
 
 @Configuration
@@ -77,7 +78,7 @@ public class CopyFlightLogTableJob {
     @Bean
     public Step flightLogTableStep1() {
         return stepBuilderFactory.get("flightLogTableStep1")
-        	.tasklet(new InitCopyTasklet(outputDataSource, "flight_log"))
+        	.tasklet(new BeforeCopyTableTasklet(outputDataSource, "flight_log"))
             .build();
     }
 
@@ -88,6 +89,13 @@ public class CopyFlightLogTableJob {
             .reader(flightLogReader)
             .processor(new FlightLogItemProcessor())
             .writer(flightLogWriter)
+            .build();
+    }
+
+    @Bean
+    public Step significantEventTableStep3() {
+        return stepBuilderFactory.get("significantEventTableStep3")
+        	.tasklet(new AfterCopyTableTasklet(outputDataSource, "flight_log"))
             .build();
     }
     // end::jobstep[]

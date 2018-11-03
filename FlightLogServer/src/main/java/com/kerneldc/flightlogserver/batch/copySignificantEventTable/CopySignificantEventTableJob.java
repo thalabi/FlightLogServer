@@ -19,7 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
-import com.kerneldc.flightlogserver.batch.tasklet.InitCopyTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.AfterCopyTableTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.BeforeCopyTableTasklet;
 import com.kerneldc.flightlogserver.domain.significantEvent.SignificantEvent;
 
 @Configuration
@@ -66,19 +67,19 @@ public class CopySignificantEventTableJob {
        	
 // tag::jobstep[]
     @Bean
-    public Job copySignificantEventTable(Step significantEventTableStep1, Step significantEventTableStep2) {
+    public Job copySignificantEventTable(Step significantEventTableStep1, Step significantEventTableStep2, Step significantEventTableStep3) {
         return jobBuilderFactory.get("copySignificantEventTable")
             .incrementer(new RunIdIncrementer())
-            .flow(significantEventTableStep1)
+            .start(significantEventTableStep1)
             .next(significantEventTableStep2)
-            .end()
+            .next(significantEventTableStep3)
             .build();
     }
     
     @Bean
     public Step significantEventTableStep1() {
         return stepBuilderFactory.get("significantEventTableStep1")
-        	.tasklet(new InitCopyTasklet(outputDataSource, "significant_event"))
+        	.tasklet(new BeforeCopyTableTasklet(outputDataSource, "significant_event"))
             .build();
     }
 
@@ -91,5 +92,13 @@ public class CopySignificantEventTableJob {
             .writer(significantEventWriter)
             .build();
     }
+
+    @Bean
+    public Step significantEventTableStep3() {
+        return stepBuilderFactory.get("significantEventTableStep3")
+        	.tasklet(new AfterCopyTableTasklet(outputDataSource, "significant_event"))
+            .build();
+    }
+
 // end::jobstep[]
 }

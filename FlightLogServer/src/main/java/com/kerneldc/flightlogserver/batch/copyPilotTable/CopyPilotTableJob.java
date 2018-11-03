@@ -19,7 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
-import com.kerneldc.flightlogserver.batch.tasklet.InitCopyTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.AfterCopyTableTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.BeforeCopyTableTasklet;
 import com.kerneldc.flightlogserver.domain.pilot.Pilot;
 
 @Configuration
@@ -66,19 +67,19 @@ public class CopyPilotTableJob {
        	
 // tag::jobstep[]
     @Bean
-    public Job copyPilotTable(Step pilotTableStep1, Step pilotTableStep2) {
+    public Job copyPilotTable(Step pilotTableStep1, Step pilotTableStep2, Step pilotTableStep3) {
         return jobBuilderFactory.get("copyPilotTable")
             .incrementer(new RunIdIncrementer())
-            .flow(pilotTableStep1)
+            .start(pilotTableStep1)
             .next(pilotTableStep2)
-            .end()
+            .next(pilotTableStep3)
             .build();
     }
     
     @Bean
     public Step pilotTableStep1() {
         return stepBuilderFactory.get("pilotTableStep1")
-        	.tasklet(new InitCopyTasklet(outputDataSource, "pilot"))
+        	.tasklet(new BeforeCopyTableTasklet(outputDataSource, "pilot"))
             .build();
     }
 
@@ -89,6 +90,13 @@ public class CopyPilotTableJob {
             .reader(pilotReader)
             .processor(new PilotItemProcessor())
             .writer(pilotWriter)
+            .build();
+    }
+
+    @Bean
+    public Step pilotTableStep3() {
+        return stepBuilderFactory.get("pilotTableStep3")
+        	.tasklet(new AfterCopyTableTasklet(outputDataSource, "pilot"))
             .build();
     }
 // end::jobstep[]

@@ -19,7 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
-import com.kerneldc.flightlogserver.batch.tasklet.InitCopyTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.AfterCopyTableTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.BeforeCopyTableTasklet;
 import com.kerneldc.flightlogserver.domain.airport.Airport;
 
 @Configuration
@@ -67,19 +68,19 @@ public class CopyAirportTableJob {
        	
 // tag::jobstep[]
     @Bean
-    public Job copyAirportTable(Step airportTableStep1, Step airportTableStep2) {
+    public Job copyAirportTable(Step airportTableStep1, Step airportTableStep2, Step airportTableStep3) {
         return jobBuilderFactory.get("copyAirportTable")
             .incrementer(new RunIdIncrementer())
-            .flow(airportTableStep1)
+            .start(airportTableStep1)
             .next(airportTableStep2)
-            .end()
+            .next(airportTableStep3)
             .build();
     }
     
     @Bean
     public Step airportTableStep1() {
         return stepBuilderFactory.get("airportTableStep1")
-        	.tasklet(new InitCopyTasklet(outputDataSource, "airport"))
+        	.tasklet(new BeforeCopyTableTasklet(outputDataSource, "airport"))
             .build();
     }
 
@@ -90,6 +91,13 @@ public class CopyAirportTableJob {
             .reader(airportReader)
             .processor(new AirportItemProcessor())
             .writer(airportWriter)
+            .build();
+    }
+
+    @Bean
+    public Step airportTableStep3() {
+        return stepBuilderFactory.get("airportTableStep3")
+        	.tasklet(new AfterCopyTableTasklet(outputDataSource, "airport"))
             .build();
     }
 // end::jobstep[]

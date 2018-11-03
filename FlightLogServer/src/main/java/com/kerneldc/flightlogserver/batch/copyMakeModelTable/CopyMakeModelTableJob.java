@@ -19,7 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
-import com.kerneldc.flightlogserver.batch.tasklet.InitCopyTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.AfterCopyTableTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.BeforeCopyTableTasklet;
 import com.kerneldc.flightlogserver.domain.makeModel.MakeModel;
 
 @Configuration
@@ -66,19 +67,19 @@ public class CopyMakeModelTableJob {
        	
 // tag::jobstep[]
     @Bean
-    public Job copyMakeModelTable(Step makeModelTableStep1, Step makeModelTableStep2) {
+    public Job copyMakeModelTable(Step makeModelTableStep1, Step makeModelTableStep2, Step makeModelTableStep3) {
         return jobBuilderFactory.get("copyMakeModelTable")
             .incrementer(new RunIdIncrementer())
-            .flow(makeModelTableStep1)
+            .start(makeModelTableStep1)
             .next(makeModelTableStep2)
-            .end()
+            .next(makeModelTableStep3)
             .build();
     }
     
     @Bean
     public Step makeModelTableStep1() {
         return stepBuilderFactory.get("makeModelTableStep1")
-        	.tasklet(new InitCopyTasklet(outputDataSource, "make_model"))
+        	.tasklet(new BeforeCopyTableTasklet(outputDataSource, "make_model"))
             .build();
     }
 
@@ -89,6 +90,13 @@ public class CopyMakeModelTableJob {
             .reader(makeModelReader)
             .processor(new MakeModelItemProcessor())
             .writer(makeModelWriter)
+            .build();
+    }
+
+    @Bean
+    public Step makeModelTableStep3() {
+        return stepBuilderFactory.get("makeModelTableStep3")
+        	.tasklet(new AfterCopyTableTasklet(outputDataSource, "make_model"))
             .build();
     }
 // end::jobstep[]

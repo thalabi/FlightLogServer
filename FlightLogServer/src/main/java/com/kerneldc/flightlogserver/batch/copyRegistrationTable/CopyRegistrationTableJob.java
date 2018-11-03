@@ -19,7 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
-import com.kerneldc.flightlogserver.batch.tasklet.InitCopyTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.AfterCopyTableTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.BeforeCopyTableTasklet;
 import com.kerneldc.flightlogserver.domain.registration.Registration;
 
 @Configuration
@@ -66,19 +67,19 @@ public class CopyRegistrationTableJob {
        	
 // tag::jobstep[]
     @Bean
-    public Job copyRegistrationTable(Step registrationTableStep1, Step registrationTableStep2) {
+    public Job copyRegistrationTable(Step registrationTableStep1, Step registrationTableStep2, Step registrationTableStep3) {
         return jobBuilderFactory.get("copyRegistrationTable")
             .incrementer(new RunIdIncrementer())
-            .flow(registrationTableStep1)
+            .start(registrationTableStep1)
             .next(registrationTableStep2)
-            .end()
+            .next(registrationTableStep3)
             .build();
     }
     
     @Bean
     public Step registrationTableStep1() {
         return stepBuilderFactory.get("registrationTableStep1")
-        	.tasklet(new InitCopyTasklet(outputDataSource, "registration"))
+        	.tasklet(new BeforeCopyTableTasklet(outputDataSource, "registration"))
             .build();
     }
 
@@ -89,6 +90,13 @@ public class CopyRegistrationTableJob {
             .reader(registrationReader)
             .processor(new RegistrationItemProcessor())
             .writer(registrationWriter)
+            .build();
+    }
+
+    @Bean
+    public Step registrationTableStep3() {
+        return stepBuilderFactory.get("registrationTableStep3")
+        	.tasklet(new AfterCopyTableTasklet(outputDataSource, "registration"))
             .build();
     }
 // end::jobstep[]
