@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.batch.CopyAirportTable;
+package com.kerneldc.flightlogserver.batch.copyAirportTable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

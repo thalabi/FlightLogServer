@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.batch.CopyAirportTable;
+package com.kerneldc.flightlogserver.batch.copyAirportTable;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.batch.item.ItemProcessor;
