@@ -9,9 +9,9 @@ import javax.sql.DataSource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-public class DatabaseInfo {
+public class DatabaseUtil {
 	
-	private DatabaseInfo() {
+	private DatabaseUtil() {
 		throw new IllegalStateException("Utility class");
 	}
 
@@ -37,6 +37,21 @@ public class DatabaseInfo {
 			String enableDisable = enable ? "enable" : "disable";
 			triggerNameList.forEach(triggerName -> {
 				new JdbcTemplate(dataSource).execute(String.format("alter trigger %s %s", triggerName, enableDisable));});
+		}
+	}
+	
+	public static void resetSequence(DataSource dataSource, String tableName) throws SQLException {
+		String sequenceName = String.format("%s_seq", tableName );;
+		if (isOracleDatabase(dataSource)) {
+			List<Integer> lastNumberList = new JdbcTemplate(dataSource).queryForList(
+					String.format("select last_number from all_sequences where sequence_owner = user and lower(sequence_name) = '%s'", sequenceName),
+					Integer.class);
+			new JdbcTemplate(dataSource).execute(String.format("alter sequence %s increment by %d nocache nominvalue", sequenceName, -1*(lastNumberList.get(0)-1)));
+			new JdbcTemplate(dataSource).execute(String.format("select %s.nextval from dual", sequenceName));
+			new JdbcTemplate(dataSource).execute(String.format("alter sequence %s increment by 1", sequenceName));
+		} else {
+			new JdbcTemplate(dataSource).execute(String.format("drop sequence %s", sequenceName));
+			new JdbcTemplate(dataSource).execute(String.format("create sequence %s", sequenceName));
 		}
 	}
 }

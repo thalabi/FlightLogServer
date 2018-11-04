@@ -7,7 +7,7 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 
-import com.kerneldc.flightlogserver.batch.util.DatabaseInfo;
+import com.kerneldc.flightlogserver.batch.util.DatabaseUtil;
 
 public class AfterCopyTableTasklet implements Tasklet {
 
@@ -21,7 +21,7 @@ public class AfterCopyTableTasklet implements Tasklet {
 	
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-		DatabaseInfo.enableTriggers(outputDataSource, tableName);
+		DatabaseUtil.enableTriggers(outputDataSource, tableName);
 		return RepeatStatus.FINISHED;
 	}
 
