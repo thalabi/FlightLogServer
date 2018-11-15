@@ -8,7 +8,7 @@
 		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
   <include file="liquibase/flight-log/create-table.xml"/> 
-<!--   <include file="liquibase/flight-log/data/insert.xml"/> -->
+  <include file="liquibase/flight-log/create-trigger.xml"/> 
    
   <include file="liquibase/pilot/create-table.xml"/> 
 <!--   <include file="liquibase/pilot/data/insert.xml"/> -->
@@ -17,13 +17,13 @@
 <!--   <include file="liquibase/registration/data/insert.xml"/> -->
    
   <include file="liquibase/make-model/create-table.xml"/> 
-<!--   <include file="liquibase/make-model/data/insert.xml"/>  -->
+  <include file="liquibase/make-model/create-trigger.xml"/> 
 
   <include file="liquibase/airport/create-table.xml"/> 
 <!--   <include file="liquibase/airport/data/insert.xml"/>  -->
 
   <include file="liquibase/significant-event/create-table.xml"/> 
-<!--   <include file="liquibase/significant-event/data/insert.xml"/>  -->
+  <include file="liquibase/significant-event/create-trigger.xml"/> 
 
   <include file="liquibase/flight-log-monthly-total-v/create-view.xml"/> 
   <include file="liquibase/flight-log-yearly-total-v/create-view.xml"/> 
