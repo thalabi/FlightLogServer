@@ -5,15 +5,16 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @MappedSuperclass
-@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlAccessorType(XmlAccessType.FIELD)
+@Getter @Setter
 public abstract class AbstractPersistableEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -22,46 +23,11 @@ public abstract class AbstractPersistableEntity implements Serializable {
         super();
     }
 	
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence_generator")
-//	private Long id;
-
 	@Version
 	@Column(name = "version")
-	@XmlTransient
 	private Long version;
 
-//	public Long getId() {
-//		return id;
-//	}
-//
-//	public void setId(Long id) {
-//		this.id = id;
-//	}
-
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
-
-
-    /**
-     * 
-     * @see java.lang.Object#toString()
-     */
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
-//    public boolean equals(final Object object) {
-//
-//        return EqualsBuilder.reflectionEquals(this, object);
-//    }
-//    public int hashCode() {
-//
-//        return HashCodeBuilder.reflectionHashCode(this);
-//    }
-
 }

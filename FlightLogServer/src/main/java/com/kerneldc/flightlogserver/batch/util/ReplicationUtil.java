@@ -1,5 +1,6 @@
 package com.kerneldc.flightlogserver.batch.util;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -8,10 +9,11 @@ import javax.sql.DataSource;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 
-public class DatabaseUtil {
+public class ReplicationUtil {
 	
-	private DatabaseUtil() {
+	private ReplicationUtil() {
 		throw new IllegalStateException("Utility class");
 	}
 
@@ -29,14 +31,18 @@ public class DatabaseUtil {
 		alterTriggers(dataSource, tableName, false);
 	}
 	
-	private static void alterTriggers(DataSource dataSource, String tableName, boolean enable) throws DataAccessException, SQLException {
+	/**
+	 * 'soft' alter of table triggers. Set the status in common.trigger_status.
+	 * @param dataSource
+	 * @param tableName
+	 * @param enable
+	 * @throws DataAccessException
+	 * @throws SQLException
+	 */
+	private static void alterTriggers(DataSource dataSource, String tableName, boolean enable) throws SQLException {
 		if (isOracleDatabase(dataSource)) {
-			List<String> triggerNameList = new JdbcTemplate(dataSource).queryForList(
-					String.format("select trigger_name from all_triggers where owner = user and lower(table_name) = '%s'", tableName),
-					String.class);
-			String enableDisable = enable ? "enable" : "disable";
-			triggerNameList.forEach(triggerName -> {
-				new JdbcTemplate(dataSource).execute(String.format("alter trigger %s %s", triggerName, enableDisable));});
+			System.out.println("alterTriggers: "+enable);
+			new JdbcTemplate(dataSource).execute(String.format("call common.trigger_status_pkg.set_trigger_status('%s',%d)", tableName, enable ? 1 : 0));
 		}
 	}
 	
@@ -56,5 +62,15 @@ public class DatabaseUtil {
 			new JdbcTemplate(dataSource).execute(String.format("drop sequence %s", sequenceName));
 			new JdbcTemplate(dataSource).execute(String.format("create sequence %s", sequenceName));
 		}
+	}
+	
+	public static int tableReplicationStatus(DataSource dataSource, String legacySchemaName, String outputSchemaName, String tableName) {
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dataSource)
+				.withSchemaName("common").withCatalogName("trigger_status_pkg").withFunctionName("get_trigger_status");
+		BigDecimal legacyTableTriggerStatus = simpleJdbcCall.executeFunction(BigDecimal.class, legacySchemaName, tableName);
+		System.out.println(legacyTableTriggerStatus);
+		BigDecimal outputTableTriggerStatus = simpleJdbcCall.executeFunction(BigDecimal.class, outputSchemaName, tableName);
+		System.out.println(outputTableTriggerStatus);
+		return legacyTableTriggerStatus.add(outputTableTriggerStatus).intValue();
 	}
 }

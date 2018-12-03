@@ -111,7 +111,7 @@ public class FlightLogControllerTests extends AbstractBaseTest {
 		Mockito.when(flightLogRepository.findAll(ArgumentMatchers.<Specification<FlightLog>>any(), ArgumentMatchers.<Pageable>any()))
 			.thenReturn(returnPage);
 
-		//Mockito.when(flightLogResourceAssembler.toResource(flightLog)
+		//Mockito.when(flightLogResourceAssembler.toResource(FLIGHT_LOG)
 
 		
 		MvcResult mvcResult = mockMvc.perform(get(BASE_URI + "/findAll").param("search", "routeFrom=CYOO"))
