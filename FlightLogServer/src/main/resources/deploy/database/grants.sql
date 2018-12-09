@@ -16,6 +16,18 @@ grant all on &&legacy_schema..make_model to &&new_schema_name;
 grant all on &&new_schema_name..make_model to &&legacy_schema;
 grant all on &&new_schema_name..make_model_seq to &&legacy_schema;
 
+-- pilot
+grant all on &&legacy_schema..pilot to &&new_schema_name;
+
+grant all on &&new_schema_name..pilot to &&legacy_schema;
+grant all on &&new_schema_name..pilot_seq to &&legacy_schema;
+
+-- registration
+grant all on &&legacy_schema..registration to &&new_schema_name;
+
+grant all on &&new_schema_name..registration to &&legacy_schema;
+grant all on &&new_schema_name..registration_seq to &&legacy_schema;
+
 
 -- flight_log
 grant all on &&legacy_schema..flight_log to &&new_schema_name;

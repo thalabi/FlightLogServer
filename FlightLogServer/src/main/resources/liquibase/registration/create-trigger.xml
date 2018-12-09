@@ -1,0 +1,74 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="thalabi" id="trigger">
+	    <preConditions onFail="CONTINUE">
+	        <dbms type="oracle" />
+	    </preConditions>
+		<sql endDelimiter="/">
+		<![CDATA[
+
+create or replace TRIGGER registration_BRDIU before delete or insert or update on registration
+for each row
+declare
+    TABLE_NAME varchar2(30) := 'registration';
+    THIS_SCHAMA_NAME varchar2(30) := '${new.schema.name}';
+    OTHER_SCHAMA_NAME varchar2(30) := '${legacy.schema.name}';
+    PROCEDURE_LOG_NAME varchar2(64) := THIS_SCHAMA_NAME || '.registration_brdiu';
+    logical_key ${legacy.schema.name}.registration.registration%type;
+    status integer;
+    row_count pls_integer;
+begin
+    common.procedure_logger(PROCEDURE_LOG_NAME, 'begin');
+    status := common.trigger_status_pkg.get_trigger_status(THIS_SCHAMA_NAME, TABLE_NAME);
+    if (status is null or status = 0) then
+        common.procedure_logger(PROCEDURE_LOG_NAME, 'trigger disabled, returning');
+        common.procedure_logger(PROCEDURE_LOG_NAME, 'end');
+        return;
+    end if;
+    common.trigger_status_pkg.set_trigger_status(OTHER_SCHAMA_NAME, TABLE_NAME, 0);
+    if (inserting or updating) then
+    	if (inserting) then
+			logical_key := :new.registration;
+    	else
+			logical_key := :old.registration;
+    	end if;
+        select count(*) into row_count from ${legacy.schema.name}.registration where registration = logical_key;
+        if (row_count = 0) then
+            insert into ${legacy.schema.name}.registration (registration) values (:new.registration);
+        else
+            delete ${legacy.schema.name}.registration where registration = logical_key;
+            insert into ${legacy.schema.name}.registration (registration) values (:new.registration);
+        end if;
+    else
+        delete ${legacy.schema.name}.registration where registration = :old.registration;
+    end if;
+    common.trigger_status_pkg.set_trigger_status(OTHER_SCHAMA_NAME, TABLE_NAME, 1);
+    common.procedure_logger(PROCEDURE_LOG_NAME, 'end');
+end;
+/
+		]]>         
+		</sql>
+		<sql>
+		<![CDATA[
+		merge into common.trigger_status target
+			using (select '${new.schema.name}' as schema_name, 'registration' as table_name from dual) source
+			on (target.schema_name = source.schema_name and target.table_name = source.table_name)
+		when not matched then
+			insert values (source.schema_name, source.table_name, 1);
+		]]>         
+		</sql>
+		<rollback>
+			<sql>
+drop trigger registration_brdiu;
+delete from common.trigger_status where schema_name='${new.schema.name}' and table='registration'
+			</sql>
+		</rollback>
+	</changeSet>
+</databaseChangeLog>

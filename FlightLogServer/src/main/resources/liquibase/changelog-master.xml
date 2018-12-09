@@ -11,10 +11,10 @@
   <include file="liquibase/flight-log/create-trigger.xml"/> 
    
   <include file="liquibase/pilot/create-table.xml"/> 
-<!--   <include file="liquibase/pilot/data/insert.xml"/> -->
+  <include file="liquibase/pilot/create-trigger.xml"/> 
    
   <include file="liquibase/registration/create-table.xml"/> 
-<!--   <include file="liquibase/registration/data/insert.xml"/> -->
+  <include file="liquibase/registration/create-trigger.xml"/> 
    
   <include file="liquibase/make-model/create-table.xml"/> 
   <include file="liquibase/make-model/create-trigger.xml"/> 
