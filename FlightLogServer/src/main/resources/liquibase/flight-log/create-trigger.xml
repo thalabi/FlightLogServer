@@ -14,43 +14,75 @@
 		<sql endDelimiter="/">
 		<![CDATA[
 
-create or replace TRIGGER flight_log_BRDIU before delete or insert or update on flight_log
-for each row
-declare
+create or replace TRIGGER flight_log_fDIU for delete or insert or update on flight_log
+compound trigger
+
     TABLE_NAME varchar2(30) := 'flight_log';
     THIS_SCHAMA_NAME varchar2(30) := '${new.schema.name}';
     OTHER_SCHAMA_NAME varchar2(30) := '${legacy.schema.name}';
-    PROCEDURE_LOG_NAME varchar2(64) := THIS_SCHAMA_NAME || '.flight_log_brdiu';
-    logical_key ${legacy.schema.name}.flight_log.flight_date%type;
+    PROCEDURE_LOG_NAME varchar2(64) := THIS_SCHAMA_NAME || '.flight_log_fdiu';
     status integer;
-    row_count pls_integer;
+    
+    this_trigger_disabled boolean;
+    
+    old_flight_date ${new.schema.name}.flight_log.flight_date%type;
+    old_rowid rowid;
+    
+before statement is
 begin
     common.procedure_logger(PROCEDURE_LOG_NAME, 'begin');
     status := common.trigger_status_pkg.get_trigger_status(THIS_SCHAMA_NAME, TABLE_NAME);
     if (status is null or status = 0) then
-        common.procedure_logger(PROCEDURE_LOG_NAME, 'trigger disabled, returning');
-        common.procedure_logger(PROCEDURE_LOG_NAME, 'end');
-        return;
+        common.procedure_logger(PROCEDURE_LOG_NAME, 'trigger disabled');
+        this_trigger_disabled := true;
+    else
+        this_trigger_disabled := false;
+        common.trigger_status_pkg.set_trigger_status(OTHER_SCHAMA_NAME, TABLE_NAME, 0);
     end if;
-    common.trigger_status_pkg.set_trigger_status(OTHER_SCHAMA_NAME, TABLE_NAME, 0);
-    if (inserting or updating) then 
-    	if (inserting) then
-			logical_key := :new.flight_date;
-    	else
-			logical_key := :old.flight_date;
-    	end if;
-        select count(*) into row_count from ${legacy.schema.name}.flight_log where flight_date = logical_key;
-        if (row_count = 0) then
+end before statement;
+
+before each row is
+begin
+    if (not this_trigger_disabled) then
+        if (inserting) then
+            common.procedure_logger(PROCEDURE_LOG_NAME, 'operation is inserting');
+            insert into ${legacy.schema.name}.flight_log (flight_date,sequence,co_pilot,day_dual,day_solo,instrument_flight_sim,instrument_imc,instrument_no_ifr_appr,instrument_simulated,make_model,night_dual,night_solo,pic,registration,remarks,route_from,route_to,tos_ldgs_day,tos_ldgs_night,x_country_day,x_country_night) values (:new.flight_date,${legacy.schema.name}.flight_log_seq.nextval,:new.co_pilot,nvl(:new.day_dual,0),nvl(:new.day_solo,0),nvl(:new.instrument_flight_sim,0),nvl(:new.instrument_imc,0),nvl(:new.instrument_no_ifr_appr,0),nvl(:new.instrument_simulated,0),:new.make_model,nvl(:new.night_dual,0),nvl(:new.night_solo,0),:new.pic,:new.registration,:new.remarks,:new.route_from,:new.route_to,nvl(:new.tos_ldgs_day,0),nvl(:new.tos_ldgs_night,0),nvl(:new.x_country_day,0),nvl(:new.x_country_night,0));
+        elsif (updating) then
+            common.procedure_logger(PROCEDURE_LOG_NAME, 'operation is updating');
+            common.procedure_logger(PROCEDURE_LOG_NAME, 'delete ${legacy.schema.name}.flight_log where flight_date = :old.flight_date;');
+            delete ${legacy.schema.name}.flight_log where flight_date = :old.flight_date;
+            old_flight_date := :old.flight_date;
+            old_rowid := :old.rowid;
+            common.procedure_logger(PROCEDURE_LOG_NAME,
+                'insert into ${legacy.schema.name}.flight_log (flight_date,sequence,co_pilot,day_dual,day_solo,instrument_flight_sim,instrument_imc,instrument_no_ifr_appr,instrument_simulated,make_model,night_dual,night_solo,pic,registration,remarks,route_from,route_to,tos_ldgs_day,tos_ldgs_night,x_country_day,x_country_night) values (:new.flight_date,${legacy.schema.name}.flight_log_seq.nextval,:new.co_pilot,nvl(:new.day_dual,0),nvl(:new.day_solo,0),nvl(:new.instrument_flight_sim,0),nvl(:new.instrument_imc,0),nvl(:new.instrument_no_ifr_appr,0),nvl(:new.instrument_simulated,0),:new.make_model,nvl(:new.night_dual,0),nvl(:new.night_solo,0),:new.pic,:new.registration,:new.remarks,:new.route_from,:new.route_to,nvl(:new.tos_ldgs_day,0),nvl(:new.tos_ldgs_night,0),nvl(:new.x_country_day,0),nvl(:new.x_country_night,0));'
+                );
             insert into ${legacy.schema.name}.flight_log (flight_date,sequence,co_pilot,day_dual,day_solo,instrument_flight_sim,instrument_imc,instrument_no_ifr_appr,instrument_simulated,make_model,night_dual,night_solo,pic,registration,remarks,route_from,route_to,tos_ldgs_day,tos_ldgs_night,x_country_day,x_country_night) values (:new.flight_date,${legacy.schema.name}.flight_log_seq.nextval,:new.co_pilot,nvl(:new.day_dual,0),nvl(:new.day_solo,0),nvl(:new.instrument_flight_sim,0),nvl(:new.instrument_imc,0),nvl(:new.instrument_no_ifr_appr,0),nvl(:new.instrument_simulated,0),:new.make_model,nvl(:new.night_dual,0),nvl(:new.night_solo,0),:new.pic,:new.registration,:new.remarks,:new.route_from,:new.route_to,nvl(:new.tos_ldgs_day,0),nvl(:new.tos_ldgs_night,0),nvl(:new.x_country_day,0),nvl(:new.x_country_night,0));
         else
-            delete ${legacy.schema.name}.flight_log where flight_date = logical_key;
-            insert into ${legacy.schema.name}.flight_log (flight_date,sequence,co_pilot,day_dual,day_solo,instrument_flight_sim,instrument_imc,instrument_no_ifr_appr,instrument_simulated,make_model,night_dual,night_solo,pic,registration,remarks,route_from,route_to,tos_ldgs_day,tos_ldgs_night,x_country_day,x_country_night) values (:new.flight_date,${legacy.schema.name}.flight_log_seq.nextval,:new.co_pilot,nvl(:new.day_dual,0),nvl(:new.day_solo,0),nvl(:new.instrument_flight_sim,0),nvl(:new.instrument_imc,0),nvl(:new.instrument_no_ifr_appr,0),nvl(:new.instrument_simulated,0),:new.make_model,nvl(:new.night_dual,0),nvl(:new.night_solo,0),:new.pic,:new.registration,:new.remarks,:new.route_from,:new.route_to,nvl(:new.tos_ldgs_day,0),nvl(:new.tos_ldgs_night,0),nvl(:new.x_country_day,0),nvl(:new.x_country_night,0));
+            common.procedure_logger(PROCEDURE_LOG_NAME, 'operation is deleting');
+            delete ${legacy.schema.name}.flight_log where flight_date = :old.flight_date;
+            old_flight_date := :old.flight_date;
+            old_rowid := :old.rowid;
         end if;
-    else
-        delete ${legacy.schema.name}.flight_log where flight_date = :old.flight_date;
     end if;
-    common.trigger_status_pkg.set_trigger_status(OTHER_SCHAMA_NAME, TABLE_NAME, 1);
+end before each row;
+
+after statement is
+begin
+    if (not this_trigger_disabled) then
+        if (not inserting) then
+            common.procedure_logger(PROCEDURE_LOG_NAME,
+                'insert into ${legacy.schema.name}.flight_log (flight_date,sequence,co_pilot,day_dual,day_solo,instrument_flight_sim,instrument_imc,instrument_no_ifr_appr,instrument_simulated,make_model,night_dual,night_solo,pic,registration,remarks,route_from,route_to,tos_ldgs_day,tos_ldgs_night,x_country_day,x_country_night) ' ||
+                    'select flight_date,${legacy.schema.name}.flight_log_seq.nextval,co_pilot,nvl(day_dual,0),nvl(day_solo,0),nvl(instrument_flight_sim,0),nvl(instrument_imc,0),nvl(instrument_no_ifr_appr,0),nvl(instrument_simulated,0),make_model,nvl(night_dual,0),nvl(night_solo,0),pic,registration,remarks,route_from,route_to,nvl(tos_ldgs_day,0),nvl(tos_ldgs_night,0),nvl(x_country_day,0),nvl(x_country_night,0) ' ||
+                      'from ${new.schema.name}.flight_log where flight_date = old_flight_date and rowid != old_rowid;'
+                );
+            insert into ${legacy.schema.name}.flight_log (flight_date,sequence,co_pilot,day_dual,day_solo,instrument_flight_sim,instrument_imc,instrument_no_ifr_appr,instrument_simulated,make_model,night_dual,night_solo,pic,registration,remarks,route_from,route_to,tos_ldgs_day,tos_ldgs_night,x_country_day,x_country_night)
+                select flight_date,${legacy.schema.name}.flight_log_seq.nextval,co_pilot,nvl(day_dual,0),nvl(day_solo,0),nvl(instrument_flight_sim,0),nvl(instrument_imc,0),nvl(instrument_no_ifr_appr,0),nvl(instrument_simulated,0),make_model,nvl(night_dual,0),nvl(night_solo,0),pic,registration,remarks,route_from,route_to,nvl(tos_ldgs_day,0),nvl(tos_ldgs_night,0),nvl(x_country_day,0),nvl(x_country_night,0)
+                  from ${new.schema.name}.flight_log where flight_date = old_flight_date and rowid != old_rowid;
+        end if;
+        common.trigger_status_pkg.set_trigger_status(OTHER_SCHAMA_NAME, TABLE_NAME, 1);
+    end if;
     common.procedure_logger(PROCEDURE_LOG_NAME, 'end');
+end after statement;
 end;
 /
 		]]>         
@@ -66,7 +98,7 @@ end;
 		</sql>
 		<rollback>
 			<sql>
-drop trigger flight_log_brdiu;
+drop trigger flight_log_fdiu;
 delete from common.trigger_status where schema_name='${new.schema.name}' and table='flight_log'
 			</sql>
 		</rollback>
