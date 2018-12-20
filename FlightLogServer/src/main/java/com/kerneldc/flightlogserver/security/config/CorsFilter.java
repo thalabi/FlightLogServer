@@ -12,25 +12,26 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
 
 import com.kerneldc.flightlogserver.security.constants.SecurityConstants;
 
-@Component
-public class CrossOriginResourceSharingFilter extends GenericFilterBean {
+//@Component
+public class CorsFilter /*extends GenericFilterBean*/ {
 
     private static final String ORIGIN_HEADER = "Origin";
 
-    @Value("${crossOriginResourceSharingFilter.crosUrlsToAllow}")
-    private String[] crosUrlsToAllow;
+    @Value("${security.corsFilter.corsUrlsToAllow}")
+    private String[] corsUrlsToAllow;
     
-    @Override
+    @Value("${security.corsFilter.corsMaxAgeSecs}")
+    private long corsMaxAgeSecs;
+    
+    //@Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
     	HttpServletRequest request = (HttpServletRequest) servletRequest;
 
         if (request.getHeader(ORIGIN_HEADER) != null
-                && originEqualsClientUrl(request.getHeader(ORIGIN_HEADER), crosUrlsToAllow)) {
+                && originEqualsClientUrl(request.getHeader(ORIGIN_HEADER), corsUrlsToAllow)) {
             setAccessControlHeader((HttpServletResponse) servletResponse, request.getHeader(ORIGIN_HEADER));
         }
 
@@ -44,7 +45,7 @@ public class CrossOriginResourceSharingFilter extends GenericFilterBean {
         response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Origin, Accept, " +
                 "Access-Control-Allow-Headers, Access-Control-Request-Headers, " + SecurityConstants.AUTH_HEADER_NAME);
-        //response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Max-Age", String.valueOf(corsMaxAgeSecs));
     }
 
     boolean originEqualsClientUrl(String origin, String... clientUrl) {
