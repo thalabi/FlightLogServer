@@ -15,6 +15,6 @@ public class SecretKeyProvider {
 	private Key secretKey;
 	
 	public SecretKeyProvider() throws NoSuchAlgorithmException {
-		secretKey = KeyGenerator.getInstance("AES").generateKey();
+		secretKey = KeyGenerator.getInstance("HmacSHA256").generateKey();
 	}
 }

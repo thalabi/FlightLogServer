@@ -1,7 +1,10 @@
 package com.kerneldc.flightlogserver.security.service;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,12 +18,14 @@ import com.kerneldc.flightlogserver.security.bean.AppUserDetails;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	@Autowired
 	public PasswordEncoder passwordEncoder;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) {
-		
+		LOGGER.debug("Begin ...");
 		// TODO - implement a user lookup service
 		
 		// Let people login with either username or email
@@ -33,17 +38,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 			throw new UsernameNotFoundException("User not found with username or email : " + username);
 		}
 		
+		LOGGER.debug("End ...");
 		return appUserDetails1();
 	}
 
-	public UserDetails loadUserById(Long id) {
-//        User user = userRepository.findById(id).orElseThrow(
-//            () -> new UsernameNotFoundException("User not found with id : " + id)
-//        );
-
-        return appUserDetails1();
-    }
-	
 	private AppUserDetails appUserDetails1() {
 		String username = "thalabi";
 		AppUserDetails appUserDetails = new AppUserDetails();

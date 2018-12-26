@@ -18,9 +18,6 @@ import com.kerneldc.flightlogserver.security.config.JwtAuthenticationFilter;
 import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
 import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
 
-//import com.kerneldc.education.studentNotesService.security.config.AuthenticationFilter;
-//import com.kerneldc.education.studentNotesService.security.config.RestAuthenticationEntryPoint;
-
 @Configuration
 @EnableWebSecurity
 //@EnableGlobalMethodSecurity(
@@ -71,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 //.antMatchers(/*"/", "/home",*/"/StudentNotesService/getVersion", "/StudentNotesService/Security/authenticate").permitAll()
                 .antMatchers("/appInfoController/*", "/authenticationController/authenticate").permitAll()
-                .antMatchers("/**").permitAll()
+                //.antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
             ;
 		// Add our jwtAuthenticationFilter

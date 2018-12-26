@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandles;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,12 @@ public class AuthenticationController {
 		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 				loginRequest.getUsernameOrEmail(), loginRequest.getPassword());
 		Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+		LOGGER.debug("authentication: {}", authentication);
+
 		AppUserDetails appUserDetails = (AppUserDetails)authentication.getPrincipal();
+		appUserDetails.setPassword(StringUtils.EMPTY);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtTokenProvider.generateToken(authentication);
+		String jwt = jwtTokenProvider.generateJwt(authentication);
 		appUserDetails.setToken(jwt);
 		LOGGER.debug("End ...");
 		return ResponseEntity.ok(appUserDetails);

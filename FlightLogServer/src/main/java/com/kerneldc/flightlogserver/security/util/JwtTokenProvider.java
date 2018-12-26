@@ -11,22 +11,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kerneldc.flightlogserver.security.bean.AppUserDetails;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 
 @Component
 public class JwtTokenProvider {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
+	private static final String APP_USER_DETAILS = "appUserDetails";
 
 	@Value("${security.jwtTokenProvider.jwtExpirationInMs}")
     private int jwtExpirationInMs;
@@ -39,21 +42,22 @@ public class JwtTokenProvider {
 	@PostConstruct
 	public void init() {
 		secretKey = secretKeyProvider.getSecretKey();
-		LOGGER.debug("secretKey: {}", secretKey);
+		LOGGER.debug("secretKey.getEncoded(): {}", secretKey.getEncoded());
 	}
 
-	public String generateToken(Authentication authentication) {
-		AppUserDetails appUserDetails = (AppUserDetails)authentication.getPrincipal();
+	public String generateJwt(Authentication authentication) {
 		Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
         
+        Claims claims = Jwts.claims();
+        claims.setSubject(authentication.getName());
+        claims.put(APP_USER_DETAILS, authentication.getPrincipal());
         
-        // TODO change to setSubject to appUserDetails object
 		return Jwts.builder()
-                .setSubject(Long.toString(appUserDetails.getId()))
+				.setClaims(claims)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .signWith(secretKey)
                 .compact();
 	}
 
@@ -61,8 +65,6 @@ public class JwtTokenProvider {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(authToken);
             return true;
-        } catch (SignatureException ex) {
-        	LOGGER.error("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
         	LOGGER.error("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
@@ -75,13 +77,14 @@ public class JwtTokenProvider {
         return false;
     }
 	
-	// TODO remove after setSubject above is changed
-	public Long getUserIdFromJWT(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
-
-        return Long.parseLong(claims.getSubject());
+	public UserDetails getAppUserDetailsFromJwt(String token) {
+    	Claims claims = Jwts.parser()
+            	.setSigningKey(secretKey)
+            	.parseClaimsJws(token)
+            	.getBody();
+    	LOGGER.debug("claims.get(APP_USER_DETAILS): {}", claims.get(APP_USER_DETAILS));
+    	ObjectMapper objectMapper = new ObjectMapper(); 
+    	objectMapper.addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityMixIn.class);
+    	return objectMapper.convertValue(claims.get(APP_USER_DETAILS), AppUserDetails.class);
     }
 }

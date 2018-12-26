@@ -21,7 +21,7 @@ public class AppUserDetails implements UserDetails {
 	private String password;
 	private String firstName;
 	private String lastName;
-	@JsonDeserialize(as = ArrayList.class, contentAs=SimpleGrantedAuthority.class)
+	@JsonDeserialize(contentAs=SimpleGrantedAuthority.class)
 	private Collection<GrantedAuthority> authorities = new ArrayList<>();
 	private String token;
 	
