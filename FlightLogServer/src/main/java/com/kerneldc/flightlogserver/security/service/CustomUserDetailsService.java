@@ -1,11 +1,17 @@
 package com.kerneldc.flightlogserver.security.service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,6 +20,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.kerneldc.flightlogserver.security.bean.AppUserDetails;
+import com.kerneldc.flightlogserver.security.domain.Group;
+import com.kerneldc.flightlogserver.security.domain.Permission;
+import com.kerneldc.flightlogserver.security.domain.User;
+import com.kerneldc.flightlogserver.security.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -21,38 +31,40 @@ public class CustomUserDetailsService implements UserDetailsService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	@Autowired
-	public PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Override
+	@Transactional
 	public UserDetails loadUserByUsername(String username) {
 		LOGGER.debug("Begin ...");
-		// TODO - implement a user lookup service
-		
-		// Let people login with either username or email
-/*        User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
-                .orElseThrow(() -> 
-                        new UsernameNotFoundException("User not found with username or email : " + usernameOrEmail)
-        );
-*/		
-		if (! /* not */ username.equals("thalabi")) {
+		List<User> oneUserList = userRepository.findByUsername(username);
+		if (oneUserList.isEmpty()) {
 			throw new UsernameNotFoundException("User not found with username or email : " + username);
 		}
+
+		User user = oneUserList.get(0);
+		//User user = userRepository.getOne(41l);
+		
+		Set<Permission> permissionSet = user.getGroupSet().stream().map(Group::getPermissionSet).flatMap(Set::stream).collect(Collectors.toSet());
+        user.setPermissionSet(permissionSet);
 		
 		LOGGER.debug("End ...");
-		return appUserDetails1();
+		return appUserDetailsFromUser(user);
 	}
 
-	private AppUserDetails appUserDetails1() {
-		String username = "thalabi";
+	private AppUserDetails appUserDetailsFromUser(User user) {
 		AppUserDetails appUserDetails = new AppUserDetails();
-    	appUserDetails.setId(7l);
-    	appUserDetails.setUsername(username);
-    	String encodedPassword = passwordEncoder.encode("secret");
-    	appUserDetails.setPassword(encodedPassword);
-    	appUserDetails.setFirstName(username + " first name");
-    	appUserDetails.setLastName(username + " last name");
-    	appUserDetails.setAuthorities(Arrays.asList(new SimpleGrantedAuthority("authority1"), new SimpleGrantedAuthority("authority2"), new SimpleGrantedAuthority("authority3")));
-    	//newUser.setToken(jwtTokenUtil.generate(newUser.getUsername(), newUser.getAuthorities()));
+		appUserDetails.setId(user.getId());
+		appUserDetails.setUsername(user.getUsername());
+		appUserDetails.setPassword(passwordEncoder.encode(user.getPassword()));
+		appUserDetails.setFirstName(user.getFirstName());
+		appUserDetails.setLastName(user.getLastName());
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		user.getPermissionSet().stream().forEach(permission->authorities.add(new SimpleGrantedAuthority(permission.getName())));
+		appUserDetails.setAuthorities(authorities);
 		return appUserDetails;
 	}
 }

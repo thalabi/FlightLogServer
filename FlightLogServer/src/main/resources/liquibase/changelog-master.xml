@@ -50,5 +50,22 @@
 <!--   <include file="liquibase/changelog-migrate-to-multi-school-year.xml"/> -->
   
 <!--   <include file="liquibase/changelog-student-drop-grade-column.xml"/> -->
+
+	<include file="liquibase/security/user/create-table.xml"/>
+	<include file="liquibase/security/user/create-unique-constraint-1.xml"/>
+	<include file="liquibase/security/user/data/insert.xml"/>
+	
+	<include file="liquibase/security/group/create-table.xml"/>
+	<include file="liquibase/security/group/create-unique-constraint-1.xml"/>
+	<include file="liquibase/security/group/data/insert.xml"/>
+	
+	<include file="liquibase/security/permission/create-table.xml"/>
+	<include file="liquibase/security/permission/create-unique-constraint-1.xml"/>
+	<include file="liquibase/security/permission/data/insert.xml"/>
   
+	<include file="liquibase/security/user_group/create-table.xml"/>
+	<include file="liquibase/security/user_group/data/insert.xml"/>
+
+	<include file="liquibase/security/group_permission/create-table.xml"/>
+	<include file="liquibase/security/group_permission/data/insert.xml"/>
 </databaseChangeLog>
