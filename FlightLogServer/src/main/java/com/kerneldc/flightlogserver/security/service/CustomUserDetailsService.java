@@ -40,13 +40,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Transactional
 	public UserDetails loadUserByUsername(String username) {
 		LOGGER.debug("Begin ...");
-		List<User> oneUserList = userRepository.findByUsername(username);
+		List<User> oneUserList = userRepository.findByUsernameAndEnabled(username, true);
 		if (oneUserList.isEmpty()) {
 			throw new UsernameNotFoundException("User not found with username or email : " + username);
 		}
 
 		User user = oneUserList.get(0);
-		//User user = userRepository.getOne(41l);
 		
 		Set<Permission> permissionSet = user.getGroupSet().stream().map(Group::getPermissionSet).flatMap(Set::stream).collect(Collectors.toSet());
         user.setPermissionSet(permissionSet);

@@ -42,7 +42,7 @@ public class User extends AbstractPersistableEntity {
 	@Column(unique = true)
     private String username; 
     private String password; 
-    private String enabled; 
+    private Boolean enabled; 
     private String firstName; 
     private String lastName;
 

@@ -13,5 +13,5 @@ import com.kerneldc.flightlogserver.security.domain.User;
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
 	@EntityGraph("userGraph")
-	List<User> findByUsername(String username);
+	List<User> findByUsernameAndEnabled(String username, Boolean enabled);
 }
