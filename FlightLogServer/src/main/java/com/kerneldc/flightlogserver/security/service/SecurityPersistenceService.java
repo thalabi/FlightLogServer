@@ -1,6 +1,7 @@
 package com.kerneldc.flightlogserver.security.service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -34,11 +35,11 @@ public class SecurityPersistenceService {
 			throw new ApplicationException(String.format("Cannot find user with username: %s", username));
 		}
 		User user = oneUserList.get(0); 
-		LOGGER.debug("Password on file is [{}] and old password provided is [{}]", user.getPassword(), oldPassword);
 		if (! /* not */ passwordEncoder.matches(oldPassword, user.getPassword())) {
 			throw new ApplicationException("Old password does not match one on record");
 		}
 		user.setPassword(newPassword);
+		user.setModified(new Date());
 		userRepository.save(user);
 		LOGGER.debug("End ...");
 

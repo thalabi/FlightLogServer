@@ -52,7 +52,6 @@ public class AirportControllerTests extends AbstractBaseTest {
 	@Autowired
     private WebApplicationContext webApplicationContext;
 
-	private static final MediaType jsonContentType = MediaType.APPLICATION_JSON_UTF8;
 	private static final MediaType halAndJsonContentType = MediaTypes.HAL_JSON_UTF8;
 
 	@Before
