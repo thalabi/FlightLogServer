@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kerneldc.flightlogserver.exception.ApplicationException;
 import com.kerneldc.flightlogserver.security.bean.AppUserDetails;
+import com.kerneldc.flightlogserver.security.bean.ChangePasswordRequest;
 import com.kerneldc.flightlogserver.security.bean.LoginRequest;
+import com.kerneldc.flightlogserver.security.service.SecurityPersistenceService;
 import com.kerneldc.flightlogserver.security.util.JwtTokenProvider;
 
 @RestController
@@ -34,6 +37,9 @@ public class AuthenticationController {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 	
+	@Autowired
+    private SecurityPersistenceService securityPersistenceService;
+
 	@PostMapping("/authenticate")
 	public ResponseEntity<AppUserDetails> auhenticate(@Valid @RequestBody LoginRequest loginRequest) {
 		LOGGER.debug("Begin ...");
@@ -49,5 +55,13 @@ public class AuthenticationController {
 		appUserDetails.setToken(jwt);
 		LOGGER.debug("End ...");
 		return ResponseEntity.ok(appUserDetails);
+	}
+
+	@PostMapping("/changePassword")
+	public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) throws ApplicationException {
+		LOGGER.debug("Begin ...");
+		securityPersistenceService.changePassword(changePasswordRequest.getUsernameOrEmail(), changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+		LOGGER.debug("End ...");
+		return ResponseEntity.ok("");
 	}
 }

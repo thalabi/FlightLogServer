@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
 	@EntityGraph("userGraph")
 	List<User> findByUsernameAndEnabled(String username, Boolean enabled);
+	@EntityGraph("userGraph")
+	List<User> findByUsername(String username);
 }

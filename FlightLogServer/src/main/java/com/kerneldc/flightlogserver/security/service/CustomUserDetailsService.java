@@ -16,7 +16,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.kerneldc.flightlogserver.security.bean.AppUserDetails;
@@ -30,9 +29,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	
 	@Autowired
 	private UserRepository userRepository;
 	
@@ -58,7 +54,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 		AppUserDetails appUserDetails = new AppUserDetails();
 		appUserDetails.setId(user.getId());
 		appUserDetails.setUsername(user.getUsername());
-		appUserDetails.setPassword(passwordEncoder.encode(user.getPassword()));
+		//appUserDetails.setPassword(passwordEncoder.encode(user.getPassword()));
+		appUserDetails.setPassword(user.getPassword());
 		appUserDetails.setFirstName(user.getFirstName());
 		appUserDetails.setLastName(user.getLastName());
 		List<GrantedAuthority> authorities = new ArrayList<>();

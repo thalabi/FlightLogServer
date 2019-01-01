@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +22,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
+import com.kerneldc.flightlogserver.domain.converter.HashingConverter;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -40,9 +42,11 @@ public class User extends AbstractPersistableEntity {
 	private Long id;
 
 	@Column(unique = true)
-    private String username; 
-    private String password; 
-    private Boolean enabled; 
+    private String username;
+	@Column
+	@Convert(converter = HashingConverter.class)
+    private String password;
+    private Boolean enabled;
     private String firstName; 
     private String lastName;
 
