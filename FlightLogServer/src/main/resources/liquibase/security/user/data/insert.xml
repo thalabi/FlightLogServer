@@ -16,5 +16,14 @@
 			<column name="PASSWORD" value="********"/>
 			<column name="enabled" value="y"/>
 		</insert>
+
+		<insert tableName="USER">
+			<column name="id" valueComputed="user_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="username" value="thalabi-viewer"/>
+			<column name="PASSWORD" value="********"/>
+			<column name="enabled" value="y"/>
+		</insert>
 	</changeSet>
 </databaseChangeLog>	

@@ -35,7 +35,7 @@ public class ReplicationController {
     private String outputSchemaName;
 
     @GetMapping("/getTableReplicationStatus/{entityName}")
-	public ResponseEntity<Integer> getTableReplicationStatus(@PathVariable("entityName") String entityName) throws ApplicationException {
+	public ResponseEntity<Integer> getTableReplicationStatus(@PathVariable("entityName") String entityName) throws ApplicationException, SQLException {
     	if (EntityEnum.getEnumByEntityName(entityName) == null) {
     		throw new ApplicationException(String.format("Invalid entityName: %s", entityName));
     	}

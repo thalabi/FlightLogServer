@@ -8,17 +8,90 @@
 		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet author="thalabi" id="insert">
+
+		<!-- flight_log -->
 		<insert tableName="group_permission">
 			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog viewer')"/>
-			<column name="permission_id" valueComputed="(select id from permission where name='flightlog read')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='flight_log read')"/>
 		</insert>
 		<insert tableName="group_permission">
 			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
-			<column name="permission_id" valueComputed="(select id from permission where name='flightlog read')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='flight_log read')"/>
 		</insert>
 		<insert tableName="group_permission">
 			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
-			<column name="permission_id" valueComputed="(select id from permission where name='flightlog write')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='flight_log write')"/>
 		</insert>
-	</changeSet>
+		
+		<!-- airport -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog viewer')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='airport read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='airport read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='airport write')"/>
+		</insert>
+		
+		<!-- make_model -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog viewer')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='make_model read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='make_model read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='make_model write')"/>
+		</insert>
+		
+		<!-- pilot -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog viewer')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='pilot read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='pilot read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='pilot write')"/>
+		</insert>
+		
+		<!-- registration -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog viewer')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='registration read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='registration read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='registration write')"/>
+		</insert>
+		
+		<!-- significant_event -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog viewer')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='significant_event read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='significant_event read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='significant_event write')"/>
+		</insert>
+		
+	</changeSet>	
 </databaseChangeLog>	

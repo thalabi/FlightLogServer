@@ -8,6 +8,8 @@
 		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet author="thalabi" id="insert">
+
+		<!-- thalabi -->
 		<insert tableName="user_group">
 			<column name="user_id" valueComputed="(select id from &quot;USER&quot; where username='thalabi')"/>
 			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog viewer')"/>
@@ -16,5 +18,12 @@
 			<column name="user_id" valueComputed="(select id from &quot;USER&quot; where username='thalabi')"/>
 			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
 		</insert>
+
+		<!-- thalabi-viewer -->
+		<insert tableName="user_group">
+			<column name="user_id" valueComputed="(select id from &quot;USER&quot; where username='thalabi-viewer')"/>
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog viewer')"/>
+		</insert>
+
 	</changeSet>
 </databaseChangeLog>	

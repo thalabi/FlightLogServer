@@ -1,8 +1,10 @@
 package com.kerneldc.flightlogserver.security;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.kerneldc.flightlogserver.domain.EntityEnum;
 import com.kerneldc.flightlogserver.security.config.JwtAuthenticationFilter;
 import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
 import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
@@ -21,9 +24,9 @@ import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
 @Configuration
 @EnableWebSecurity
 //@EnableGlobalMethodSecurity(
-//securedEnabled = true,
-//jsr250Enabled = true,
-//prePostEnabled = true
+//	securedEnabled = true,
+//	jsr250Enabled = true,
+//	prePostEnabled = true
 //)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -66,13 +69,45 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             	.and()
             .authorizeRequests()
-                //.antMatchers(/*"/", "/home",*/"/StudentNotesService/getVersion", "/StudentNotesService/Security/authenticate").permitAll()
-                .antMatchers("/appInfoController/*", "/authenticationController/authenticate").permitAll()
-                //.antMatchers("/**").permitAll()
-                .anyRequest().authenticated()
+                //.mvcMatchers(/*"/", "/home",*/"/StudentNotesService/getVersion", "/StudentNotesService/Security/authenticate").permitAll()
+                .mvcMatchers("/appInfoController/*", "/authenticationController/authenticate").permitAll()
+                .mvcMatchers("/appInfoController/*", "/authenticationController/changePassword").authenticated()
+//
+//                .mvcMatchers(HttpMethod.GET, "/flightLogController/findAll/*").hasAuthority("flight_log read")
+//                .mvcMatchers(HttpMethod.GET, "/flightLogController/count/*").hasAuthority("flight_log read")
+//                .mvcMatchers(HttpMethod.POST, "/flightLogs/*").hasAuthority("flight_log write")
+//                .mvcMatchers(HttpMethod.PUT, "/flightLogs/*").hasAuthority("flight_log write")
+//                .mvcMatchers(HttpMethod.DELETE, "/flightLogs/*").hasAuthority("flight_log write")
+//
+//                .mvcMatchers(HttpMethod.GET, "/makeModelController/findAll/*").hasAuthority("make_model read")
+//                .mvcMatchers(HttpMethod.POST, "/makeModels/*").hasAuthority("make_model write")
+//                .mvcMatchers(HttpMethod.PUT, "/makeModels/*").hasAuthority("make_model write")
+//                .mvcMatchers(HttpMethod.DELETE, "/makeModels/*").hasAuthority("make_model write")
+                //.mvcMatchers("/**").permitAll()
+                //.anyRequest().authenticated()
+                //.anyRequest().denyAll()
             ;
+		for (EntityEnum entityEnum : EntityEnum.values()) {
+			String entityName = entityEnum.getEntityName();
+			String tableName = entityEnum.getTableName();
+			httpSecurity
+	            .authorizeRequests()
+		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"Controller/findAll/*").hasAuthority(tableName+" read")
+		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"Controller/count").hasAuthority(tableName+" read")
+		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"s/*").hasAuthority(tableName+" read")
+		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"s/search/findAll*").hasAuthority(tableName+" read")
+		            .mvcMatchers(HttpMethod.POST, "/"+entityName+"s/*").hasAuthority(tableName+" write")
+		            .mvcMatchers(HttpMethod.PUT, "/"+entityName+"s/*").hasAuthority(tableName+" write")
+		            .mvcMatchers(HttpMethod.DELETE, "/"+entityName+"s/*").hasAuthority(tableName+" write")
+		            .mvcMatchers(HttpMethod.GET, "/replicationController/getTableReplicationStatus/"+entityName).hasAuthority(tableName+" read")
+		            .mvcMatchers(HttpMethod.GET, "/replicationController/setTableReplicationStatus/"+entityName).hasAuthority(tableName+" write")
+		            .mvcMatchers(HttpMethod.GET, "/jobLauncherController/copy"+StringUtils.capitalize(entityName+"Table")).hasAuthority(tableName+" write")
+		            ;
+		}
+		
+		httpSecurity.authorizeRequests().anyRequest().denyAll();
+		
 		// Add our jwtAuthenticationFilter
 		httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
     }
 }

@@ -8,17 +8,90 @@
 		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet author="thalabi" id="insert">
+
+		<!-- flight_log -->
 		<insert tableName="permission">
 			<column name="id" valueComputed="permission_seq.nextval"/>
 			<column name="version" value="0"/>
 
-			<column name="name" value="flightlog read"/>
+			<column name="name" value="flight_log read"/>
 		</insert>
 		<insert tableName="permission">
 			<column name="id" valueComputed="permission_seq.nextval"/>
 			<column name="version" value="0"/>
 
-			<column name="name" value="flightlog write"/>
+			<column name="name" value="flight_log write"/>
 		</insert>
+
+		<!-- airport -->
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="airport read"/>
+		</insert>
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="airport write"/>
+		</insert>
+
+		<!-- make_model -->
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="make_model read"/>
+		</insert>
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="make_model write"/>
+		</insert>
+
+		<!-- pilot -->
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="pilot read"/>
+		</insert>
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="pilot write"/>
+		</insert>
+
+		<!-- registration -->
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="registration read"/>
+		</insert>
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="registration write"/>
+		</insert>
+
+		<!-- significant_event -->
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="significant_event read"/>
+		</insert>
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="significant_event write"/>
+		</insert>
+
 	</changeSet>
 </databaseChangeLog>	

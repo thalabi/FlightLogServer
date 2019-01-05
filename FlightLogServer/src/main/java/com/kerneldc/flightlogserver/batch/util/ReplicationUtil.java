@@ -64,7 +64,11 @@ public class ReplicationUtil {
 		}
 	}
 	
-	public static int tableReplicationStatus(DataSource dataSource, String legacySchemaName, String outputSchemaName, String tableName) {
+	public static int tableReplicationStatus(DataSource dataSource, String legacySchemaName, String outputSchemaName, String tableName) throws SQLException {
+		if (! /* not */ isOracleDatabase(dataSource)) {
+			return 0;
+		}
+
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dataSource)
 				.withSchemaName("common").withCatalogName("trigger_status_pkg").withFunctionName("get_trigger_status");
 		BigDecimal legacyTableTriggerStatus = simpleJdbcCall.executeFunction(BigDecimal.class, legacySchemaName, tableName);
