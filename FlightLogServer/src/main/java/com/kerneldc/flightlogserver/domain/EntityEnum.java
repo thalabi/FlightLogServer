@@ -11,7 +11,11 @@ public enum EntityEnum {
 	PILOT("pilot", "pilot"),
 	REGISTRATION("registration", "registration"),
 	SIGNIFICAT_EVENT("significantEvent", "significant_event"),
-	MAKE_MODEL("makeModel", "make_model");
+	MAKE_MODEL("makeModel", "make_model"),
+	
+	USER("user", "user"),
+	GROUP("group", "group"),
+	PERMISSION("permission", "permission");
 	
 	@Getter
 	private String entityName;

@@ -12,6 +12,8 @@ import com.kerneldc.flightlogserver.security.domain.User;
 @RepositoryRestResource
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
+	List<User> findAllByOrderByUsername();
+
 	@EntityGraph("userGraph")
 	List<User> findByUsernameAndEnabled(String username, Boolean enabled);
 	@EntityGraph("userGraph")

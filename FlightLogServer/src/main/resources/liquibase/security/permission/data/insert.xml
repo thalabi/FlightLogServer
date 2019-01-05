@@ -93,5 +93,47 @@
 			<column name="name" value="significant_event write"/>
 		</insert>
 
+		<!-- user -->
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="user read"/>
+		</insert>
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="user write"/>
+		</insert>
+
+		<!-- group -->
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="group read"/>
+		</insert>
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="group write"/>
+		</insert>
+
+		<!-- permission -->
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="permission read"/>
+		</insert>
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="permission write"/>
+		</insert>
+
 	</changeSet>
 </databaseChangeLog>	
