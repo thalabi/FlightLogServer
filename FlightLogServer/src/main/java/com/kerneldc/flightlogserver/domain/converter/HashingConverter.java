@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 public class HashingConverter implements AttributeConverter<String, String> {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	private static final int LENGTH_OF_HASH = 60;
 	private static PasswordEncoder passwordEncoder;
 
 	@PostConstruct
@@ -32,8 +34,8 @@ public class HashingConverter implements AttributeConverter<String, String> {
 	@Override
 	public String convertToDatabaseColumn(String attribute) {
 		LOGGER.debug("passwordEncoder == null: {}", passwordEncoder == null);
-		LOGGER.debug("attribute: {}", attribute);
-        return passwordEncoder.encode(attribute);
+		LOGGER.debug("attribute: {}, isAlreadyAHash: {}", attribute, isAlreadyAHash(attribute));
+        return isAlreadyAHash(attribute) ? attribute : passwordEncoder.encode(attribute);
 	}
 
 	@Override
@@ -41,4 +43,8 @@ public class HashingConverter implements AttributeConverter<String, String> {
 		LOGGER.debug("dbData: {}", dbData);
         return dbData;	
     }
+	
+	private boolean isAlreadyAHash(String attribute) {
+		return StringUtils.length(attribute) == LENGTH_OF_HASH;
+	}
 }

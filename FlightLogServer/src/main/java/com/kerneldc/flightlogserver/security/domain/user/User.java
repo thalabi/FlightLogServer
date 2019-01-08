@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.security.domain;
+package com.kerneldc.flightlogserver.security.domain.user;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -21,8 +21,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.springframework.hateoas.Identifiable;
+
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
 import com.kerneldc.flightlogserver.domain.converter.HashingConverter;
+import com.kerneldc.flightlogserver.security.domain.Group;
+import com.kerneldc.flightlogserver.security.domain.Permission;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -32,7 +36,7 @@ import lombok.Setter;
 	attributeNodes = @NamedAttributeNode(value = "groupSet", subgraph = "permissions"), 
 	subgraphs = @NamedSubgraph(name = "permissions", attributeNodes = @NamedAttributeNode("permissionSet")))
 @Getter @Setter
-public class User extends AbstractPersistableEntity {
+public class User extends AbstractPersistableEntity implements Identifiable<Long> {
 
 	private static final long serialVersionUID = 1L;
 

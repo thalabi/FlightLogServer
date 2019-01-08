@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.kerneldc.flightlogserver.exception.ApplicationException;
-import com.kerneldc.flightlogserver.security.domain.User;
+import com.kerneldc.flightlogserver.security.domain.user.User;
 import com.kerneldc.flightlogserver.security.repository.UserRepository;
 
 @Service
