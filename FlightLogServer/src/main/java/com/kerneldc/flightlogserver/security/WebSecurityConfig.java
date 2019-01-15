@@ -58,6 +58,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
 	@Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+		//httpSecurity.authorizeRequests().mvcMatchers("/**").permitAll();
+
 		httpSecurity
 			.cors()
 				.and()
@@ -72,17 +74,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.mvcMatchers(/*"/", "/home",*/"/StudentNotesService/getVersion", "/StudentNotesService/Security/authenticate").permitAll()
                 .mvcMatchers("/appInfoController/*", "/authenticationController/authenticate").permitAll()
                 .mvcMatchers("/appInfoController/*", "/authenticationController/changePassword").authenticated()
-//
-//                .mvcMatchers(HttpMethod.GET, "/flightLogController/findAll/*").hasAuthority("flight_log read")
-//                .mvcMatchers(HttpMethod.GET, "/flightLogController/count/*").hasAuthority("flight_log read")
-//                .mvcMatchers(HttpMethod.POST, "/flightLogs/*").hasAuthority("flight_log write")
-//                .mvcMatchers(HttpMethod.PUT, "/flightLogs/*").hasAuthority("flight_log write")
-//                .mvcMatchers(HttpMethod.DELETE, "/flightLogs/*").hasAuthority("flight_log write")
-//
-//                .mvcMatchers(HttpMethod.GET, "/makeModelController/findAll/*").hasAuthority("make_model read")
-//                .mvcMatchers(HttpMethod.POST, "/makeModels/*").hasAuthority("make_model write")
-//                .mvcMatchers(HttpMethod.PUT, "/makeModels/*").hasAuthority("make_model write")
-//                .mvcMatchers(HttpMethod.DELETE, "/makeModels/*").hasAuthority("make_model write")
+
                 //.mvcMatchers("/**").permitAll()
                 //.anyRequest().authenticated()
                 //.anyRequest().denyAll()
@@ -94,11 +86,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	            .authorizeRequests()
 		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"Controller/findAll/*").hasAuthority(tableName+" read")
 		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"Controller/count").hasAuthority(tableName+" read")
-		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"s/*").hasAuthority(tableName+" read")
-		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"s/search/findAll*").hasAuthority(tableName+" read")
+		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"s").hasAuthority(tableName+" read")
+		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"s/**").hasAuthority(tableName+" read")
+		            
 		            .mvcMatchers(HttpMethod.POST, "/"+entityName+"s").hasAuthority(tableName+" write")
-		            .mvcMatchers(HttpMethod.PUT, "/"+entityName+"s/*").hasAuthority(tableName+" write")
-		            .mvcMatchers(HttpMethod.DELETE, "/"+entityName+"s/*").hasAuthority(tableName+" write")
+		            .mvcMatchers(HttpMethod.PUT, "/"+entityName+"s/**").hasAuthority(tableName+" write")
+		            .mvcMatchers(HttpMethod.DELETE, "/"+entityName+"s/**").hasAuthority(tableName+" write")
+		            
 		            .mvcMatchers(HttpMethod.GET, "/replicationController/getTableReplicationStatus/"+entityName).hasAuthority(tableName+" read")
 		            .mvcMatchers(HttpMethod.GET, "/replicationController/setTableReplicationStatus/"+entityName).hasAuthority(tableName+" write")
 		            .mvcMatchers(HttpMethod.GET, "/jobLauncherController/copy"+StringUtils.capitalize(entityName+"Table")).hasAuthority(tableName+" write")
@@ -106,6 +100,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		}
 		
 		httpSecurity.authorizeRequests().anyRequest().denyAll();
+
 		
 		// Add our jwtAuthenticationFilter
 		httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

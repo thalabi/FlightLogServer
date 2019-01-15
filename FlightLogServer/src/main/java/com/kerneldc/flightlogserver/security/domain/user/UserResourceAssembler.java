@@ -2,7 +2,7 @@ package com.kerneldc.flightlogserver.security.domain.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
-import org.springframework.hateoas.Link;
+import org.springframework.hateoas.LinkBuilder;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -20,11 +20,11 @@ public class UserResourceAssembler extends ResourceAssemblerSupport<User, UserRe
 
 	@Override
 	public UserResource toResource(User user) {
-		Link link = repositoryEntityLinks.linkToSingleResource(user);
+		LinkBuilder linkBuilder = repositoryEntityLinks.linkForSingleResource(user);
 		UserResource userResource = new UserResource();
 		userResource.setUser(user);
-		userResource.add(link);
-		userResource.add(link.withSelfRel());
+		userResource.add(linkBuilder.withSelfRel());
+		userResource.add(linkBuilder.slash(User.PROPERTY_GROUP_SET).withRel(User.PROPERTY_GROUP_SET));
 		return userResource;
 	}
 	

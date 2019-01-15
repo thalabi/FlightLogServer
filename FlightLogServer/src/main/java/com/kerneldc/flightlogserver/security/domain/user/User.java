@@ -1,7 +1,6 @@
 package com.kerneldc.flightlogserver.security.domain.user;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -25,20 +24,22 @@ import org.springframework.hateoas.Identifiable;
 
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
 import com.kerneldc.flightlogserver.domain.converter.HashingConverter;
-import com.kerneldc.flightlogserver.security.domain.Group;
 import com.kerneldc.flightlogserver.security.domain.Permission;
+import com.kerneldc.flightlogserver.security.domain.group.Group;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@NamedEntityGraph(name = "userGraph", 
-	attributeNodes = @NamedAttributeNode(value = "groupSet", subgraph = "permissions"), 
-	subgraphs = @NamedSubgraph(name = "permissions", attributeNodes = @NamedAttributeNode("permissionSet")))
+@NamedEntityGraph(
+	name = "userGraph",	attributeNodes = @NamedAttributeNode(value = "groupSet", subgraph = "permissions"), 
+		subgraphs = @NamedSubgraph(name = "permissions", attributeNodes = @NamedAttributeNode("permissionSet")))
 @Getter @Setter
 public class User extends AbstractPersistableEntity implements Identifiable<Long> {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final String PROPERTY_GROUP_SET = "groupSet";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")
@@ -58,7 +59,7 @@ public class User extends AbstractPersistableEntity implements Identifiable<Long
     @JoinTable(name = "user_group", 
         joinColumns = @JoinColumn(name = "user_id"), 
         inverseJoinColumns = @JoinColumn( name="group_id")) 
-    private Set<Group> groupSet = new HashSet<>(); 
+    private Set<Group> groupSet;// = new HashSet<>(); 
 
     @Transient 
     private Set<Permission> permissionSet; 

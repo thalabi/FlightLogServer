@@ -19,8 +19,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.kerneldc.flightlogserver.security.bean.AppUserDetails;
-import com.kerneldc.flightlogserver.security.domain.Group;
 import com.kerneldc.flightlogserver.security.domain.Permission;
+import com.kerneldc.flightlogserver.security.domain.group.Group;
 import com.kerneldc.flightlogserver.security.domain.user.User;
 import com.kerneldc.flightlogserver.security.repository.UserRepository;
 

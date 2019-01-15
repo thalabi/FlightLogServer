@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.security.domain;
+package com.kerneldc.flightlogserver.security.domain.group;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -16,7 +16,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.hateoas.Identifiable;
+
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
+import com.kerneldc.flightlogserver.security.domain.Permission;
 import com.kerneldc.flightlogserver.security.domain.user.User;
 
 import lombok.Getter;
@@ -24,9 +27,12 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class Group extends AbstractPersistableEntity {
+public class Group extends AbstractPersistableEntity implements Identifiable<Long> {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final String PROPERTY_USER_SET = "userSet";
+	public static final String PROPERTY_PERMISSION_SET = "permissionSet";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_seq_gen")
