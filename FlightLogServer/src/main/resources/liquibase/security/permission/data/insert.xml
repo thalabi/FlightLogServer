@@ -135,5 +135,13 @@
 			<column name="name" value="permission write"/>
 		</insert>
 
+		<!-- summary -->
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="summary"/>
+		</insert>
+
 	</changeSet>
 </databaseChangeLog>	

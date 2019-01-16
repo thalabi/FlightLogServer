@@ -123,5 +123,10 @@
 			<column name="permission_id" valueComputed="(select id from permission where name='permission write')"/>
 		</insert>
 		
+		<!-- summary to flightlog viewer -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog viewer')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='summary')"/>
+		</insert>
 	</changeSet>	
 </databaseChangeLog>	

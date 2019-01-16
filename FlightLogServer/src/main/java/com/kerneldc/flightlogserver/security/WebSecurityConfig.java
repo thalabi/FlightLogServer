@@ -99,6 +99,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		            ;
 		}
 		
+		httpSecurity.authorizeRequests()
+            .mvcMatchers(HttpMethod.GET, "/flightLogMonthlyTotalVs/**").hasAuthority("summary")
+            .mvcMatchers(HttpMethod.GET, "/flightLogYearlyTotalVs/**").hasAuthority("summary")
+            .mvcMatchers(HttpMethod.GET, "/flightLogLastXDaysTotalVs/**").hasAuthority("summary");
+
 		httpSecurity.authorizeRequests().anyRequest().denyAll();
 
 		
