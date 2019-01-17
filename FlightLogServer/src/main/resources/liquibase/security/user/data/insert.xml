@@ -13,7 +13,7 @@
 			<column name="version" value="0"/>
 
 			<column name="username" value="thalabi"/>
-			<column name="PASSWORD" value="********"/>
+			<column name="PASSWORD" value="$2a$10$tzWGr/8jAV3238e4L7O2.eNdlJ0s15QNb7ZKNXGFqCGcOPbde/Zv6"/>
 			<column name="enabled" value="y"/>
 		</insert>
 
