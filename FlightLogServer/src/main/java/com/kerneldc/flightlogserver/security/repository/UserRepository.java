@@ -14,11 +14,9 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
 	List<User> findAllByOrderByUsername();
 
-	@EntityGraph("userGraph")
+	@EntityGraph("userGroupSetPermissionSetGraph")
 	List<User> findByUsernameAndEnabled(String username, Boolean enabled);
-	@EntityGraph("userGraph")
+
+	@EntityGraph("userGroupSetGraph")
 	List<User> findByUsername(String username);
-	
-	//@EntityGraph("userGraph")
-	//Page<User> findAll(@Nullable Specification<User> spec, Pageable pageable);
 }

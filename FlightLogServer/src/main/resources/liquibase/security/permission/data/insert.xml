@@ -181,5 +181,11 @@
 			<column name="name" value="significant_event sync"/>
 		</insert>
 
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="copy user"/>
+		</insert>
 	</changeSet>
 </databaseChangeLog>	

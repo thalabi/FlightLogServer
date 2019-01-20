@@ -128,5 +128,55 @@
 			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog viewer')"/>
 			<column name="permission_id" valueComputed="(select id from permission where name='summary')"/>
 		</insert>
+
+
+		<!-- summary to flightlog admin -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='summary')"/>
+		</insert>
+
+		<!-- flight_log sync to flightlog admin -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='flight_log sync')"/>
+		</insert>
+
+		<!-- airport sync to flightlog admin -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='airport sync')"/>
+		</insert>
+
+		<!-- make_model sync to flightlog admin -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='make_model sync')"/>
+		</insert>
+
+		<!-- pilot sync to flightlog admin -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='pilot sync')"/>
+		</insert>
+
+		<!-- registration sync to flightlog admin -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='registration sync')"/>
+		</insert>
+
+		<!-- significant_event sync to flightlog admin -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='significant_event sync')"/>
+		</insert>
+		
+		<!-- copy user to flightlog admin -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='copy user')"/>
+		</insert>
+		
 	</changeSet>	
 </databaseChangeLog>	

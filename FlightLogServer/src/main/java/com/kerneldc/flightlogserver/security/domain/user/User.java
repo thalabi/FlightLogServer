@@ -14,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
 import javax.persistence.NamedSubgraph;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
@@ -31,9 +32,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@NamedEntityGraph(
-	name = "userGraph",	attributeNodes = @NamedAttributeNode(value = "groupSet", subgraph = "permissions"), 
-		subgraphs = @NamedSubgraph(name = "permissions", attributeNodes = @NamedAttributeNode("permissionSet")))
+@NamedEntityGraphs({
+	@NamedEntityGraph(
+		name = "userGroupSetGraph",
+		attributeNodes = @NamedAttributeNode(value = "groupSet")),
+	@NamedEntityGraph(
+		name = "userGroupSetPermissionSetGraph",
+		attributeNodes = @NamedAttributeNode(value = "groupSet", subgraph = "permissions"), 
+			subgraphs = @NamedSubgraph(name = "permissions", attributeNodes = @NamedAttributeNode("permissionSet")))
+})
 @Getter @Setter
 public class User extends AbstractPersistableEntity implements Identifiable<Long> {
 

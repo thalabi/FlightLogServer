@@ -58,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
 	@Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+		// Uncomment to turn off security
 		//httpSecurity.authorizeRequests().mvcMatchers("/**").permitAll();
 
 		httpSecurity
@@ -103,6 +104,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .mvcMatchers(HttpMethod.GET, "/flightLogMonthlyTotalVs/**").hasAuthority("summary")
             .mvcMatchers(HttpMethod.GET, "/flightLogYearlyTotalVs/**").hasAuthority("summary")
             .mvcMatchers(HttpMethod.GET, "/flightLogLastXDaysTotalVs/**").hasAuthority("summary");
+
+		httpSecurity.authorizeRequests()
+			.mvcMatchers(HttpMethod.POST, "/copyUserController/copyUser").hasAuthority("copy user");
 
 		httpSecurity.authorizeRequests().anyRequest().denyAll();
 

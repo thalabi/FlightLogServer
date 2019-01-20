@@ -2,7 +2,6 @@ package com.kerneldc.flightlogserver.domain.converter;
 
 import java.lang.invoke.MethodHandles;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
@@ -21,10 +20,10 @@ public class HashingConverter implements AttributeConverter<String, String> {
 	private static final int LENGTH_OF_HASH = 60;
 	private static PasswordEncoder passwordEncoder;
 
-	@PostConstruct
-	public void init () {
-		LOGGER.debug("passwordEncoder == null: {}", passwordEncoder == null);
-	}
+//	@PostConstruct
+//	public void init () {
+//		LOGGER.debug("passwordEncoder == null: {}", passwordEncoder == null);
+//	}
 
 	@Autowired
 	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
@@ -33,14 +32,14 @@ public class HashingConverter implements AttributeConverter<String, String> {
 	
 	@Override
 	public String convertToDatabaseColumn(String attribute) {
-		LOGGER.debug("passwordEncoder == null: {}", passwordEncoder == null);
-		LOGGER.debug("attribute: {}, isAlreadyAHash: {}", attribute, isAlreadyAHash(attribute));
+//		LOGGER.debug("passwordEncoder == null: {}", passwordEncoder == null);
+//		LOGGER.debug("attribute: {}, isAlreadyAHash: {}", attribute, isAlreadyAHash(attribute));
         return isAlreadyAHash(attribute) ? attribute : passwordEncoder.encode(attribute);
 	}
 
 	@Override
 	public String convertToEntityAttribute(String dbData) {
-		LOGGER.debug("dbData: {}", dbData);
+//		LOGGER.debug("dbData: {}", dbData);
         return dbData;	
     }
 	
