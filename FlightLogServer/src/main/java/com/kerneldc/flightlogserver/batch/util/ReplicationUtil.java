@@ -66,7 +66,7 @@ public class ReplicationUtil {
 	
 	public static int tableReplicationStatus(DataSource dataSource, String legacySchemaName, String outputSchemaName, String tableName) throws SQLException {
 		if (! /* not */ isOracleDatabase(dataSource)) {
-			return 0;
+			return -1;
 		}
 
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dataSource)
