@@ -95,7 +95,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		            .mvcMatchers(HttpMethod.DELETE, "/"+entityName+"s/**").hasAuthority(tableName+" write")
 		            
 		            .mvcMatchers(HttpMethod.GET, "/replicationController/getTableReplicationStatus/"+entityName).hasAuthority(tableName+" read")
-		            .mvcMatchers(HttpMethod.GET, "/replicationController/setTableReplicationStatus/"+entityName).hasAuthority(tableName+" write")
+		            .mvcMatchers(HttpMethod.PUT, "/replicationController/setTableReplicationStatus/"+entityName).hasAuthority(tableName+" write")
 		            .mvcMatchers(HttpMethod.GET, "/jobLauncherController/copy"+StringUtils.capitalize(entityName+"Table")).hasAuthority(tableName+" sync")
 		            ;
 		}
