@@ -62,6 +62,6 @@ public class AuthenticationController {
 		LOGGER.debug("Begin ...");
 		securityPersistenceService.changePassword(changePasswordRequest.getUsernameOrEmail(), changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
 		LOGGER.debug("End ...");
-		return ResponseEntity.ok("");
+		return ResponseEntity.ok(StringUtils.EMPTY);
 	}
 }
