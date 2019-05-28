@@ -59,7 +59,7 @@ public class DataSourceConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
        LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
        localContainerEntityManagerFactoryBean.setDataSource(outputDataSource());
-       localContainerEntityManagerFactoryBean.setPackagesToScan("com.kerneldc.flightlogserver.domain", "com.kerneldc.flightlogserver.security.domain");
+       localContainerEntityManagerFactoryBean.setPackagesToScan("com.kerneldc.flightlogserver.domain", "com.kerneldc.flightlogserver.security.domain", "com.kerneldc.flightlogserver.aircraftmaintenance.domain");
   
        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
        localContainerEntityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
