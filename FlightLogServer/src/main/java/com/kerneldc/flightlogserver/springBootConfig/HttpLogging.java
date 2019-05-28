@@ -13,7 +13,7 @@ public class HttpLogging {
 		filter.setIncludeQueryString(true);
 		filter.setIncludePayload(true);
 		filter.setMaxPayloadLength(10000);
-		filter.setIncludeHeaders(true);
+		filter.setIncludeHeaders(false);
 		filter.setBeforeMessagePrefix("HTTP Message before processing - ");
 		filter.setAfterMessagePrefix("HTTP Message after processing - ");
 		return filter;
