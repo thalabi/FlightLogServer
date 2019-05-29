@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
 	@Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-		// Uncomment to turn off security
+		// Comment to turn on security
 		//httpSecurity.authorizeRequests().mvcMatchers("/**").permitAll();
 
 		httpSecurity
@@ -93,7 +93,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		            .mvcMatchers(HttpMethod.POST, "/"+entityName+"s").hasAuthority(tableName+" write")
 		            .mvcMatchers(HttpMethod.PUT, "/"+entityName+"s/**").hasAuthority(tableName+" write")
 		            .mvcMatchers(HttpMethod.DELETE, "/"+entityName+"s/**").hasAuthority(tableName+" write")
-		            
+
+		            .mvcMatchers(HttpMethod.POST, "/"+entityName+"Controller/add").hasAuthority(tableName+" write")
+		            .mvcMatchers(HttpMethod.PUT, "/"+entityName+"Controller/modify").hasAuthority(tableName+" write")
+		            .mvcMatchers(HttpMethod.DELETE, "/"+entityName+"Controller/delete").hasAuthority(tableName+" write")
+
 		            .mvcMatchers(HttpMethod.GET, "/replicationController/getTableReplicationStatus/"+entityName).hasAuthority(tableName+" read")
 		            .mvcMatchers(HttpMethod.PUT, "/replicationController/setTableReplicationStatus/"+entityName).hasAuthority(tableName+" write")
 		            .mvcMatchers(HttpMethod.GET, "/jobLauncherController/copy"+StringUtils.capitalize(entityName+"Table")).hasAuthority(tableName+" sync")
