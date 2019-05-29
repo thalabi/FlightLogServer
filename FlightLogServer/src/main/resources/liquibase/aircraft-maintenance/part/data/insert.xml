@@ -1,0 +1,76 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet author="thalabi" id="insert">
+		<insert tableName="part">
+			<column name="id" valueComputed="part_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="Champion CH48110-1"/>
+			<column name="description" value="Engine Oil Filter"/>
+		</insert>
+		<insert tableName="part">
+			<column name="id" valueComputed="part_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="Aereoshell 15W50"/>
+			<column name="description" value="Engine Oil"/>
+		</insert>
+		<insert tableName="part">
+			<column name="id" valueComputed="part_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="Air Hawk 6.00x6, 6ply"/>
+			<column name="description" value="Tire"/>
+		</insert>
+		<insert tableName="part">
+			<column name="id" valueComputed="part_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="Brackett BA3"/>
+			<column name="description" value="Air Filter"/>
+		</insert>
+		<insert tableName="part">
+			<column name="id" valueComputed="part_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="RAPCO 215CC"/>
+			<column name="description" value="Vacuum Pump"/>
+		</insert>
+		<insert tableName="part">
+			<column name="id" valueComputed="part_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="Sky Tec 149NL"/>
+			<column name="description" value="Starter"/>
+		</insert>
+		<insert tableName="part">
+			<column name="id" valueComputed="part_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="Champion REM38E"/>
+			<column name="description" value="Sparg Plug"/>
+		</insert>
+		<insert tableName="part">
+			<column name="id" valueComputed="part_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="Concorde p/n RG-35AXC"/>
+			<column name="description" value="Battery"/>
+		</insert>
+		<insert tableName="part">
+			<column name="id" valueComputed="part_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="Lycoming 05K21104"/>
+			<column name="description" value="Cylinder"/>
+		</insert>
+	</changeSet>
+</databaseChangeLog>	

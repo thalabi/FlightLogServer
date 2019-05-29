@@ -187,5 +187,34 @@
 
 			<column name="name" value="copy user"/>
 		</insert>
+
+		<!-- part -->
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="part read"/>
+		</insert>
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="part write"/>
+		</insert>
+
+		<!-- component -->
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="component read"/>
+		</insert>
+		<insert tableName="permission">
+			<column name="id" valueComputed="permission_seq.nextval"/>
+			<column name="version" value="0"/>
+
+			<column name="name" value="component write"/>
+		</insert>
+
 	</changeSet>
 </databaseChangeLog>	

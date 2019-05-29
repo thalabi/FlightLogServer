@@ -68,4 +68,18 @@
 
 	<include file="liquibase/security/group_permission/create-table.xml"/>
 	<include file="liquibase/security/group_permission/data/insert.xml"/>
+	
+	<include file="liquibase/aircraft-maintenance/part/create-table.xml"/>
+	<include file="liquibase/aircraft-maintenance/part/create-idx-1.xml"/>
+	<include file="liquibase/aircraft-maintenance/part/data/insert.xml"/>
+	
+	<include file="liquibase/aircraft-maintenance/component/create-table.xml"/>
+	<include file="liquibase/aircraft-maintenance/component/create-idx-1.xml"/>
+	<include file="liquibase/aircraft-maintenance/component/data/insert.xml"/>
+	
+	<include file="liquibase/aircraft-maintenance/component-history/create-table.xml"/>
+	<include file="liquibase/aircraft-maintenance/component-history/data/insert.xml"/>
+
+	<include file="liquibase/aircraft-maintenance/component-component-history/create-table.xml"/>
+	<include file="liquibase/aircraft-maintenance/component-component-history/data/insert.xml"/>
 </databaseChangeLog>

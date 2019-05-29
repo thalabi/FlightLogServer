@@ -178,5 +178,33 @@
 			<column name="permission_id" valueComputed="(select id from permission where name='copy user')"/>
 		</insert>
 		
+		<!-- part -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog viewer')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='part read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='part read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='part write')"/>
+		</insert>
+		
+		<!-- component -->
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog viewer')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='component read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='component read')"/>
+		</insert>
+		<insert tableName="group_permission">
+			<column name="group_id" valueComputed="(select id from &quot;GROUP&quot; where name='flightlog admin')"/>
+			<column name="permission_id" valueComputed="(select id from permission where name='component write')"/>
+		</insert>
+		
 	</changeSet>	
 </databaseChangeLog>	

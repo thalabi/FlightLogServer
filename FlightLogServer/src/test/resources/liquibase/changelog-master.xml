@@ -46,5 +46,11 @@
 <!--   <include file="liquibase/changelog-student-drop-grade-column.xml"/> -->
 
 	<include file="liquibase/security/user/create-table.xml"/>
+	<include file="liquibase/aircraft-maintenance/part/create-table.xml"/>
+	<include file="liquibase/aircraft-maintenance/part/create-idx-1.xml"/>
+	<include file="liquibase/aircraft-maintenance/component/create-table.xml"/>
+	<include file="liquibase/aircraft-maintenance/component/create-idx-1.xml"/>
+	<include file="liquibase/aircraft-maintenance/component-history/create-table.xml"/>
+	<include file="liquibase/aircraft-maintenance/component-component-history/create-table.xml"/>
   
 </databaseChangeLog>

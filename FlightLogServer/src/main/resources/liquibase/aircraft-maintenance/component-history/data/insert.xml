@@ -1,0 +1,49 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet author="thalabi" id="insert">
+
+		<!-- History of Engine Oil Filter -->
+		<insert tableName="component_history">
+			<column name="id" valueComputed="component_history_seq.nextval"/>
+			<column name="version" value="0"/>
+
+            <column name="work_performed" value="Replaced"/>
+            <column name="date_performed" value="2017-01-01"/>
+            <column name="hours_performed" value="1900"/>
+		</insert>
+		<insert tableName="component_history">
+			<column name="id" valueComputed="component_history_seq.nextval"/>
+			<column name="version" value="0"/>
+
+            <column name="work_performed" value="Replaced"/>
+            <column name="date_performed" value="2018-01-01"/>
+            <column name="hours_performed" value="1950"/>
+		</insert>
+
+		<!-- History of Engine Oil -->
+		<insert tableName="component_history">
+			<column name="id" valueComputed="component_history_seq.nextval"/>
+			<column name="version" value="0"/>
+
+            <column name="work_performed" value="Replaced"/>
+            <column name="date_performed" value="2017-01-01"/>
+            <column name="hours_performed" value="1900"/>
+		</insert>
+		<insert tableName="component_history">
+			<column name="id" valueComputed="component_history_seq.nextval"/>
+			<column name="version" value="0"/>
+
+            <column name="work_performed" value="Replaced"/>
+            <column name="date_performed" value="2018-01-01"/>
+            <column name="hours_performed" value="1950"/>
+		</insert>
+	</changeSet>
+</databaseChangeLog>	
