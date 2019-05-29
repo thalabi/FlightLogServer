@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.controller.util;
+package com.kerneldc.flightlogserver.exception;
 
 import java.sql.SQLException;
 
@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.kerneldc.flightlogserver.exception.ApplicationException;
-
 import oracle.jdbc.OracleDatabaseException;
 
 @ControllerAdvice
@@ -20,22 +18,18 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
 	//ApplicationException
 	@ExceptionHandler(value = {ApplicationException.class})
-	protected ResponseEntity<Object> handleNullPointerException(ApplicationException applicationException, WebRequest request) {
+	protected ResponseEntity<Object> handleApplicationException(ApplicationException applicationException, WebRequest request) {
 		applicationException.printStackTrace();
-		ExceptionBean exceptionBean = initExceptionBean(applicationException);
+		ExceptionBean exceptionBean = createExceptionBean(applicationException);
 		return handleExceptionInternal(applicationException, exceptionBean, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
 	@ExceptionHandler(value = {SQLException.class})
 	protected ResponseEntity<Object> handleSqlException(SQLException sqlException, WebRequest request) {
 		sqlException.printStackTrace();
-		ExceptionBean exceptionBean = initExceptionBean(sqlException);
+		ExceptionBean exceptionBean = createExceptionBean(sqlException);
 		if (sqlException.getCause() instanceof OracleDatabaseException) {
-			OracleDatabaseException oracleDatabaseException = (OracleDatabaseException)sqlException.getCause();
-			exceptionBean.setOracleSqlError(oracleDatabaseException.getOracleErrorNumber());
-			exceptionBean.setOracleSqlMessage(oracleDatabaseException.getMessage());
-			exceptionBean.setOriginalSqlStatement(oracleDatabaseException.getOriginalSql());
-			exceptionBean.setSqlStatement(oracleDatabaseException.getSql());
+			enrichSqlExceptionBean(exceptionBean, (OracleDatabaseException)sqlException.getCause());
 		}
 		return handleExceptionInternal(sqlException, exceptionBean, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
@@ -43,14 +37,18 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ExceptionHandler(value = {NullPointerException.class})
 	protected ResponseEntity<Object> handleNullPointerException(NullPointerException nullPointerException, WebRequest request) {
 		nullPointerException.printStackTrace();
-		ExceptionBean exceptionBean = initExceptionBean(nullPointerException);
+		ExceptionBean exceptionBean = createExceptionBean(nullPointerException);
 		return handleExceptionInternal(nullPointerException, exceptionBean, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
-	private ExceptionBean initExceptionBean(Exception exception) {
-		ExceptionBean exceptionBean = new ExceptionBean();
-		exceptionBean.setMessage(exception.getMessage());
-		exceptionBean.setStackTrace(ExceptionUtils.getStackTrace(exception));
-		return exceptionBean;
+	private ExceptionBean createExceptionBean(Exception exception) {
+		return ExceptionBean.builder().message(exception.getMessage())
+				.stackTrace(ExceptionUtils.getStackTrace(exception)).build();
+	}
+	private void enrichSqlExceptionBean(ExceptionBean sqlExceptionBean, OracleDatabaseException oracleDatabaseException) {
+		sqlExceptionBean.setOracleSqlError(oracleDatabaseException.getOracleErrorNumber());
+		sqlExceptionBean.setOracleSqlMessage(oracleDatabaseException.getMessage());
+		sqlExceptionBean.setOriginalSqlStatement(oracleDatabaseException.getOriginalSql());
+		sqlExceptionBean.setSqlStatement(oracleDatabaseException.getSql());
 	}
 }

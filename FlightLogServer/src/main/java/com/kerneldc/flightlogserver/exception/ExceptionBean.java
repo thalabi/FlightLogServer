@@ -1,10 +1,14 @@
-package com.kerneldc.flightlogserver.controller.util;
+package com.kerneldc.flightlogserver.exception;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@Builder
+@ToString
 public class ExceptionBean {
 
 	private String message;
