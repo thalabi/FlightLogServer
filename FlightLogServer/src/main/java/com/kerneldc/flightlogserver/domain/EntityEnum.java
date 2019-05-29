@@ -15,7 +15,10 @@ public enum EntityEnum {
 	
 	USER("user", "user"),
 	GROUP("group", "group"),
-	PERMISSION("permission", "permission");
+	PERMISSION("permission", "permission"),
+	
+	PART("part", "part"),
+	COMPONENT("component", "component");
 	
 	@Getter
 	private String entityName;
