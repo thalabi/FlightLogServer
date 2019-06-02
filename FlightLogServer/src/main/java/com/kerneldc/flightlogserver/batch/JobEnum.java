@@ -2,6 +2,8 @@ package com.kerneldc.flightlogserver.batch;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.collect.ImmutableMap;
 
 import lombok.Getter;
@@ -19,6 +21,7 @@ public enum JobEnum {
 	ENABLE_MAKE_MODEL_TRIGGERS ("make_model", JobTypeEnum.TRIGGER_CHANGE_STATUS, ImmutableMap.of("triggerStatus", true)),
 	DISABLE_SIGNIFICANT_EVENT_TRIGGERS ("significant_event", JobTypeEnum.TRIGGER_CHANGE_STATUS, ImmutableMap.of("triggerStatus", false)),
 	ENABLE_SIGNIFICANT_EVENT_TRIGGERS ("significant_event", JobTypeEnum.TRIGGER_CHANGE_STATUS, ImmutableMap.of("triggerStatus", true)),
+	COPY_AIRCRAFT_MAINTENANCE_TABLES (StringUtils.EMPTY, JobTypeEnum.COPY_TABLE),
 	;
 	
 	@Getter
