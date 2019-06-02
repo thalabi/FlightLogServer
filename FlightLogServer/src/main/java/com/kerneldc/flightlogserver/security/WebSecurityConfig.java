@@ -112,6 +112,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.authorizeRequests()
 			.mvcMatchers(HttpMethod.POST, "/copyUserController/copyUser").hasAuthority("copy user");
 
+		httpSecurity.authorizeRequests()
+		// TODO should have "part write" and "component write"
+			.mvcMatchers(HttpMethod.GET, "/jobLauncherController/copyAircraftMaintenanceTables").hasAuthority("component write");
+
 		httpSecurity.authorizeRequests().anyRequest().denyAll();
 
 		
