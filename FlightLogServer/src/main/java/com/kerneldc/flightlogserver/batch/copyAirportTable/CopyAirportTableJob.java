@@ -52,7 +52,6 @@ public class CopyAirportTableJob {
                 .dataSource(inputDataSource)
                 .name("airportReader")
                 .sql("select id, identifier, name, province, city, country, latitude, longitude, upper_winds_station_id, created, modified, version from airport")
-                //.sql("select id, event_date, event_description, created, modified, version from significant_event")
                 .rowMapper(new AirportRowMapper())
                 .build();
     }
