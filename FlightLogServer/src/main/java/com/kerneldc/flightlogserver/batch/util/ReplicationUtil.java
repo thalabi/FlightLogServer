@@ -58,8 +58,10 @@ public class ReplicationUtil {
 			new JdbcTemplate(dataSource).execute(String.format("select %s.nextval from dual", sequenceName));
 			new JdbcTemplate(dataSource).execute(String.format("alter sequence %s increment by 1", sequenceName));
 		} else {
-			new JdbcTemplate(dataSource).execute(String.format("drop sequence %s", sequenceName));
-			new JdbcTemplate(dataSource).execute(String.format("create sequence %s", sequenceName));
+			if (sequenceExists(dataSource, sequenceName)) {
+				new JdbcTemplate(dataSource).execute(String.format("drop sequence %s", sequenceName));
+				new JdbcTemplate(dataSource).execute(String.format("create sequence %s", sequenceName));
+			}
 		}
 	}
 	
@@ -73,5 +75,16 @@ public class ReplicationUtil {
 		BigDecimal legacyTableTriggerStatus = simpleJdbcCall.executeFunction(BigDecimal.class, legacySchemaName, tableName);
 		BigDecimal outputTableTriggerStatus = simpleJdbcCall.executeFunction(BigDecimal.class, outputSchemaName, tableName);
 		return legacyTableTriggerStatus.add(outputTableTriggerStatus).intValue();
+	}
+	
+	public static boolean sequenceExists(DataSource dataSource, String sequenceName) throws SQLException {
+		String sql;
+		if (isOracleDatabase(dataSource)) {
+			sql = "select count(*) from user_sequences where sequence_name = upper(?)";
+		} else {
+			sql = "select count(*) from information_schema.sequences where sequence_name = upper(?)";
+		}
+		Integer sequenceCount = new JdbcTemplate(dataSource).queryForObject(sql, new Object[] { sequenceName }, Integer.class);
+		return sequenceCount.equals(1);
 	}
 }
