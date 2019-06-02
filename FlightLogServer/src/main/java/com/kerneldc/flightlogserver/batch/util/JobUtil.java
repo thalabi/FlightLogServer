@@ -42,6 +42,10 @@ public class JobUtil {
     @Qualifier("alterTableTriggers")
     private Job alterTableTriggersJob;
 
+    @Autowired
+    @Qualifier("copyAircraftMaintenanceTables")
+    private Job copyAircraftMaintenanceTablesJob;
+
     public Job getJob(JobEnum jobEnum) {
     	switch (jobEnum) {
     		case COPY_FLIGHT_LOG_TABLE:
@@ -63,6 +67,8 @@ public class JobUtil {
     		case DISABLE_SIGNIFICANT_EVENT_TRIGGERS:
     		case ENABLE_SIGNIFICANT_EVENT_TRIGGERS:
     			return alterTableTriggersJob;
+    		case COPY_AIRCRAFT_MAINTENANCE_TABLES:
+    			return copyAircraftMaintenanceTablesJob;
     	}
     	return null;
     }
