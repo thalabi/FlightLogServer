@@ -6,8 +6,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -29,30 +29,23 @@ public class DataSourceConfig {
 	@Value("${hibernate.physical_naming_strategy}")
     private String hibernatePhysicalNamingStrategy;
 	
-	@Bean
-    @Primary // primary for Spring boot
-    @ConfigurationProperties("output.datasource")
-    public DataSourceProperties outputDataSourceProperties() {
-    	return new DataSourceProperties();
-    }
-
     @Bean
     @Primary // primary for Spring boot
     @ConfigurationProperties("output.datasource")
     public DataSource outputDataSource() {
-    	return outputDataSourceProperties().initializeDataSourceBuilder().build();
+    	return DataSourceBuilder.create().build();
     }
 
     @Bean
-    @ConfigurationProperties("input.datasource")
-    public DataSourceProperties inputDataSourceProperties() {
-    	return new DataSourceProperties();
-    }
-
-    @Bean
-    @ConfigurationProperties("input.datasource")
+    @ConfigurationProperties("input.datasource.oracle")
     public DataSource inputDataSource() {
-    	return inputDataSourceProperties().initializeDataSourceBuilder().build();
+    	return DataSourceBuilder.create().build();
+    }
+
+    @Bean
+    @ConfigurationProperties("input.datasource.h2")
+    public DataSource inputDataSourceH2() {
+    	return DataSourceBuilder.create().build();
     }
 
     @Bean
