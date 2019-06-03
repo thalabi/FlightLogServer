@@ -1,5 +1,6 @@
 package com.kerneldc.flightlogserver.batch.copyAircraftMaintenanceTables;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,11 @@ public class PartCachingService {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(outputDataSource);
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList("select id, name from part");
 		for (Map<String, Object> row: rows) {
-			nameToPartIdMap.put((String)row.get("name"), (Long)row.get("id"));
+			if (row.get("id") instanceof BigDecimal) {
+				nameToPartIdMap.put((String)row.get("name"), ((BigDecimal)row.get("id")).longValue());
+			} else {
+				nameToPartIdMap.put((String)row.get("name"), (Long)row.get("id"));
+			}
 		}
     	LOGGER.info("Cached nameToPartIdMap of size: {}", nameToPartIdMap.size());
 		return nameToPartIdMap;
