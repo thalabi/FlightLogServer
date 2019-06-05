@@ -7,6 +7,9 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.FlowBuilder;
+import org.springframework.batch.core.job.flow.Flow;
+import org.springframework.batch.core.job.flow.support.SimpleFlow;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
@@ -18,10 +21,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.Component;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.batch.tasklet.BeforeCopyTableTasklet;
+import com.kerneldc.flightlogserver.batch.tasklet.CreateTableFromTableTasklet;
+import com.kerneldc.flightlogserver.domain.EntityEnum;
 
 @Configuration
 @EnableBatchProcessing
@@ -87,20 +93,86 @@ public class CopyAircraftMaintenanceTablesJob {
             .build();
     }
 
+    /**
+     * Job that copies Part and Component tables from old H2 database
+     * @param parallelBackupFlow Is a parallel flow to make a backup of the part, component, component_history & component_component_history tables
+     * @param purgeTablesStep1 Step to purge component_component_history table
+     * @param purgeTablesStep2 Step to purge component_history table
+     * @param purgeTablesStep3 Step to purge component table
+     * @param purgeTablesStep4 Step to purge part table
+     * @param copyPartTableStep5 Copies part table
+     * @param copyComponentTableStep6 Copied component table
+     * @return
+     */
     @Bean
-	public Job copyAircraftMaintenanceTables(Step purgeTablesStep1, Step purgeTablesStep2, Step purgeTablesStep3,
-			Step purgeTablesStep4, Step copyPartTableStep5, Step copyComponentTableStep6) {
+	public Job copyAircraftMaintenanceTables(Flow parallelBackupFlow, Step purgeTablesStep1,
+			Step purgeTablesStep2, Step purgeTablesStep3, Step purgeTablesStep4, Step copyPartTableStep5,
+			Step copyComponentTableStep6) {
         return jobBuilderFactory.get("copyAircraftMaintenanceTables")
             .incrementer(new RunIdIncrementer())
-            .start(purgeTablesStep1)
+            .start(parallelBackupFlow)
+            .next(purgeTablesStep1)
             .next(purgeTablesStep2)
             .next(purgeTablesStep3)
             .next(purgeTablesStep4)
             .next(copyPartTableStep5)
             .next(copyComponentTableStep6)
+            .build() // build parallelBackupFlow
+            .build(); // build job
+    }
+
+    @Bean
+    public Step backupPartTableStep1() {
+        return stepBuilderFactory.get("backupPartTableStep1")
+        	.tasklet(new CreateTableFromTableTasklet(outputDataSource, EntityEnum.PART))
             .build();
     }
 
+    @Bean
+    public Step backupComponentComponentHistoryTableStep2() {
+        return stepBuilderFactory.get("backupComponentComponentHistoryTableStep2")
+        	.tasklet(new CreateTableFromTableTasklet(outputDataSource, EntityEnum.COMPONENT_COMPONENT_HISTORY))
+            .build();
+    }
+
+    @Bean
+    public Step backupComponentHistoryTableStep3() {
+        return stepBuilderFactory.get("backupComponentHistoryTableStep3")
+        	.tasklet(new CreateTableFromTableTasklet(outputDataSource, EntityEnum.COMPONENT_HISTORY))
+            .build();
+    }
+
+    @Bean
+    public Step backupComponentTableStep4() {
+        return stepBuilderFactory.get("backupComponentTableStep4")
+        	.tasklet(new CreateTableFromTableTasklet(outputDataSource, EntityEnum.COMPONENT))
+            .build();
+    }
+
+	@Bean
+	public Flow backupFlow1(Step backupPartTableStep1) {
+		return new FlowBuilder<SimpleFlow>("backupFlow1").start(backupPartTableStep1).build();
+	}
+	@Bean
+	public Flow backupFlow2(Step backupComponentComponentHistoryTableStep2) {
+		return new FlowBuilder<SimpleFlow>("backupFlow2").start(backupComponentComponentHistoryTableStep2).build();
+	}
+	@Bean
+	public Flow backupFlow3(Step backupComponentHistoryTableStep3) {
+		return new FlowBuilder<SimpleFlow>("backupFlow3").start(backupComponentHistoryTableStep3).build();
+	}
+	@Bean
+	public Flow backupFlow4(Step backupComponentTableStep4) {
+		return new FlowBuilder<SimpleFlow>("backupFlow4").start(backupComponentTableStep4).build();
+	}
+	@Bean
+	public Flow parallelBackupFlow(Flow backupFlow1, Flow backupFlow2, Flow backupFlow3, Flow backupFlow4) {
+	    return new FlowBuilder<SimpleFlow>("parallelBackupFlow")
+	        .split(new SimpleAsyncTaskExecutor())
+	        .add(backupFlow1, backupFlow2, backupFlow3, backupFlow4)
+	        .build();
+	}
+	
     @Bean
     public Step purgeTablesStep1() {
         return stepBuilderFactory.get("purgeTablesStep1")
