@@ -30,11 +30,11 @@ public class BeforeCopyTableTasklet implements Tasklet {
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 		String sql;
-		if (ReplicationUtil.isOracleDatabase(outputDataSource)) {
-			sql = String.format("truncate table %s reuse storage", tableName);
-		} else {
+//		if (ReplicationUtil.isOracleDatabase(outputDataSource)) {
+//			sql = String.format("truncate table %s reuse storage", tableName);
+//		} else {
 			sql = String.format("delete from %s", tableName);
-		}
+//		}
 		new JdbcTemplate(outputDataSource).execute(sql);
 		ReplicationUtil.resetSequence(outputDataSource, tableName);
 		ReplicationUtil.disableTriggers(outputDataSource, tableName);
