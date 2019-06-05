@@ -32,7 +32,7 @@ public class PartCachingService {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(outputDataSource);
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList("select id, name from part");
 		for (Map<String, Object> row: rows) {
-			if (row.get("id") instanceof BigDecimal) {
+			if (row.get("id") instanceof BigDecimal) { // hack for Oracle jdbc driver to work
 				nameToPartIdMap.put((String)row.get("name"), ((BigDecimal)row.get("id")).longValue());
 			} else {
 				nameToPartIdMap.put((String)row.get("name"), (Long)row.get("id"));
