@@ -6,27 +6,33 @@ import java.util.Optional;
 import lombok.Getter;
 
 public enum EntityEnum {
-	FLIGHT_LOG("flightLog", "flight_log"),
-	AIRPORT("airport", "airport"),
-	PILOT("pilot", "pilot"),
-	REGISTRATION("registration", "registration"),
-	SIGNIFICAT_EVENT("significantEvent", "significant_event"),
-	MAKE_MODEL("makeModel", "make_model"),
+	FLIGHT_LOG("flightLog", "flight_log", null),
+	AIRPORT("airport", "airport", null),
+	PILOT("pilot", "pilot", null),
+	REGISTRATION("registration", "registration", null),
+	SIGNIFICAT_EVENT("significantEvent", "significant_event", null),
+	MAKE_MODEL("makeModel", "make_model", null),
 	
-	USER("user", "user"),
-	GROUP("group", "group"),
-	PERMISSION("permission", "permission"),
+	USER("user", "user", null),
+	GROUP("group", "group", null),
+	PERMISSION("permission", "permission", null),
 	
-	PART("part", "part"),
-	COMPONENT("component", "component");
+	PART("part", "part", "acm_bu_%s_%s_part"),
+	COMPONENT("component", "component", "acm_bu_%s_%s_component"),
+	COMPONENT_HISTORY("componentHistory", "component_history", "acm_bu_%s_%s_comp_hist"),
+	COMPONENT_COMPONENT_HISTORY("componentComponentHistory", "component_component_history", "acm_bu_%s_%s_c_c_h");
 	
 	@Getter
 	private String entityName;
 	@Getter
 	private String tableName;
-	private EntityEnum(String entityName, String tableName) {
+	@Getter
+	private String backupTableNameTemplate;
+	
+	private EntityEnum(String entityName, String tableName, String backupTableNameTemplate) {
 		this.entityName = entityName;
 		this.tableName = tableName;
+		this.backupTableNameTemplate = backupTableNameTemplate;
 	}
 
 	public static EntityEnum getEnumByEntityName(String entityName) {
