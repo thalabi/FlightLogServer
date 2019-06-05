@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
@@ -47,20 +48,21 @@ public class ReplicationUtil {
 	
 	public static void resetSequence(DataSource dataSource, String tableName) throws SQLException {
 		String sequenceName = String.format("%s_seq", tableName );
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		if (isOracleDatabase(dataSource)) {
-			List<Integer> lastNumberList = new JdbcTemplate(dataSource).queryForList(
+			List<Integer> lastNumberList = jdbcTemplate.queryForList(
 					String.format("select last_number from all_sequences where sequence_owner = user and lower(sequence_name) = '%s'", sequenceName),
 					Integer.class);
-			if (lastNumberList.get(0).compareTo(Integer.valueOf(1)) == 0) {
+			if (CollectionUtils.isEmpty(lastNumberList) || lastNumberList.get(0).compareTo(1) == 0) {
 				return;
 			}
-			new JdbcTemplate(dataSource).execute(String.format("alter sequence %s increment by %d nocache nominvalue", sequenceName, -1*(lastNumberList.get(0)-1)));
-			new JdbcTemplate(dataSource).execute(String.format("select %s.nextval from dual", sequenceName));
-			new JdbcTemplate(dataSource).execute(String.format("alter sequence %s increment by 1", sequenceName));
+			jdbcTemplate.execute(String.format("alter sequence %s increment by %d nocache nominvalue", sequenceName, -1*(lastNumberList.get(0)-1)));
+			jdbcTemplate.execute(String.format("select %s.nextval from dual", sequenceName));
+			jdbcTemplate.execute(String.format("alter sequence %s increment by 1", sequenceName));
 		} else {
 			if (sequenceExists(dataSource, sequenceName)) {
-				new JdbcTemplate(dataSource).execute(String.format("drop sequence %s", sequenceName));
-				new JdbcTemplate(dataSource).execute(String.format("create sequence %s", sequenceName));
+				jdbcTemplate.execute(String.format("drop sequence %s", sequenceName));
+				jdbcTemplate.execute(String.format("create sequence %s", sequenceName));
 			}
 		}
 	}
@@ -86,5 +88,10 @@ public class ReplicationUtil {
 		}
 		Integer sequenceCount = new JdbcTemplate(dataSource).queryForObject(sql, new Object[] { sequenceName }, Integer.class);
 		return sequenceCount.equals(1);
+	}
+	
+	public static void executeSqlStatement(DataSource dataSource, String sqlStatement) throws SQLException {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		jdbcTemplate.execute(sqlStatement);
 	}
 }
