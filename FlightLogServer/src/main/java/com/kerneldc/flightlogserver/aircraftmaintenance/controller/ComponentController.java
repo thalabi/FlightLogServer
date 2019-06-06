@@ -1,10 +1,14 @@
 package com.kerneldc.flightlogserver.aircraftmaintenance.controller;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -93,12 +97,12 @@ public class ComponentController {
     @PutMapping("/modify")
     public ResponseEntity<String> modify(@Valid @RequestBody ComponentRequest componentRequest) throws ApplicationException {
     	LOGGER.debug("modifyComponentRequest: {}", componentRequest);
-    	Component component = parseAndFindComponent(componentRequest.getComponentUri()).get();
+    	Component component = parseAndFindComponent(componentRequest.getComponentUri());
     	ComponentHistory componentHistory = null;
     	if (componentRequest.getCreateHistoryRecord().equals(true)) {
     		componentHistory = ComponentHistory.builder().workPerformed(component.getWorkPerformed())
     				.datePerformed(component.getDatePerformed()).hoursPerformed(component.getHoursPerformed())
-    				.created(component.getCreated()).modified(component.getModified()).build();
+    				.created(componentRequest.getModified()).modified(componentRequest.getModified()).build();
     	}
     	Part part = parseAndFindPart(componentRequest.getPartUri()).get();
     	BeanUtils.copyProperties(componentRequest, component);
@@ -114,10 +118,25 @@ public class ComponentController {
     
     @Transactional
     @DeleteMapping("/delete")
-    public ResponseEntity<String> delete(@RequestParam(value = "componentUri") String componentUri) throws ApplicationException {
-    	LOGGER.debug("componentUri: {}", componentUri);
-    	Component component = parseAndFindComponent(componentUri).get();
-    	componentRepository.delete(component);
+    public ResponseEntity<String> delete(@RequestParam(value = "componentUri") String componentUri, @RequestParam(value = "deleteHistoryRecords") Boolean deleteHistoryRecords) throws ApplicationException {
+    	LOGGER.debug("componentUri: {}, deleteHistoryRecords: {}", deleteHistoryRecords, deleteHistoryRecords);
+    	Component component = parseAndFindComponent(componentUri);
+    	if (deleteHistoryRecords) {
+    		componentRepository.delete(component);
+    	} else {
+    		Set<ComponentHistory> componentHistorySet = component.getComponentHistorySet();
+    		LOGGER.info("componentHistorySet: {}", componentHistorySet);
+    		Comparator<ComponentHistory> compareByCreated = (ComponentHistory o1, ComponentHistory o2) -> o1.getCreated().compareTo( o2.getCreated());
+    		SortedSet<ComponentHistory> componentHistorySetSortedByCreatedDesc = new TreeSet<>(compareByCreated.reversed());
+    		componentHistorySetSortedByCreatedDesc.addAll(componentHistorySet);
+    		LOGGER.info("componentHistorySetSortedByCreatedDesc: {}", componentHistorySetSortedByCreatedDesc);
+    		component.setWorkPerformed(componentHistorySetSortedByCreatedDesc.first().getWorkPerformed());
+    		component.setDatePerformed(componentHistorySetSortedByCreatedDesc.first().getDatePerformed());
+    		component.setHoursPerformed(componentHistorySetSortedByCreatedDesc.first().getHoursPerformed());
+    		component.setModified(componentHistorySetSortedByCreatedDesc.first().getModified());
+    		componentHistorySet.remove(componentHistorySetSortedByCreatedDesc.first());
+    		componentRepository.save(component);
+    	}
     	return ResponseEntity.ok(StringUtils.EMPTY);
     }
     
@@ -135,7 +154,7 @@ public class ComponentController {
     	return optionalPart;
     }
     
-    private Optional<Component> parseAndFindComponent(String componentUri) throws ApplicationException {
+    private Component parseAndFindComponent(String componentUri) throws ApplicationException {
     	Long componentId;
     	try {
     		componentId = parseId(componentUri, COMPONENT_URI_TEMPLATE);	
@@ -146,7 +165,7 @@ public class ComponentController {
     	if (!optionalComponent.isPresent()) {
     		throw new ApplicationException(String.format("Component ID: %d not found", componentId));
     	}
-    	return optionalComponent;
+    	return optionalComponent.get();
     }
     
     private Long parseId(String uri, UriTemplate uriTemplate) {
