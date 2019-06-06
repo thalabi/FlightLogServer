@@ -44,6 +44,6 @@ public class PartCachingService {
 
     @CacheEvict()
     public void clearCache() {
-    	// noop
+    	LOGGER.info("Parts cache evicted");
     }
 }
