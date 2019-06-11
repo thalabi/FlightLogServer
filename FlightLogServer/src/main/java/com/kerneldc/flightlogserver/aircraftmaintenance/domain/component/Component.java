@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedEntityGraphs;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
@@ -39,8 +40,12 @@ import lombok.Setter;
 		name = "componentPartGraph",
 		attributeNodes = @NamedAttributeNode(value = "part")),
 	@NamedEntityGraph(
-			name = "componentFullGraph",
-			attributeNodes = {@NamedAttributeNode(value = "part"), @NamedAttributeNode(value = "componentHistorySet")})
+		name = "componentFullGraph",
+		attributeNodes = {
+			@NamedAttributeNode(value = "part"),
+			@NamedAttributeNode(value = "componentHistorySet", subgraph = "componentHistoryPart")},
+		subgraphs = @NamedSubgraph(name = "componentHistoryPart", attributeNodes = @NamedAttributeNode("part"))
+	)
 })
 @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter

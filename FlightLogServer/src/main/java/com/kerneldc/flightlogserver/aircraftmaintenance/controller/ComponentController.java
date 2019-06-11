@@ -63,7 +63,7 @@ public class ComponentController {
     private PartRepository partRepository;
 	private ComponentResourceAssembler componentResourceAssembler;
 
-    public ComponentController(ComponentRepository componentRepository, /*ComponentHistoryRepository componentHistoryRepository,*/ PartRepository partRepository, ComponentResourceAssembler componentResourceAssembler) throws JsonProcessingException {
+    public ComponentController(ComponentRepository componentRepository, PartRepository partRepository, ComponentResourceAssembler componentResourceAssembler) throws JsonProcessingException {
         this.componentRepository = componentRepository;
         this.partRepository = partRepository;
         this.componentResourceAssembler = componentResourceAssembler;
@@ -100,8 +100,13 @@ public class ComponentController {
     	Component component = parseAndFindComponent(componentRequest.getComponentUri());
     	ComponentHistory componentHistory = null;
     	if (componentRequest.getCreateHistoryRecord().equals(true)) {
-    		componentHistory = ComponentHistory.builder().workPerformed(component.getWorkPerformed())
+    		componentHistory = ComponentHistory.builder()
+    				.name(component.getName())
+    				.description(component.getDescription())
+    				.part(component.getPart())
+    				.workPerformed(component.getWorkPerformed())
     				.datePerformed(component.getDatePerformed()).hoursPerformed(component.getHoursPerformed())
+    				.dateDue(component.getDateDue()).hoursDue(component.getHoursDue())
     				.created(componentRequest.getModified()).modified(componentRequest.getModified()).build();
     	}
     	Part part = parseAndFindPart(componentRequest.getPartUri()).get();
@@ -130,9 +135,15 @@ public class ComponentController {
     		SortedSet<ComponentHistory> componentHistorySetSortedByCreatedDesc = new TreeSet<>(compareByCreated.reversed());
     		componentHistorySetSortedByCreatedDesc.addAll(componentHistorySet);
     		LOGGER.info("componentHistorySetSortedByCreatedDesc: {}", componentHistorySetSortedByCreatedDesc);
+    		component.setName(componentHistorySetSortedByCreatedDesc.first().getName());
+    		component.setDescription(componentHistorySetSortedByCreatedDesc.first().getDescription());
+    		component.setPart(componentHistorySetSortedByCreatedDesc.first().getPart());
     		component.setWorkPerformed(componentHistorySetSortedByCreatedDesc.first().getWorkPerformed());
     		component.setDatePerformed(componentHistorySetSortedByCreatedDesc.first().getDatePerformed());
     		component.setHoursPerformed(componentHistorySetSortedByCreatedDesc.first().getHoursPerformed());
+    		component.setDateDue(componentHistorySetSortedByCreatedDesc.first().getDateDue());
+    		component.setHoursDue(componentHistorySetSortedByCreatedDesc.first().getHoursDue());
+    		component.setCreated(componentHistorySetSortedByCreatedDesc.first().getCreated());
     		component.setModified(componentHistorySetSortedByCreatedDesc.first().getModified());
     		componentHistorySet.remove(componentHistorySetSortedByCreatedDesc.first());
     		componentRepository.save(component);

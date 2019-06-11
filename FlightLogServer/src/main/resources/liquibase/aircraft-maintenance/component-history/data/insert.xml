@@ -15,17 +15,27 @@
 			<column name="id" valueComputed="component_history_seq.nextval"/>
 			<column name="version" value="0"/>
 
+			<column name="name" value="Engine Oil Filter"/>
+			<column name="description" value="Engine Oil Filter"/>
+			
+			<column name="part_id" valueComputed="(select id from part where name='Champion CH48110-1')"/>
             <column name="work_performed" value="Replaced"/>
             <column name="date_performed" value="2017-01-01"/>
             <column name="hours_performed" value="1900"/>
+			<column name="hours_due" valueNumeric="1950"/>
 		</insert>
 		<insert tableName="component_history">
 			<column name="id" valueComputed="component_history_seq.nextval"/>
 			<column name="version" value="0"/>
 
+			<column name="name" value="Engine Oil Filter"/>
+			<column name="description" value="Engine Oil Filter"/>
+			
+			<column name="part_id" valueComputed="(select id from part where name='Champion CH48110-1')"/>
             <column name="work_performed" value="Replaced"/>
             <column name="date_performed" value="2018-01-01"/>
             <column name="hours_performed" value="1950"/>
+			<column name="hours_due" valueNumeric="2000"/>
 		</insert>
 
 		<!-- History of Engine Oil -->
@@ -33,17 +43,27 @@
 			<column name="id" valueComputed="component_history_seq.nextval"/>
 			<column name="version" value="0"/>
 
+			<column name="name" value="Engine Oil"/>
+			<column name="description" value="Engine Oil"/>
+			
+			<column name="part_id" valueComputed="(select id from part where name='Aereoshell 15W50')"/>
             <column name="work_performed" value="Replaced"/>
             <column name="date_performed" value="2017-01-01"/>
             <column name="hours_performed" value="1900"/>
+			<column name="hours_due" valueNumeric="1950"/>
 		</insert>
 		<insert tableName="component_history">
 			<column name="id" valueComputed="component_history_seq.nextval"/>
 			<column name="version" value="0"/>
 
+			<column name="name" value="Engine Oil"/>
+			<column name="description" value="Engine Oil"/>
+			
+			<column name="part_id" valueComputed="(select id from part where name='Aereoshell 15W50')"/>
             <column name="work_performed" value="Replaced"/>
             <column name="date_performed" value="2018-01-01"/>
             <column name="hours_performed" value="1950"/>
+			<column name="hours_due" valueNumeric="2000"/>
 		</insert>
 	</changeSet>
 </databaseChangeLog>	

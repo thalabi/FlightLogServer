@@ -18,14 +18,19 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="name" type="varchar(64)"/>
+            <column name="description" type="varchar(256)"/>
+            <column name="part_id" type="bigint"/>
             <column name="work_performed" type="varchar(256)"/>
             <column name="date_performed" type="date"/>
             <column name="hours_performed" type="decimal(5,1)"/>
+            <column name="date_due" type="date"/>
+            <column name="hours_due" type="decimal(5,1)"/>
             
             <column name="created" type="timestamp"/>
             <column name="modified" type="timestamp"/>
             
         </createTable>
+        <addForeignKeyConstraint baseTableName="component_history" baseColumnNames="part_id" constraintName="component_history_fk_1" referencedTableName="part" referencedColumnNames="id"/>
     </changeSet>
-
 </databaseChangeLog>

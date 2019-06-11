@@ -5,8 +5,9 @@ import java.util.Set;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.hateoas.core.Relation;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistory;
+import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistoryResource;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 
 import lombok.Getter;
@@ -19,9 +20,7 @@ public class ComponentResource extends ResourceSupport {
 	@JsonUnwrapped
 	private Component component;
 	
-//	private String partName;
-//	private String partDescription;
-	
 	private Part part;
-	private Set<ComponentHistory> componentHistorySet;
+	@JsonProperty("componentHistorySet")
+	private Set<ComponentHistoryResource> componentHistoryResourceSet;
 }
