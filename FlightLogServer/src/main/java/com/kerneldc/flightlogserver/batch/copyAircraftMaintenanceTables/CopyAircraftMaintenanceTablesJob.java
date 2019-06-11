@@ -57,7 +57,7 @@ public class CopyAircraftMaintenanceTablesJob {
     	return new JdbcCursorItemReaderBuilder<OldPart>()
                 .dataSource(inputDataSourceH2)
                 .name("oldPartReader")
-                .sql("select component_id, name from aircraft_maintenance.component") // component is the old name of part table
+                .sql("select component_id, name from public.component") // component is the old name of part table
                 .rowMapper(new OldPartRowMapper())
                 .build();
     }
@@ -76,13 +76,13 @@ public class CopyAircraftMaintenanceTablesJob {
     	return new JdbcCursorItemReaderBuilder<OldComponent>()
                 .dataSource(inputDataSourceH2)
                 .name("oldComponentReader")
-                .sql("select c.name part_name, ma.activity_performed, ma.date_performed, ma.hours_performed, ma.date_due, ma.hours_due\r\n" + 
-                		"  from aircraft_maintenance.maintenance_activity ma\r\n" + 
-                		"  join aircraft_maintenance.component c on ma.component_id = c.component_id") // maintenance_activity is the old name of component table
+                .sql("select c.name part_name, mr.work_performed, mr.date_performed, mr.hours_performed, mr.date_due, mr.hours_due\r\n" + 
+                		"  from public.maint_rec mr\r\n" + 
+                		"  join public.component c on mr.component_id = c.component_id") // maintenance_activity is the old name of component table
                 .rowMapper(new OldComponentRowMapper())
                 .build();
     }
-    
+
     @Bean
     public JdbcBatchItemWriter<Component> componentWriter() {
         return new JdbcBatchItemWriterBuilder<Component>()
