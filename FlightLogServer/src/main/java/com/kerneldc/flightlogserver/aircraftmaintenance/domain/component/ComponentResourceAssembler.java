@@ -1,10 +1,10 @@
 package com.kerneldc.flightlogserver.aircraftmaintenance.domain.component;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityLinks;
+import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.LinkBuilder;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ComponentResourceAssembler extends ResourceAssemblerSupport<Component, ComponentResource> {
 
 	@Autowired
-	private EntityLinks repositoryEntityLinks;
+	private RepositoryEntityLinks repositoryEntityLinks;
 	
 	public ComponentResourceAssembler() {
 		super(ComponentController.class, ComponentResource.class);
@@ -33,7 +33,7 @@ public class ComponentResourceAssembler extends ResourceAssemblerSupport<Compone
 		
 		componentResource.setPart(component.getPart());
 		
-		Set<ComponentHistoryResource> componentHistoryResourceSet = new HashSet<>();
+		Set<ComponentHistoryResource> componentHistoryResourceSet = new LinkedHashSet<>();
 		for (ComponentHistory componentHistory : component.getComponentHistorySet()) {
 			ComponentHistoryResource componentHistoryResource = new ComponentHistoryResource();
 			LinkBuilder componentHistorylinkBuilder = repositoryEntityLinks.linkForSingleResource(componentHistory);
