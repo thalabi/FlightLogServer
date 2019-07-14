@@ -1,7 +1,7 @@
 package com.kerneldc.flightlogserver.domain.flightLog;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityLinks;
+import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import com.kerneldc.flightlogserver.controller.FlightLogController;
 public class FlightLogResourceAssembler extends ResourceAssemblerSupport<FlightLog, FlightLogResource> {
 
 	@Autowired
-	private EntityLinks repositoryEntityLinks;
+	private RepositoryEntityLinks repositoryEntityLinks;
 	
 	public FlightLogResourceAssembler() {
 		super(FlightLogController.class, FlightLogResource.class);
