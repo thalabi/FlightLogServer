@@ -15,7 +15,8 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<relativePath/> <!-- lookup parent from repository -->
-		<version>2.0.3.RELEASE</version>
+<!-- 		<version>2.0.3.RELEASE</version> -->
+		<version>2.1.6.RELEASE</version>
 	</parent>
 
 	<properties>
@@ -25,6 +26,13 @@
 		<deploy.folder>c:/temp</deploy.folder>
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 		<timestamp>${maven.build.timestamp}</timestamp>
+<!-- 		Downgrade maven-jar-plugin when upgrading to Spring Boot 2.1.5 -->
+<!-- 		Why does change from Spring boot version 2.1.4 to 2.1.5 gives unknown configuration Maven error? -->
+<!-- 		https://stackoverflow.com/questions/56154266/why-does-change-from-spring-boot-version-2-1-4-to-2-1-5-gives-unknown-configurat -->
+<!-- 		Cannot import any project into Eclipse with maven-jar-plugin 3.1.2 -->
+<!-- 		https://bugs.eclipse.org/bugs/show_bug.cgi?id=547340 -->
+		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+		
 	</properties>
 
 	<dependencies>
@@ -70,9 +78,9 @@
 			<artifactId>spring-data-rest-hal-browser</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.oracle.jdbc</groupId>
+			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc8</artifactId>
-			<version>12.2.0.1</version>
+			<version>19.3.0.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.liquibase</groupId>
@@ -91,11 +99,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.httpcomponents</groupId> -->
-<!-- 			<artifactId>httpclient</artifactId> -->
-<!-- 			<scope>test</scope> -->
-<!-- 		</dependency> -->
 		<dependency>
 			<groupId>com.github.ulisesbocchio</groupId>
 			<artifactId>jasypt-spring-boot-starter</artifactId>
@@ -122,6 +125,16 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.10.5</version>
 		</dependency>
+		
+		
+<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+<dependency>
+    <groupId>org.hibernate</groupId>
+    <artifactId>hibernate-core</artifactId>
+    <version>5.4.3.Final</version>
+</dependency>
+		
+		
 	</dependencies>
 
 	<build>
@@ -133,62 +146,30 @@
 		</plugins>
 	</build>
 
-	<repositories>
-		<repository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
+<!-- 	<pluginRepositories> -->
+<!-- 		<pluginRepository> -->
+<!-- 			<id>spring-snapshots</id> -->
+<!-- 			<name>Spring Snapshots</name> -->
+<!-- 			<url>https://repo.spring.io/snapshot</url> -->
+<!-- 			<snapshots> -->
+<!-- 				<enabled>true</enabled> -->
+<!-- 			</snapshots> -->
+<!-- 		</pluginRepository> -->
+<!-- 		<pluginRepository> -->
+<!-- 			<id>spring-milestones</id> -->
+<!-- 			<name>Spring Milestones</name> -->
+<!-- 			<url>https://repo.spring.io/milestone</url> -->
+<!-- 			<snapshots> -->
+<!-- 				<enabled>false</enabled> -->
+<!-- 			</snapshots> -->
+<!-- 		</pluginRepository> -->
 
-		<repository>
-			<id>maven.oracle.com</id>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<url>https://maven.oracle.com</url>
-			<layout>default</layout>
-		</repository>
+<!-- 		<pluginRepository> -->
+<!-- 			<id>maven.oracle.com</id> -->
+<!-- 			<url>https://maven.oracle.com</url> -->
+<!-- 		</pluginRepository> -->
 
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-
-		<pluginRepository>
-			<id>maven.oracle.com</id>
-			<url>https://maven.oracle.com</url>
-		</pluginRepository>
-
-	</pluginRepositories>
+<!-- 	</pluginRepositories> -->
 
 	<distributionManagement>
 		<repository>

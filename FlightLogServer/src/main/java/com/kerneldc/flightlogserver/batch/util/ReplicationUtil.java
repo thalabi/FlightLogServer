@@ -56,7 +56,7 @@ public class ReplicationUtil {
 			if (CollectionUtils.isEmpty(lastNumberList) || lastNumberList.get(0).compareTo(1) == 0) {
 				return;
 			}
-			jdbcTemplate.execute(String.format("alter sequence %s increment by %d nocache nominvalue", sequenceName, -1*(lastNumberList.get(0)-1)));
+			jdbcTemplate.execute(String.format("alter sequence %s increment by %d nocache", sequenceName, -1*(lastNumberList.get(0)-1)));
 			jdbcTemplate.execute(String.format("select %s.nextval from dual", sequenceName));
 			jdbcTemplate.execute(String.format("alter sequence %s increment by 1", sequenceName));
 		} else {

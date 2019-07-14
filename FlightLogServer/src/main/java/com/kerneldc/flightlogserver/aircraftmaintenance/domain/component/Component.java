@@ -18,6 +18,7 @@ import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedEntityGraphs;
 import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -82,6 +83,7 @@ public class Component extends AbstractPersistableEntity implements Identifiable
 		name = "component_component_history",
 		joinColumns = @JoinColumn(name = "component_id"),
 		inverseJoinColumns = @JoinColumn(name="component_history_id"))
+	@OrderBy(value = "datePerformed desc") // show component history ordered by datePerformed in descending
 	@Builder.Default // to make builder initialize componentHistorySet with empty set
 	private Set<ComponentHistory> componentHistorySet = new LinkedHashSet<>(); // the no-args constructor won't get this default value
 

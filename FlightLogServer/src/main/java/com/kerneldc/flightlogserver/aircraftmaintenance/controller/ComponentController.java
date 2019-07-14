@@ -1,18 +1,16 @@
 package com.kerneldc.flightlogserver.aircraftmaintenance.controller;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,11 +73,13 @@ public class ComponentController {
     	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
     	EntitySpecificationsBuilder<Component> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
         Page<Component> componentPage = componentRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);
+        LOGGER.info("componentPage: {}", componentPage.getContent());
 		Link link = ControllerLinkBuilder
 				.linkTo(ControllerLinkBuilder.methodOn(ComponentController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
 		return pagedResourcesAssembler.toResource(componentPage, componentResourceAssembler, link);
     }
     
+    @Transactional
     @PostMapping("/add")
     public ResponseEntity<String> add(@Valid @RequestBody ComponentRequest componentRequest) throws ApplicationException {
     	LOGGER.debug("addComponentRequest: {}", componentRequest);
@@ -126,26 +126,38 @@ public class ComponentController {
     public ResponseEntity<String> delete(@RequestParam(value = "componentUri") String componentUri, @RequestParam(value = "deleteHistoryRecords") Boolean deleteHistoryRecords) throws ApplicationException {
     	LOGGER.debug("componentUri: {}, deleteHistoryRecords: {}", deleteHistoryRecords, deleteHistoryRecords);
     	Component component = parseAndFindComponent(componentUri);
-    	if (deleteHistoryRecords) {
+		Set<ComponentHistory> componentHistorySet = component.getComponentHistorySet();
+    	if (deleteHistoryRecords || CollectionUtils.isEmpty(componentHistorySet)) {
     		componentRepository.delete(component);
     	} else {
-    		Set<ComponentHistory> componentHistorySet = component.getComponentHistorySet();
     		LOGGER.info("componentHistorySet: {}", componentHistorySet);
-    		Comparator<ComponentHistory> compareByCreated = (ComponentHistory o1, ComponentHistory o2) -> o1.getCreated().compareTo( o2.getCreated());
-    		SortedSet<ComponentHistory> componentHistorySetSortedByCreatedDesc = new TreeSet<>(compareByCreated.reversed());
-    		componentHistorySetSortedByCreatedDesc.addAll(componentHistorySet);
-    		LOGGER.info("componentHistorySetSortedByCreatedDesc: {}", componentHistorySetSortedByCreatedDesc);
-    		component.setName(componentHistorySetSortedByCreatedDesc.first().getName());
-    		component.setDescription(componentHistorySetSortedByCreatedDesc.first().getDescription());
-    		component.setPart(componentHistorySetSortedByCreatedDesc.first().getPart());
-    		component.setWorkPerformed(componentHistorySetSortedByCreatedDesc.first().getWorkPerformed());
-    		component.setDatePerformed(componentHistorySetSortedByCreatedDesc.first().getDatePerformed());
-    		component.setHoursPerformed(componentHistorySetSortedByCreatedDesc.first().getHoursPerformed());
-    		component.setDateDue(componentHistorySetSortedByCreatedDesc.first().getDateDue());
-    		component.setHoursDue(componentHistorySetSortedByCreatedDesc.first().getHoursDue());
-    		component.setCreated(componentHistorySetSortedByCreatedDesc.first().getCreated());
-    		component.setModified(componentHistorySetSortedByCreatedDesc.first().getModified());
-    		componentHistorySet.remove(componentHistorySetSortedByCreatedDesc.first());
+    		//Comparator<ComponentHistory> compareByCreated = (ComponentHistory o1, ComponentHistory o2) -> o1.getCreated().compareTo( o2.getCreated());
+    		//SortedSet<ComponentHistory> componentHistorySetSortedByCreatedDesc = new TreeSet<>(compareByCreated.reversed());
+    		//componentHistorySetSortedByCreatedDesc.addAll(componentHistorySet);
+    		//LOGGER.info("componentHistorySetSortedByCreatedDesc: {}", componentHistorySetSortedByCreatedDesc);
+//    		component.setName(componentHistorySetSortedByCreatedDesc.first().getName());
+//    		component.setDescription(componentHistorySetSortedByCreatedDesc.first().getDescription());
+//    		component.setPart(componentHistorySetSortedByCreatedDesc.first().getPart());
+//    		component.setWorkPerformed(componentHistorySetSortedByCreatedDesc.first().getWorkPerformed());
+//    		component.setDatePerformed(componentHistorySetSortedByCreatedDesc.first().getDatePerformed());
+//    		component.setHoursPerformed(componentHistorySetSortedByCreatedDesc.first().getHoursPerformed());
+//    		component.setDateDue(componentHistorySetSortedByCreatedDesc.first().getDateDue());
+//    		component.setHoursDue(componentHistorySetSortedByCreatedDesc.first().getHoursDue());
+//    		component.setCreated(componentHistorySetSortedByCreatedDesc.first().getCreated());
+//    		component.setModified(componentHistorySetSortedByCreatedDesc.first().getModified());
+//    		componentHistorySet.remove(componentHistorySetSortedByCreatedDesc.first());
+    		component.setName(componentHistorySet.iterator().next().getName());
+    		component.setDescription(componentHistorySet.iterator().next().getDescription());
+    		component.setPart(componentHistorySet.iterator().next().getPart());
+    		component.setWorkPerformed(componentHistorySet.iterator().next().getWorkPerformed());
+    		component.setDatePerformed(componentHistorySet.iterator().next().getDatePerformed());
+    		component.setHoursPerformed(componentHistorySet.iterator().next().getHoursPerformed());
+    		component.setDateDue(componentHistorySet.iterator().next().getDateDue());
+    		component.setHoursDue(componentHistorySet.iterator().next().getHoursDue());
+    		component.setCreated(componentHistorySet.iterator().next().getCreated());
+    		component.setModified(componentHistorySet.iterator().next().getModified());
+    		componentHistorySet.remove(componentHistorySet.iterator().next());
+
     		componentRepository.save(component);
     	}
     	return ResponseEntity.ok(StringUtils.EMPTY);

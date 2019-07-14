@@ -7,7 +7,6 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +27,6 @@ public abstract class AbstractPersistableEntity implements Serializable {
 	private Long version;
 
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+        return ToStringBuilder.reflectionToString(this);
     }
 }

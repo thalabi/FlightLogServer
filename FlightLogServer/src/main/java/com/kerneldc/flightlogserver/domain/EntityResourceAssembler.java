@@ -1,7 +1,7 @@
 package com.kerneldc.flightlogserver.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityLinks;
+import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
@@ -13,7 +13,7 @@ public class EntityResourceAssembler<E extends AbstractPersistableEntity, R exte
 	private Class<R> classR;
 	
 	@Autowired
-	private EntityLinks repositoryEntityLinks;
+	private RepositoryEntityLinks repositoryEntityLinks;
 	
 	public EntityResourceAssembler(Class<E> classE, Class<R> classR, Class<C> classC) {
 		super(classC, classR);

@@ -1,7 +1,7 @@
 package com.kerneldc.flightlogserver.security.domain.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityLinks;
+import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.LinkBuilder;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import com.kerneldc.flightlogserver.security.controller.UserController;
 public class UserResourceAssembler extends ResourceAssemblerSupport<User, UserResource> {
 
 	@Autowired
-	private EntityLinks repositoryEntityLinks;
+	private RepositoryEntityLinks repositoryEntityLinks;
 	
 	public UserResourceAssembler() {
 		super(UserController.class, UserResource.class);
