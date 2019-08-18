@@ -12,10 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Date;
-import java.util.Optional;
 
 import org.apache.commons.lang3.SerializationUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -25,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -47,6 +46,8 @@ import com.kerneldc.flightlogserver.security.util.JwtTokenProvider;
 @WebMvcTest(controllers = ComponentController.class)
 public class ComponentControllerTest {
 
+	private static final String COMPONENT_WRITE = "component write";
+	
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -70,8 +71,7 @@ public class ComponentControllerTest {
 	private JwtTokenProvider jwtTokenProvider;
 	
 	@Test
-	@Ignore
-	//@WithUserDetails
+	@WithMockUser(authorities = COMPONENT_WRITE)
 	public void testAdd_success() throws Exception {
 		ComponentRequest componentRequest = new ComponentRequest();
 		componentRequest.setName("OilFilter");
@@ -88,8 +88,6 @@ public class ComponentControllerTest {
 		component.setPart(part);
 		Component savedComponent = SerializationUtils.clone(component);
 		savedComponent.setId(7l);
-		
-		Optional<Part> optionalPart = Optional.of(part);
 		
 		when(componentPersistenceService.parseAndFindPart(componentRequest.getPartUri())).thenReturn(part);
 		
@@ -112,7 +110,7 @@ public class ComponentControllerTest {
 	}
 
 	@Test
-	@Ignore
+	@WithMockUser(authorities = COMPONENT_WRITE)
 	public void testAdd_partNotFound_failure() throws Exception {
 		ComponentRequest componentRequest = new ComponentRequest();
 		componentRequest.setName("OilFilter");
@@ -124,12 +122,9 @@ public class ComponentControllerTest {
 		componentRequest.setHoursDue(1500f);
 		componentRequest.setPartUri("http://localhost:6001/parts/666");
 		long partId = 666;
-		Part part = Part.builder().id(partId).build();
 		Component component = new Component();
 		BeanUtils.copyProperties(componentRequest, component);
 		component.setId(7l);
-		
-		Optional<Part> optionalPart = Optional.empty();
 		
 		when(componentPersistenceService.parseAndFindPart(componentRequest.getPartUri())).thenThrow(new ApplicationException(String.format("Part ID: %d not found", partId)));
 		
@@ -142,8 +137,8 @@ public class ComponentControllerTest {
 				.andDo(print());
 	}
 
-	@Ignore
 	@Test
+	@WithMockUser(authorities = COMPONENT_WRITE)
 	public void testAdd_partIdNotParsable_failure() throws Exception {
 		ComponentRequest componentRequest = new ComponentRequest();
 		componentRequest.setName("OilFilter");
@@ -166,8 +161,8 @@ public class ComponentControllerTest {
 				.andDo(print());
 	}
 
-	@Ignore
 	@Test
+	@WithMockUser(authorities = COMPONENT_WRITE)
 	public void testModify_success() throws Exception {
 		ComponentRequest componentRequest = new ComponentRequest();
 		componentRequest.setComponentUri("http://localhost:6001/components/7");
@@ -182,9 +177,7 @@ public class ComponentControllerTest {
 		componentRequest.setCreateHistoryRecord(false);
 		Part oldPart = Part.builder().id(25l).build();
 		Part newPart = Part.builder().id(258l).name("part 258 name").build();
-		Optional<Part> optionalNewPart = Optional.of(newPart);
 		Component oldComponent = Component.builder().id(7l).part(oldPart).name("old name").build();
-		Optional<Component> optionalOldComponent = Optional.of(oldComponent);
 		Component newComponent = new Component();
 		BeanUtils.copyProperties(componentRequest, newComponent);
 		newComponent.setId(7l);
@@ -214,8 +207,8 @@ public class ComponentControllerTest {
 		assertThat(newComponentArg.getValue().getPart(), equalTo(newPart));
 	}
 
-	@Ignore
 	@Test
+	@WithMockUser(authorities = COMPONENT_WRITE)
 	public void testModify_createHistoryRecord_success() throws Exception {
 		ComponentRequest componentRequest = new ComponentRequest();
 		componentRequest.setComponentUri("http://localhost:6001/components/7");
@@ -230,9 +223,7 @@ public class ComponentControllerTest {
 		componentRequest.setCreateHistoryRecord(true);
 		Part oldPart = Part.builder().id(25l).build();
 		Part newPart = Part.builder().id(258l).name("part 258 name").build();
-		Optional<Part> optionalNewPart = Optional.of(newPart);
 		Component oldComponent = Component.builder().id(7l).part(oldPart).name("old name").workPerformed("old replaced").datePerformed(new Date()).hoursPerformed(999f).build();
-		Optional<Component> optionalOldComponent = Optional.of(oldComponent);
 		ComponentHistory newComponentHistory = ComponentHistory.builder().workPerformed(oldComponent.getWorkPerformed())
 				.datePerformed(oldComponent.getDatePerformed()).hoursPerformed(oldComponent.getHoursPerformed())
 				.build();
