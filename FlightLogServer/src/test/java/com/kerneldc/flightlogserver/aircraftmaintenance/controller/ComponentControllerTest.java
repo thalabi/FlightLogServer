@@ -15,14 +15,12 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.apache.commons.lang3.SerializationUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -39,10 +37,12 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentHist
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepository;
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.PartRepository;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
+import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
+import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
+import com.kerneldc.flightlogserver.security.util.JwtTokenProvider;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(ComponentController.class)
-@AutoConfigureMockMvc(secure = false) // no web security
+@WebMvcTest(controllers = ComponentController.class)
 public class ComponentControllerTest {
 
     @Autowired
@@ -58,9 +58,15 @@ public class ComponentControllerTest {
     private PartRepository partRepository;
 	@MockBean
 	private ComponentResourceAssembler componentResourceAssembler;
+	@MockBean
+	private CustomUserDetailsService customUserDetailsService;
+	@MockBean
+	private UnauthorizedHandler unauthorizedHandler;
+	@MockBean
+	private JwtTokenProvider jwtTokenProvider;
 	
-	@Ignore
 	@Test
+	//@WithMockUser(value = "spring")
 	public void testAdd_success() throws Exception {
 		ComponentRequest componentRequest = new ComponentRequest();
 		componentRequest.setName("OilFilter");
@@ -100,7 +106,6 @@ public class ComponentControllerTest {
 		assertThat(componentArg.getValue().getHoursDue(), equalTo(componentRequest.getHoursDue()));
 	}
 
-	@Ignore
 	@Test
 	public void testAdd_partNotFound_failure() throws Exception {
 		ComponentRequest componentRequest = new ComponentRequest();
@@ -131,7 +136,6 @@ public class ComponentControllerTest {
 				.andDo(print());
 	}
 
-	@Ignore
 	@Test
 	public void testAdd_partIdNotParsable_failure() throws Exception {
 		ComponentRequest componentRequest = new ComponentRequest();
@@ -153,7 +157,6 @@ public class ComponentControllerTest {
 				.andDo(print());
 	}
 
-	@Ignore
 	@Test
 	public void testModify_success() throws Exception {
 		ComponentRequest componentRequest = new ComponentRequest();
@@ -200,7 +203,7 @@ public class ComponentControllerTest {
 		assertThat(newComponentArg.getValue().getPart().getId(), equalTo(newPart.getId()));
 		assertThat(newComponentArg.getValue().getPart(), equalTo(newPart));
 	}
-	@Ignore
+
 	@Test
 	public void testModify_createHistoryRecord_success() throws Exception {
 		ComponentRequest componentRequest = new ComponentRequest();
