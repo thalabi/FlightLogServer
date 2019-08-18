@@ -3,8 +3,6 @@ package com.kerneldc.flightlogserver.aircraftmaintenance.controller;
 import java.lang.invoke.MethodHandles;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -31,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.TextNode;
@@ -42,7 +39,7 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.Compone
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistory;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepository;
-import com.kerneldc.flightlogserver.aircraftmaintenance.repository.PartRepository;
+import com.kerneldc.flightlogserver.aircraftmaintenance.service.ComponentPersistenceService;
 import com.kerneldc.flightlogserver.controller.ControllerHelper;
 import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
@@ -54,16 +51,17 @@ import com.kerneldc.flightlogserver.exception.ApplicationException;
 public class ComponentController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	private static final UriTemplate PART_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/parts/{id}");
-	private static final UriTemplate COMPONENT_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/components/{id}");
+//	private static final UriTemplate PART_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/parts/{id}");
+//	private static final UriTemplate COMPONENT_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/components/{id}");
 
     private ComponentRepository componentRepository;
-    private PartRepository partRepository;
+    private ComponentPersistenceService componentPersistenceService;
 	private ComponentResourceAssembler componentResourceAssembler;
 
-    public ComponentController(ComponentRepository componentRepository, PartRepository partRepository, ComponentResourceAssembler componentResourceAssembler) throws JsonProcessingException {
+    public ComponentController(ComponentRepository componentRepository, /*PartRepository partRepository,*/ ComponentPersistenceService componentPersistenceService, ComponentResourceAssembler componentResourceAssembler) throws JsonProcessingException {
         this.componentRepository = componentRepository;
-        this.partRepository = partRepository;
+//        this.partRepository = partRepository;
+        this.componentPersistenceService = componentPersistenceService;
         this.componentResourceAssembler = componentResourceAssembler;
     }
 
@@ -83,7 +81,8 @@ public class ComponentController {
     @PostMapping("/add")
     public ResponseEntity<String> add(@Valid @RequestBody ComponentRequest componentRequest) throws ApplicationException {
     	LOGGER.debug("addComponentRequest: {}", componentRequest);
-    	Part part = parseAndFindPart(componentRequest.getPartUri()).get();
+    	Part part = componentPersistenceService.parseAndFindPart(componentRequest.getPartUri());
+    	 
     	Component component = new Component();
     	BeanUtils.copyProperties(componentRequest, component);
     	component.setPart(part);
@@ -96,10 +95,10 @@ public class ComponentController {
     @Transactional
     @PutMapping("/modify")
     public ResponseEntity<String> modify(@Valid @RequestBody ComponentRequest componentRequest) throws ApplicationException {
-    	LOGGER.debug("modifyComponentRequest: {}", componentRequest);
-    	Component component = parseAndFindComponent(componentRequest.getComponentUri());
+    	LOGGER.debug("componentRequest: {}", componentRequest);
+    	Component component = componentPersistenceService.parseAndFindComponent(componentRequest.getComponentUri());
     	ComponentHistory componentHistory = null;
-    	if (componentRequest.getCreateHistoryRecord().equals(true)) {
+    	if (componentRequest.getCreateHistoryRecord()) {
     		componentHistory = ComponentHistory.builder()
     				.name(component.getName())
     				.description(component.getDescription())
@@ -109,7 +108,7 @@ public class ComponentController {
     				.dateDue(component.getDateDue()).hoursDue(component.getHoursDue())
     				.created(componentRequest.getModified()).modified(componentRequest.getModified()).build();
     	}
-    	Part part = parseAndFindPart(componentRequest.getPartUri()).get();
+    	Part part = componentPersistenceService.parseAndFindPart(componentRequest.getPartUri());
     	BeanUtils.copyProperties(componentRequest, component);
     	component.setPart(part);
     	if (componentHistory != null) {
@@ -121,11 +120,39 @@ public class ComponentController {
     	return ResponseEntity.ok(StringUtils.EMPTY);
     }
     
+//    @Transactional
+//    @PutMapping("/modifyNew")
+//    public ResponseEntity<String> modifyNew(@Valid @RequestBody ComponentRequestNew componentRequestNew) throws ApplicationException {
+//    	LOGGER.debug("componentRequestNew: {}", componentRequestNew);
+//    	Component component = componentPersistenceService.parseAndFindComponent(componentRequestNew.getComponentUri());
+//    	ComponentHistory componentHistory = null;
+//    	if (componentRequestNew.getCreateHistoryRecord()) {
+//    		componentHistory = ComponentHistory.builder()
+//    				.name(component.getName())
+//    				.description(component.getDescription())
+//    				.part(component.getPart())
+//    				.workPerformed(component.getWorkPerformed())
+//    				.datePerformed(component.getDatePerformed()).hoursPerformed(component.getHoursPerformed())
+//    				.dateDue(component.getDateDue()).hoursDue(component.getHoursDue())
+//    				.created(componentRequestNew.getModified()).modified(componentRequestNew.getModified()).build();
+//    	}
+//    	Part part = componentPersistenceService.parseAndFindPart(componentRequestNew.getPartUri());
+//    	BeanUtils.copyProperties(componentRequestNew, component);
+//    	component.setPart(part);
+//    	if (componentHistory != null) {
+//    		component.getComponentHistorySet().add(componentHistory);
+//    	}
+//    	component.setDeleted(false);
+//    	componentRepository.save(component);
+//    	LOGGER.info("component: {}", component);
+//    	return ResponseEntity.ok(StringUtils.EMPTY);
+//    }
+    
     @Transactional
     @DeleteMapping("/delete")
     public ResponseEntity<String> delete(@RequestParam(value = "componentUri") String componentUri, @RequestParam(value = "deleteHistoryRecords") Boolean deleteHistoryRecords) throws ApplicationException {
     	LOGGER.debug("componentUri: {}, deleteHistoryRecords: {}", deleteHistoryRecords, deleteHistoryRecords);
-    	Component component = parseAndFindComponent(componentUri);
+    	Component component = componentPersistenceService.parseAndFindComponent(componentUri);
 		Set<ComponentHistory> componentHistorySet = component.getComponentHistorySet();
     	if (deleteHistoryRecords || CollectionUtils.isEmpty(componentHistorySet)) {
     		componentRepository.delete(component);
@@ -163,38 +190,38 @@ public class ComponentController {
     	return ResponseEntity.ok(StringUtils.EMPTY);
     }
     
-    private Optional<Part> parseAndFindPart(String partUri) throws ApplicationException {
-    	Long partId;
-    	try {
-    		partId = parseId(partUri, PART_URI_TEMPLATE);	
-    	} catch (NumberFormatException e) {
-    		throw new ApplicationException(String.format("Could not parse part ID from uri: %s", partUri));
-    	}
-    	Optional<Part> optionalPart = partRepository.findById(partId);
-    	if (!optionalPart.isPresent()) {
-    		throw new ApplicationException(String.format("Part ID: %d not found", partId));
-    	}
-    	return optionalPart;
-    }
-    
-    private Component parseAndFindComponent(String componentUri) throws ApplicationException {
-    	Long componentId;
-    	try {
-    		componentId = parseId(componentUri, COMPONENT_URI_TEMPLATE);	
-    	} catch (NumberFormatException e) {
-    		throw new ApplicationException(String.format("Could not parse component ID from uri: %s", componentUri));
-    	}
-    	Optional<Component> optionalComponent = componentRepository.findById(componentId);
-    	if (!optionalComponent.isPresent()) {
-    		throw new ApplicationException(String.format("Component ID: %d not found", componentId));
-    	}
-    	return optionalComponent.get();
-    }
-    
-    private Long parseId(String uri, UriTemplate uriTemplate) {
-    	Map<String, String> parameterMap = uriTemplate.match(uri);
-    	return Long.parseLong(parameterMap.get("id"));
-    }
+//    private Optional<Part> parseAndFindPart(String partUri) throws ApplicationException {
+//    	Long partId;
+//    	try {
+//    		partId = parseId(partUri, PART_URI_TEMPLATE);	
+//    	} catch (NumberFormatException e) {
+//    		throw new ApplicationException(String.format("Could not parse part ID from uri: %s", partUri));
+//    	}
+//    	Optional<Part> optionalPart = partRepository.findById(partId);
+//    	if (!optionalPart.isPresent()) {
+//    		throw new ApplicationException(String.format("Part ID: %d not found", partId));
+//    	}
+//    	return optionalPart;
+//    }
+//    
+//    private Component parseAndFindComponent(String componentUri) throws ApplicationException {
+//    	Long componentId;
+//    	try {
+//    		componentId = parseId(componentUri, COMPONENT_URI_TEMPLATE);	
+//    	} catch (NumberFormatException e) {
+//    		throw new ApplicationException(String.format("Could not parse component ID from uri: %s", componentUri));
+//    	}
+//    	Optional<Component> optionalComponent = componentRepository.findById(componentId);
+//    	if (!optionalComponent.isPresent()) {
+//    		throw new ApplicationException(String.format("Component ID: %d not found", componentId));
+//    	}
+//    	return optionalComponent.get();
+//    }
+//    
+//    private Long parseId(String uri, UriTemplate uriTemplate) {
+//    	Map<String, String> parameterMap = uriTemplate.match(uri);
+//    	return Long.parseLong(parameterMap.get("id"));
+//    }
     
     @GetMapping("/testDate")
     public ResponseEntity<String> testDate(@RequestParam(value = "testDate") Date testDate) {
