@@ -1,11 +1,11 @@
 package com.kerneldc.flightlogserver.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -23,7 +23,7 @@ import com.kerneldc.flightlogserver.repository.MakeModelRepository;
 
 @RestController
 @RequestMapping("makeModelController")
-@ExposesResourceFor(MakeModel.class) // needed for unit test to create entity links
+//@ExposesResourceFor(MakeModel.class) // needed for unit test to create entity links
 public class MakeModelController {
 
     private MakeModelRepository makeModelRepository;
@@ -39,6 +39,7 @@ public class MakeModelController {
     @GetMapping("/findAll")
 	public PagedResources<MakeModelResource> findAll(
 			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<MakeModel> pagedResourcesAssembler) {
+    	Objects.requireNonNull(pagedResourcesAssembler, "pagedResourcesAssembler cannot be null for this controller to work");
     	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
     	EntitySpecificationsBuilder<MakeModel> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
         Page<MakeModel> makeModelPage = makeModelRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);

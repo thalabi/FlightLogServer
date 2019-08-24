@@ -1,11 +1,11 @@
 package com.kerneldc.flightlogserver.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -23,7 +23,7 @@ import com.kerneldc.flightlogserver.repository.RegistrationRepository;
 
 @RestController
 @RequestMapping("registrationController")
-@ExposesResourceFor(Registration.class) // needed for unit test to create entity links
+//@ExposesResourceFor(Registration.class) // needed for unit test to create entity links
 public class RegistrationController {
 
     private RegistrationRepository registrationRepository;
@@ -38,6 +38,7 @@ public class RegistrationController {
     @GetMapping("/findAll")
 	public PagedResources<RegistrationResource> findAll(
 			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<Registration> pagedResourcesAssembler) {
+    	Objects.requireNonNull(pagedResourcesAssembler, "pagedResourcesAssembler cannot be null for this controller to work");
     	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
     	EntitySpecificationsBuilder<Registration> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
         Page<Registration> registrationPage = registrationRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);

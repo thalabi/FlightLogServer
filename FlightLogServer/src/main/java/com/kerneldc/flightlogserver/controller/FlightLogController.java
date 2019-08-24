@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -15,9 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaContext;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -41,7 +40,8 @@ import lombok.Setter;
 
 @RestController
 @RequestMapping("flightLogController")
-@ExposesResourceFor(FlightLog.class) // needed for unit test to create entity links
+//@Import(HateoasAwareSpringDataWebConfiguration.class)
+//@ExposesResourceFor(FlightLog.class) // needed for unit test to create entity links
 public class FlightLogController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -51,10 +51,9 @@ public class FlightLogController {
 	
 	private EntityManager flightLogEntityManager;
 
-    public FlightLogController(JpaContext jpaContext, FlightLogRepository flightLogRepository, FlightLogResourceAssembler flightLogResourceAssembler) {
+    public FlightLogController(FlightLogRepository flightLogRepository, FlightLogResourceAssembler flightLogResourceAssembler) {
         this.flightLogRepository = flightLogRepository;
         this.flightLogResourceAssembler = flightLogResourceAssembler;
-        flightLogEntityManager = jpaContext.getEntityManagerByManagedType(FlightLog.class);
     }
 
     @GetMapping("/count")
@@ -79,6 +78,7 @@ public class FlightLogController {
     @GetMapping("/findAll")
 	public HttpEntity<PagedResources<FlightLogResource>> findAll(
 			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<FlightLog> pagedResourcesAssembler) {
+    	Objects.requireNonNull(pagedResourcesAssembler, "pagedResourcesAssembler cannot be null for this controller to work");
     	LOGGER.info("search: {}", search);
     	LOGGER.info("pageable: {}", pageable);
     	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);

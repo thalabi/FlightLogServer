@@ -2,13 +2,13 @@ package com.kerneldc.flightlogserver.controller;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -29,7 +29,7 @@ import com.kerneldc.flightlogserver.repository.AirportRepository;
 
 @RestController
 @RequestMapping("airportController")
-@ExposesResourceFor(Airport.class) // needed for unit test to create entity links
+//@ExposesResourceFor(Airport.class) // needed for unit test to create entity links
 public class AirportController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -45,6 +45,7 @@ public class AirportController {
     @GetMapping("/findAll")
 	public PagedResources<AirportResource> findAll(
 			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<Airport> pagedResourcesAssembler) {
+    	Objects.requireNonNull(pagedResourcesAssembler, "pagedResourcesAssembler cannot be null for this controller to work");
     	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
     	EntitySpecificationsBuilder<Airport> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
         Page<Airport> airportPage = airportRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);
