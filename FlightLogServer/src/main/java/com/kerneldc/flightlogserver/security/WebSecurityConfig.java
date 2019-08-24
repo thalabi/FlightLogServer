@@ -23,13 +23,10 @@ import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(
-//	securedEnabled = true,
-//	jsr250Enabled = true,
-//	prePostEnabled = true
-//)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+	private static final String READ_TABLE_SUFFIX = " read";
+	private static final String WRITE_TABLE_SUFFIX = " write";
 	@Autowired
     private CustomUserDetailsService customUserDetailsService;
 	@Autowired
@@ -85,21 +82,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			String tableName = entityEnum.getTableName();
 			httpSecurity
 	            .authorizeRequests()
-		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"Controller/findAll/**").hasAuthority(tableName+" read")
-		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"Controller/count").hasAuthority(tableName+" read")
-		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"s").hasAuthority(tableName+" read")
-		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"s/**").hasAuthority(tableName+" read")
+		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"Controller/findAll/**").hasAuthority(tableName+READ_TABLE_SUFFIX)
+		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"Controller/count").hasAuthority(tableName+READ_TABLE_SUFFIX)
+		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"s").hasAuthority(tableName+READ_TABLE_SUFFIX)
+		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"s/**").hasAuthority(tableName+READ_TABLE_SUFFIX)
 		            
-		            .mvcMatchers(HttpMethod.POST, "/"+entityName+"s").hasAuthority(tableName+" write")
-		            .mvcMatchers(HttpMethod.PUT, "/"+entityName+"s/**").hasAuthority(tableName+" write")
-		            .mvcMatchers(HttpMethod.DELETE, "/"+entityName+"s/**").hasAuthority(tableName+" write")
+		            .mvcMatchers(HttpMethod.POST, "/"+entityName+"s").hasAuthority(tableName+WRITE_TABLE_SUFFIX)
+		            .mvcMatchers(HttpMethod.PUT, "/"+entityName+"s/**").hasAuthority(tableName+WRITE_TABLE_SUFFIX)
+		            .mvcMatchers(HttpMethod.DELETE, "/"+entityName+"s/**").hasAuthority(tableName+WRITE_TABLE_SUFFIX)
 
-		            .mvcMatchers(HttpMethod.POST, "/"+entityName+"Controller/add").hasAuthority(tableName+" write")
-		            .mvcMatchers(HttpMethod.PUT, "/"+entityName+"Controller/modify").hasAuthority(tableName+" write")
-		            .mvcMatchers(HttpMethod.DELETE, "/"+entityName+"Controller/delete").hasAuthority(tableName+" write")
+		            .mvcMatchers(HttpMethod.POST, "/"+entityName+"Controller/add").hasAuthority(tableName+WRITE_TABLE_SUFFIX)
+		            .mvcMatchers(HttpMethod.PUT, "/"+entityName+"Controller/modify").hasAuthority(tableName+WRITE_TABLE_SUFFIX)
+		            .mvcMatchers(HttpMethod.DELETE, "/"+entityName+"Controller/delete").hasAuthority(tableName+WRITE_TABLE_SUFFIX)
 
-		            .mvcMatchers(HttpMethod.GET, "/replicationController/getTableReplicationStatus/"+entityName).hasAuthority(tableName+" read")
-		            .mvcMatchers(HttpMethod.PUT, "/replicationController/setTableReplicationStatus/"+entityName).hasAuthority(tableName+" write")
+		            .mvcMatchers(HttpMethod.GET, "/replicationController/getTableReplicationStatus/"+entityName).hasAuthority(tableName+READ_TABLE_SUFFIX)
+		            .mvcMatchers(HttpMethod.PUT, "/replicationController/setTableReplicationStatus/"+entityName).hasAuthority(tableName+WRITE_TABLE_SUFFIX)
 		            .mvcMatchers(HttpMethod.GET, "/jobLauncherController/copy"+StringUtils.capitalize(entityName+"Table")).hasAuthority(tableName+" sync")
 		            ;
 		}
