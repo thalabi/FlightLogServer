@@ -85,7 +85,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			String tableName = entityEnum.getTableName();
 			httpSecurity
 	            .authorizeRequests()
-		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"Controller/findAll/*").hasAuthority(tableName+" read")
+		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"Controller/findAll/**").hasAuthority(tableName+" read")
 		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"Controller/count").hasAuthority(tableName+" read")
 		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"s").hasAuthority(tableName+" read")
 		            .mvcMatchers(HttpMethod.GET, "/"+entityName+"s/**").hasAuthority(tableName+" read")
