@@ -1,11 +1,11 @@
 package com.kerneldc.flightlogserver.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -23,7 +23,7 @@ import com.kerneldc.flightlogserver.repository.PilotRepository;
 
 @RestController
 @RequestMapping("pilotController")
-@ExposesResourceFor(Pilot.class) // needed for unit test to create entity links
+//@ExposesResourceFor(Pilot.class) // needed for unit test to create entity links
 public class PilotController {
 
     private PilotRepository pilotRepository;
@@ -38,6 +38,7 @@ public class PilotController {
     @GetMapping("/findAll")
 	public PagedResources<PilotResource> findAll(
 			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<Pilot> pagedResourcesAssembler) {
+    	Objects.requireNonNull(pagedResourcesAssembler, "pagedResourcesAssembler cannot be null for this controller to work");
     	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
     	EntitySpecificationsBuilder<Pilot> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
         Page<Pilot> pilotPage = pilotRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);
