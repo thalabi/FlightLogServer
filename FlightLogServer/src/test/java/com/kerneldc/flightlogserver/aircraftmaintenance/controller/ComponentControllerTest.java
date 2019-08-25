@@ -234,11 +234,8 @@ public class ComponentControllerTest {
 		newComponent.setId(7l);
 		newComponent.setPart(newPart);
 		
-//		when(partRepository.findById(newPart.getId())).thenReturn(optionalNewPart);
-//		when(componentRepository.findById(oldComponent.getId())).thenReturn(optionalOldComponent);
 		when(componentPersistenceService.parseAndFindPart(componentRequest.getPartUri())).thenReturn(newPart);
 		when(componentPersistenceService.parseAndFindComponent(componentRequest.getComponentUri())).thenReturn(oldComponent);
-
 		
 		mockMvc.perform(put("/componentController/modify")
 				.content(objectMapper.writeValueAsBytes(componentRequest))
