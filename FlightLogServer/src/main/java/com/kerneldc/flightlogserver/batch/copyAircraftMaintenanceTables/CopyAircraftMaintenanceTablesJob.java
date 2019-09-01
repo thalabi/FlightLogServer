@@ -95,7 +95,7 @@ public class CopyAircraftMaintenanceTablesJob {
 
     /**
      * Job that copies Part and Component tables from old H2 database
-     * @param parallelBackupFlow Is a parallel flow to make a backup of the part, component, component_history & component_component_history tables
+     * @param parallelBackupFlow Is a parallel flow to make a backup of the part, component, component_history {@literal &} component_component_history tables
      * @param purgeTablesStep1 Step to purge component_component_history table
      * @param purgeTablesStep2 Step to purge component_history table
      * @param purgeTablesStep3 Step to purge component table
