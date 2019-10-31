@@ -1,6 +1,7 @@
 package com.kerneldc.flightlogserver.aircraftmaintenance.controller;
 
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -92,41 +93,13 @@ public class ComponentController {
     	return ResponseEntity.ok(StringUtils.EMPTY);
     }
     
-    @Transactional
-    @PutMapping("/modify")
-    public ResponseEntity<String> modify(@Valid @RequestBody ComponentRequest componentRequest) throws ApplicationException {
-    	LOGGER.debug("componentRequest: {}", componentRequest);
-    	Component component = componentPersistenceService.parseAndFindComponent(componentRequest.getComponentUri());
-    	ComponentHistory componentHistory = null;
-    	if (componentRequest.getCreateHistoryRecord()) {
-    		componentHistory = ComponentHistory.builder()
-    				.name(component.getName())
-    				.description(component.getDescription())
-    				.part(component.getPart())
-    				.workPerformed(component.getWorkPerformed())
-    				.datePerformed(component.getDatePerformed()).hoursPerformed(component.getHoursPerformed())
-    				.dateDue(component.getDateDue()).hoursDue(component.getHoursDue())
-    				.created(componentRequest.getModified()).modified(componentRequest.getModified()).build();
-    	}
-    	Part part = componentPersistenceService.parseAndFindPart(componentRequest.getPartUri());
-    	BeanUtils.copyProperties(componentRequest, component);
-    	component.setPart(part);
-    	if (componentHistory != null) {
-    		component.getComponentHistorySet().add(componentHistory);
-    	}
-    	component.setDeleted(false);
-    	componentRepository.save(component);
-    	LOGGER.info("component: {}", component);
-    	return ResponseEntity.ok(StringUtils.EMPTY);
-    }
-    
 //    @Transactional
-//    @PutMapping("/modifyNew")
-//    public ResponseEntity<String> modifyNew(@Valid @RequestBody ComponentRequestNew componentRequestNew) throws ApplicationException {
-//    	LOGGER.debug("componentRequestNew: {}", componentRequestNew);
-//    	Component component = componentPersistenceService.parseAndFindComponent(componentRequestNew.getComponentUri());
+//    @PutMapping("/modify")
+//    public ResponseEntity<String> modify(@Valid @RequestBody ComponentRequest componentRequest) throws ApplicationException {
+//    	LOGGER.debug("componentRequest: {}", componentRequest);
+//    	Component component = componentPersistenceService.parseAndFindComponent(componentRequest.getComponentUri());
 //    	ComponentHistory componentHistory = null;
-//    	if (componentRequestNew.getCreateHistoryRecord()) {
+//    	if (componentRequest.getCreateHistoryRecord()) {
 //    		componentHistory = ComponentHistory.builder()
 //    				.name(component.getName())
 //    				.description(component.getDescription())
@@ -134,10 +107,10 @@ public class ComponentController {
 //    				.workPerformed(component.getWorkPerformed())
 //    				.datePerformed(component.getDatePerformed()).hoursPerformed(component.getHoursPerformed())
 //    				.dateDue(component.getDateDue()).hoursDue(component.getHoursDue())
-//    				.created(componentRequestNew.getModified()).modified(componentRequestNew.getModified()).build();
+//    				.created(componentRequest.getModified()).modified(componentRequest.getModified()).build();
 //    	}
-//    	Part part = componentPersistenceService.parseAndFindPart(componentRequestNew.getPartUri());
-//    	BeanUtils.copyProperties(componentRequestNew, component);
+//    	Part part = componentPersistenceService.parseAndFindPart(componentRequest.getPartUri());
+//    	BeanUtils.copyProperties(componentRequest, component);
 //    	component.setPart(part);
 //    	if (componentHistory != null) {
 //    		component.getComponentHistorySet().add(componentHistory);
@@ -149,6 +122,13 @@ public class ComponentController {
 //    }
     
     @Transactional
+    @PutMapping("/modifyComponentAndHistory")
+    public ResponseEntity<String> modifyComponentAndHistory(@Valid @RequestBody ComponentRequest componentRequest) throws ApplicationException, IllegalAccessException, InvocationTargetException {
+    	componentPersistenceService.updateComponentAndHistory(componentRequest);
+    	return ResponseEntity.ok(StringUtils.EMPTY);
+    }
+    
+    @Transactional
     @DeleteMapping("/delete")
     public ResponseEntity<String> delete(@RequestParam(value = "componentUri") String componentUri, @RequestParam(value = "deleteHistoryRecords") Boolean deleteHistoryRecords) throws ApplicationException {
     	LOGGER.debug("componentUri: {}, deleteHistoryRecords: {}", deleteHistoryRecords, deleteHistoryRecords);
@@ -158,21 +138,6 @@ public class ComponentController {
     		componentRepository.delete(component);
     	} else {
     		LOGGER.info("componentHistorySet: {}", componentHistorySet);
-    		//Comparator<ComponentHistory> compareByCreated = (ComponentHistory o1, ComponentHistory o2) -> o1.getCreated().compareTo( o2.getCreated());
-    		//SortedSet<ComponentHistory> componentHistorySetSortedByCreatedDesc = new TreeSet<>(compareByCreated.reversed());
-    		//componentHistorySetSortedByCreatedDesc.addAll(componentHistorySet);
-    		//LOGGER.info("componentHistorySetSortedByCreatedDesc: {}", componentHistorySetSortedByCreatedDesc);
-//    		component.setName(componentHistorySetSortedByCreatedDesc.first().getName());
-//    		component.setDescription(componentHistorySetSortedByCreatedDesc.first().getDescription());
-//    		component.setPart(componentHistorySetSortedByCreatedDesc.first().getPart());
-//    		component.setWorkPerformed(componentHistorySetSortedByCreatedDesc.first().getWorkPerformed());
-//    		component.setDatePerformed(componentHistorySetSortedByCreatedDesc.first().getDatePerformed());
-//    		component.setHoursPerformed(componentHistorySetSortedByCreatedDesc.first().getHoursPerformed());
-//    		component.setDateDue(componentHistorySetSortedByCreatedDesc.first().getDateDue());
-//    		component.setHoursDue(componentHistorySetSortedByCreatedDesc.first().getHoursDue());
-//    		component.setCreated(componentHistorySetSortedByCreatedDesc.first().getCreated());
-//    		component.setModified(componentHistorySetSortedByCreatedDesc.first().getModified());
-//    		componentHistorySet.remove(componentHistorySetSortedByCreatedDesc.first());
     		component.setName(componentHistorySet.iterator().next().getName());
     		component.setDescription(componentHistorySet.iterator().next().getDescription());
     		component.setPart(componentHistorySet.iterator().next().getPart());
@@ -189,39 +154,6 @@ public class ComponentController {
     	}
     	return ResponseEntity.ok(StringUtils.EMPTY);
     }
-    
-//    private Optional<Part> parseAndFindPart(String partUri) throws ApplicationException {
-//    	Long partId;
-//    	try {
-//    		partId = parseId(partUri, PART_URI_TEMPLATE);	
-//    	} catch (NumberFormatException e) {
-//    		throw new ApplicationException(String.format("Could not parse part ID from uri: %s", partUri));
-//    	}
-//    	Optional<Part> optionalPart = partRepository.findById(partId);
-//    	if (!optionalPart.isPresent()) {
-//    		throw new ApplicationException(String.format("Part ID: %d not found", partId));
-//    	}
-//    	return optionalPart;
-//    }
-//    
-//    private Component parseAndFindComponent(String componentUri) throws ApplicationException {
-//    	Long componentId;
-//    	try {
-//    		componentId = parseId(componentUri, COMPONENT_URI_TEMPLATE);	
-//    	} catch (NumberFormatException e) {
-//    		throw new ApplicationException(String.format("Could not parse component ID from uri: %s", componentUri));
-//    	}
-//    	Optional<Component> optionalComponent = componentRepository.findById(componentId);
-//    	if (!optionalComponent.isPresent()) {
-//    		throw new ApplicationException(String.format("Component ID: %d not found", componentId));
-//    	}
-//    	return optionalComponent.get();
-//    }
-//    
-//    private Long parseId(String uri, UriTemplate uriTemplate) {
-//    	Map<String, String> parameterMap = uriTemplate.match(uri);
-//    	return Long.parseLong(parameterMap.get("id"));
-//    }
     
     @GetMapping("/testDate")
     public ResponseEntity<String> testDate(@RequestParam(value = "testDate") Date testDate) {
