@@ -219,5 +219,5 @@
 		<connection>scm:git:https://github.com/thalabi/FlightLogServer</connection>
 		<developerConnection>scm:git:https://github.com/thalabi/FlightLogServer</developerConnection>
 	  <tag>HEAD</tag>
-  </scm>
+	</scm>
 </project>
