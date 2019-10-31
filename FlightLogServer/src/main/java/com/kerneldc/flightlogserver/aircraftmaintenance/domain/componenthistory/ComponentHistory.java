@@ -49,10 +49,10 @@ public class ComponentHistory extends AbstractPersistableEntity implements Ident
     @JoinColumn(name = "part_id")
     private Part part;
     private String workPerformed;
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date datePerformed;
     private Float hoursPerformed;
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dateDue;
     private Float hoursDue;
 
