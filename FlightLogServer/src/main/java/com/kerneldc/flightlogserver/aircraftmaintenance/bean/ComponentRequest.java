@@ -4,12 +4,14 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter
 @ToString
+@Builder
 public class ComponentRequest {
 
 	private String componentUri;
@@ -27,5 +29,6 @@ public class ComponentRequest {
     private Date created;
 	private Date modified;
 
+	@Builder.Default
 	private Set<ComponentHistoryVo> historyRequestSet = new LinkedHashSet<>(); 
 }
