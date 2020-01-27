@@ -113,6 +113,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// TODO should have "part write" and "component write"
 			.mvcMatchers(HttpMethod.GET, "/jobLauncherController/copyAircraftMaintenanceTables").hasAuthority("component write");
 
+		httpSecurity.authorizeRequests()
+			.mvcMatchers(HttpMethod.GET, "/aircraftMaintenancePrintController/*").hasAuthority("component read");
+
 		httpSecurity.authorizeRequests().anyRequest().denyAll();
 
 		
