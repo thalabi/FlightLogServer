@@ -1,7 +1,6 @@
 package com.kerneldc.flightlogserver.security.controller;
 
 import java.lang.invoke.MethodHandles;
-import java.lang.reflect.InvocationTargetException;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 import com.kerneldc.flightlogserver.security.bean.CopyUserRequest;
 import com.kerneldc.flightlogserver.security.domain.user.User;
-import com.kerneldc.flightlogserver.security.repository.UserRepository;
 import com.kerneldc.flightlogserver.security.service.SecurityPersistenceService;
 
 @RestController
@@ -31,17 +29,14 @@ public class CopyUserController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private UserRepository userRepository;
-    
 	private SecurityPersistenceService securityPersistenceService;
 	
-    public CopyUserController(UserRepository userRepository, SecurityPersistenceService securityPersistenceService) {
-        this.userRepository = userRepository;
+    public CopyUserController(SecurityPersistenceService securityPersistenceService) {
         this.securityPersistenceService = securityPersistenceService;
     }
 
     @PostMapping("/copyUser")
-	public ResponseEntity<String> copyUser(@Valid @RequestBody CopyUserRequest copyUserRequest) throws IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<String> copyUser(@Valid @RequestBody CopyUserRequest copyUserRequest) {
     	LOGGER.debug("copyUserRequest: {}", copyUserRequest);
 		try {
 			securityPersistenceService.copyUser(copyUserRequest.getFromUsername(), copyUserRequest.getToUsername());
