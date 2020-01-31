@@ -63,4 +63,6 @@
 
 	<include file="liquibase/aircraft-maintenance/component-component-history/create-table.xml"/>
 	<include file="liquibase/aircraft-maintenance/component-component-history/data/insert.xml"/>
+	
+	<include file="liquibase/aircraft-maintenance/component-and-history-v/create-view.xml"/>
 </databaseChangeLog>
