@@ -64,7 +64,8 @@ public class AircraftMaintenancePrintController {
 
 		LOGGER.debug(LOG_BEGIN);
 		
-		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository.findAllByOrderByDatePerformedDescComponentName();
+		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository
+				.findAllByOrderByDatePerformedDescComponentName();
 		LOGGER.debug("componentAndHistoryVList: {}", componentAndHistoryVList);
 
 		clearPartNameAndPartDescription(componentAndHistoryVList);
@@ -86,7 +87,9 @@ public class AircraftMaintenancePrintController {
 		LOGGER.debug(LOG_BEGIN);
 		
 		LOGGER.debug("fromDatePerformed: {}, toDatePerformed: {}", fromDatePerformed, toDatePerformed);
-		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository.findByDatePerformedBetweenOrderByDatePerformedDescComponentName(toDate(fromDatePerformed), toDate(toDatePerformed));
+		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository
+				.findByDatePerformedBetweenOrderByDatePerformedDescComponentName(toDate(fromDatePerformed),
+						toDate(toDatePerformed));
 		LOGGER.debug("componentAndHistoryVList: {}", componentAndHistoryVList);
 
 		if (componentAndHistoryVList.isEmpty()) {
@@ -107,7 +110,8 @@ public class AircraftMaintenancePrintController {
 
 		LOGGER.debug(LOG_BEGIN);
 		
-		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository.findAllByOrderByComponentNameAscDatePerformedDesc();
+		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository
+				.findAllByOrderByComponentNameAscDatePerformedDesc();
 		LOGGER.debug("componentAndHistoryVList: {}", componentAndHistoryVList);
 
 		clearPartNameAndPartDescription(componentAndHistoryVList);
@@ -127,7 +131,8 @@ public class AircraftMaintenancePrintController {
 
 		LOGGER.debug(LOG_BEGIN);
 		
-		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository.findAllByDateDueNotNullOrderByDateDueDescComponentName();
+		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository
+				.findAllByDateDueNotNullOrderByDateDueDescComponentName();
 		LOGGER.debug("componentAndHistoryVList: {}", componentAndHistoryVList);
 
 		clearPartNameAndPartDescription(componentAndHistoryVList);
@@ -148,7 +153,8 @@ public class AircraftMaintenancePrintController {
 		
 		Date today = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
 		LOGGER.info("today: {}", today);
-		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository.findByDateDueGreaterThanEqualOrderByDateDueAscComponentName(today);
+		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository
+				.findByDateDueGreaterThanEqualOrderByDateDueAscComponentName(today);
 		LOGGER.debug("componentAndHistoryVList: {}", componentAndHistoryVList);
 
 		clearPartNameAndPartDescription(componentAndHistoryVList);
@@ -166,7 +172,8 @@ public class AircraftMaintenancePrintController {
 
 		LOGGER.debug(LOG_BEGIN);
 		
-		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository.findAllByHoursDueNotNullOrderByHoursDueDescComponentName();
+		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository
+				.findAllByHoursDueNotNullOrderByHoursDueDescComponentName();
 		LOGGER.debug("componentAndHistoryVList: {}", componentAndHistoryVList);
 
 		clearPartNameAndPartDescription(componentAndHistoryVList);
@@ -184,7 +191,8 @@ public class AircraftMaintenancePrintController {
 
 		LOGGER.debug(LOG_BEGIN);
 		
-		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository.findByHoursDueGreaterThanLastHoursPerformedOrderByHoursDueAsc();
+		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository
+				.findByHoursDueGreaterThanLastHoursPerformedOrderByHoursDueAsc();
 		LOGGER.debug("componentAndHistoryVList: {}", componentAndHistoryVList);
 
 		clearPartNameAndPartDescription(componentAndHistoryVList);
@@ -203,7 +211,8 @@ public class AircraftMaintenancePrintController {
 
 		LOGGER.debug(LOG_BEGIN);
 		
-		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository.findByHoursDueGreaterThanEqualOrderByHoursDueAscComponentName(hoursDue);
+		List<ComponentAndHistoryV> componentAndHistoryVList = componentAndHistoryVRepository
+				.findByHoursDueGreaterThanEqualOrderByHoursDueAscComponentName(hoursDue);
 		LOGGER.debug("componentAndHistoryVList: {}", componentAndHistoryVList);
 
 		clearPartNameAndPartDescription(componentAndHistoryVList);
@@ -245,26 +254,7 @@ public class AircraftMaintenancePrintController {
 		
 		return ResponseEntity.ok(pdfByteArray);
 	}
-	/*
-	@GetMapping(value = "/printComponentHistoryByComponentNameInList2")
-	public ResponseEntity<String> printComponentHistoryByComponentNameInList2(
-			@RequestParam(value = "componentNameVoList") String componentNameVoList) {
-		
-		LOGGER.debug(LOG_BEGIN);
-		LOGGER.debug("componentAndHistoryVList: {}", componentNameVoList);
-		LOGGER.debug(LOG_END);
-		return ResponseEntity.ok(componentNameVoList);
-	}
-	@GetMapping(value = "/printComponentHistoryByComponentNameInList3")
-	public ResponseEntity<String> printComponentHistoryByComponentNameInList3(
-			@RequestBody ComponentNameVo componentNameVo) {
-		
-		LOGGER.debug(LOG_BEGIN);
-		LOGGER.debug("componentAndHistoryVList: {}", componentNameVo);
-		LOGGER.debug(LOG_END);
-		return ResponseEntity.ok(componentNameVo.toString());
-	}
-	*/
+
 	/**
 	 * clear partName & partDescription for partName = "No Parts Used"
 	 */
