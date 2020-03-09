@@ -6,6 +6,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -39,6 +40,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		nullPointerException.printStackTrace();
 		ExceptionBean exceptionBean = createExceptionBean(nullPointerException);
 		return handleExceptionInternal(nullPointerException, exceptionBean, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException methodArgumentNotValidException, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		methodArgumentNotValidException.printStackTrace();
+		ExceptionBean exceptionBean = createExceptionBean(methodArgumentNotValidException);
+		return handleExceptionInternal(methodArgumentNotValidException, exceptionBean, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
 	private ExceptionBean createExceptionBean(Exception exception) {
