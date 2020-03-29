@@ -1,6 +1,7 @@
 package com.kerneldc.flightlogserver.aircraftmaintenance.domain.part;
 
 import java.util.Date;
+import java.util.function.Function;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.springframework.hateoas.Identifiable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
@@ -27,9 +26,11 @@ import lombok.Setter;
 @Getter @Setter
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Part extends AbstractPersistableEntity implements Identifiable<Long> {
+public class Part extends AbstractPersistableEntity {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final Function<Part, Object> idExtractor = Part::getId;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "part_seq_gen")

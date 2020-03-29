@@ -39,7 +39,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
-import com.kerneldc.flightlogserver.domain.flightLog.FlightLogResourceAssembler;
+import com.kerneldc.flightlogserver.domain.flightLog.FlightLogModelAssembler;
 import com.kerneldc.flightlogserver.repository.FlightLogRepository;
 import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
 import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
@@ -59,7 +59,7 @@ public class FlightLogControllerTests extends AbstractBaseTest {
 	@MockBean
 	private FlightLogRepository flightLogRepository;
 	@SpyBean // Note we are Mockito spy bean
-	private FlightLogResourceAssembler flightLogResourceAssembler;
+	private FlightLogModelAssembler flightLogModelAssembler;
 	@MockBean
 	private RepositoryEntityLinks repositoryEntityLinks;
 
@@ -78,7 +78,7 @@ public class FlightLogControllerTests extends AbstractBaseTest {
 		
 		mockMvc.perform(get(BASE_URI + "/count"))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.count", is(1)))
         ;
 	}
@@ -109,12 +109,12 @@ public class FlightLogControllerTests extends AbstractBaseTest {
 		Mockito.when(flightLogRepository.findAll(ArgumentMatchers.<Specification<FlightLog>>any(), ArgumentMatchers.<Pageable>any()))
 			.thenReturn(returnPage);
 
-		Mockito.when(repositoryEntityLinks.linkToSingleResource(flightLog))
+		Mockito.when(repositoryEntityLinks.linkToItemResource(flightLog, FlightLog.idExtractor))
 			.thenReturn(new Link("http://mocked-link"));
 		
 		MvcResult mvcResult = mockMvc.perform(get(BASE_URI + "/findAll").param("search", "routeFrom=CYOO").contentType(MediaType.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaTypes.HAL_JSON_UTF8))
+        .andExpect(content().contentType(MediaTypes.HAL_JSON))
         .andExpect(jsonPath("$._embedded.flightLogs[0].routeFrom", is(flightLog.getRouteFrom())))
         .andExpect(jsonPath("$._embedded.flightLogs[0].routeTo", is(flightLog.getRouteTo())))
         .andExpect(jsonPath("$._embedded.flightLogs[0].pic", is(flightLog.getPic())))

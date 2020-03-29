@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import java.lang.invoke.MethodHandles;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import org.junit.Before;
@@ -48,8 +47,6 @@ public class SimpleControllerTests extends AbstractBaseTest {
 	@Autowired
     private WebApplicationContext webApplicationContext;
 
-	private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
-
 	private static final Pilot PILOT1 = new Pilot();
 	{
 		PILOT1.setId(7l);
@@ -70,7 +67,7 @@ public class SimpleControllerTests extends AbstractBaseTest {
 
 		MvcResult mvcResult = mockMvc.perform(get(BASE_URI + "/findAll"))
 			.andExpect(status().isOk())
-			.andExpect(content().contentType(contentType))
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(jsonPath("$.[0].pilot", equalTo(PILOT1.getPilot())))
 			.andExpect(jsonPath("$.[0].id", equalTo(PILOT1.getId().intValue())))
 			.andReturn();

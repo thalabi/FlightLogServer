@@ -17,10 +17,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +34,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.kerneldc.flightlogserver.aircraftmaintenance.bean.ComponentRequest;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.Component;
-import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.ComponentResource;
-import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.ComponentResourceAssembler;
+import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.ComponentModel;
+import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.ComponentModelAssembler;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistory;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepository;
@@ -48,7 +47,7 @@ import com.kerneldc.flightlogserver.exception.ApplicationException;
 
 @RestController
 @RequestMapping("componentController")
-@ExposesResourceFor(Component.class) // needed for unit test to create entity links
+//@ExposesResourceFor(Component.class) // needed for unit test to create entity links
 public class ComponentController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -57,25 +56,23 @@ public class ComponentController {
 
     private ComponentRepository componentRepository;
     private ComponentPersistenceService componentPersistenceService;
-	private ComponentResourceAssembler componentResourceAssembler;
+	private ComponentModelAssembler componentModelAssembler;
 
-    public ComponentController(ComponentRepository componentRepository, /*PartRepository partRepository,*/ ComponentPersistenceService componentPersistenceService, ComponentResourceAssembler componentResourceAssembler) throws JsonProcessingException {
+    public ComponentController(ComponentRepository componentRepository, /*PartRepository partRepository,*/ ComponentPersistenceService componentPersistenceService, ComponentModelAssembler componentModelAssembler) throws JsonProcessingException {
         this.componentRepository = componentRepository;
 //        this.partRepository = partRepository;
         this.componentPersistenceService = componentPersistenceService;
-        this.componentResourceAssembler = componentResourceAssembler;
+        this.componentModelAssembler = componentModelAssembler;
     }
 
     @GetMapping("/findAll")
-	public PagedResources<ComponentResource> findAll(
+	public PagedModel<ComponentModel> findAll(
 			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<Component> pagedResourcesAssembler) {
     	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
     	EntitySpecificationsBuilder<Component> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
         Page<Component> componentPage = componentRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);
-        LOGGER.info("componentPage: {}", componentPage.getContent());
-		Link link = ControllerLinkBuilder
-				.linkTo(ControllerLinkBuilder.methodOn(ComponentController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
-		return pagedResourcesAssembler.toResource(componentPage, componentResourceAssembler, link);
+        Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ComponentController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
+		return pagedResourcesAssembler.toModel(componentPage, componentModelAssembler, link);
     }
     
     @Transactional

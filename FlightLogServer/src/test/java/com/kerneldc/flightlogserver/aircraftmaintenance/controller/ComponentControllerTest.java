@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kerneldc.flightlogserver.aircraftmaintenance.bean.ComponentRequest;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.Component;
-import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.ComponentResourceAssembler;
+import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.ComponentModelAssembler;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentHistoryRepository;
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepository;
@@ -60,7 +60,7 @@ public class ComponentControllerTest {
 	@MockBean
 	private ComponentPersistenceService componentPersistenceService;
 	@MockBean
-	private ComponentResourceAssembler componentResourceAssembler;
+	private ComponentModelAssembler componentModelAssembler;
 	@MockBean
 	private CustomUserDetailsService customUserDetailsService;
 	@MockBean

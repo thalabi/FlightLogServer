@@ -1,7 +1,7 @@
 package com.kerneldc.flightlogserver.domain.makeModel;
 
-import org.springframework.hateoas.ResourceSupport;
-import org.springframework.hateoas.core.Relation;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Relation(collectionRelation = "makeModels")
-public class MakeModelResource extends ResourceSupport {
+public class MakeModelModel extends RepresentationModel<MakeModelModel> {
 
 	@JsonUnwrapped
 	private MakeModel makeModel;

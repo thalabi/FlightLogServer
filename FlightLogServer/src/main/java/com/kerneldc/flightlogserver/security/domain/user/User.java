@@ -2,6 +2,7 @@ package com.kerneldc.flightlogserver.security.domain.user;
 
 import java.util.Date;
 import java.util.Set;
+import java.util.function.Function;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -20,8 +21,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
-import org.springframework.hateoas.Identifiable;
 
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
 import com.kerneldc.flightlogserver.domain.converter.HashingConverter;
@@ -42,11 +41,13 @@ import lombok.Setter;
 			subgraphs = @NamedSubgraph(name = "permissions", attributeNodes = @NamedAttributeNode("permissionSet")))
 })
 @Getter @Setter
-public class User extends AbstractPersistableEntity implements Identifiable<Long> {
+public class User extends AbstractPersistableEntity {
 
 	private static final long serialVersionUID = 1L;
 
 	public static final String PROPERTY_GROUP_SET = "groupSet";
+
+	public static final Function<User, Object> idExtractor = User::getId;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")

@@ -10,11 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
 import com.kerneldc.flightlogserver.domain.airport.Airport;
-import com.kerneldc.flightlogserver.domain.airport.AirportResource;
-import com.kerneldc.flightlogserver.domain.airport.AirportResourceAssembler;
+import com.kerneldc.flightlogserver.domain.airport.AirportModel;
+import com.kerneldc.flightlogserver.domain.airport.AirportModelAssembler;
 import com.kerneldc.flightlogserver.repository.AirportRepository;
 
 @RestController
@@ -35,27 +32,27 @@ public class AirportController {
 
     private AirportRepository airportRepository;
     
-	private AirportResourceAssembler airportResourceAssembler;
+	private AirportModelAssembler airportModelAssembler;
 	
-    public AirportController(AirportRepository airportRepository, AirportResourceAssembler airportResourceAssembler) {
+    public AirportController(AirportRepository airportRepository, AirportModelAssembler airportModelAssembler) {
         this.airportRepository = airportRepository;
-        this.airportResourceAssembler = airportResourceAssembler;
+        this.airportModelAssembler = airportModelAssembler;
     }
 
     @GetMapping("/findAll")
-	public PagedResources<AirportResource> findAll(
+	public PagedModel<AirportModel> findAll(
 			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<Airport> pagedResourcesAssembler) {
     	Objects.requireNonNull(pagedResourcesAssembler, "pagedResourcesAssembler cannot be null for this controller to work");
     	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
     	EntitySpecificationsBuilder<Airport> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
         Page<Airport> airportPage = airportRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);
-		Link link = ControllerLinkBuilder
-				.linkTo(ControllerLinkBuilder.methodOn(AirportController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
-		return pagedResourcesAssembler.toResource(airportPage, airportResourceAssembler, link);
+		Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AirportController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
+		return pagedResourcesAssembler.toModel(airportPage, airportModelAssembler, link);
     }
 
+    /*
     @GetMapping("/findAll2")
-	public HttpEntity<PagedResources<AirportResource>> findAll2(
+	public HttpEntity<PagedResources<AirportModel>> findAll2(
 			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<Airport> pagedResourcesAssembler) {
     	LOGGER.info("search: {}", search);
     	LOGGER.info("pageable: {}", pageable);
@@ -65,14 +62,15 @@ public class AirportController {
 		Link link = ControllerLinkBuilder
 				.linkTo(ControllerLinkBuilder.methodOn(AirportController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
 		
-		PagedResources<AirportResource> airportPagedResources =
-				pagedResourcesAssembler.toResource(airportPage, airportResourceAssembler, link);
+		PagedResources<AirportModel> airportPagedResources =
+				pagedResourcesAssembler.toResource(airportPage, airportModelAssembler, link);
 		
 		LOGGER.debug("airportPagedResources: {}", airportPagedResources);
 		
-		HttpEntity<PagedResources<AirportResource>> r = ResponseEntity.status(HttpStatus.OK).body(airportPagedResources);
+		HttpEntity<PagedResources<AirportModel>> r = ResponseEntity.status(HttpStatus.OK).body(airportPagedResources);
 		
 		LOGGER.debug("r: {}", r);
 		return r;
     }
+    */
 }

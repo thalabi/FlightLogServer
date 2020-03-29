@@ -1,6 +1,7 @@
 package com.kerneldc.flightlogserver.domain.airport;
 
 import java.util.Date;
+import java.util.function.Function;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,8 +11,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.springframework.hateoas.Identifiable;
-
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
 
 import lombok.Getter;
@@ -19,12 +18,14 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class Airport extends AbstractPersistableEntity implements Identifiable<Long> {
+public class Airport extends AbstractPersistableEntity {
 
 	private static final long serialVersionUID = 1L;
 
 	public Airport() {
 	}
+
+	public static final Function<Airport, Object> idExtractor = Airport::getId;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "airport_seq_gen")

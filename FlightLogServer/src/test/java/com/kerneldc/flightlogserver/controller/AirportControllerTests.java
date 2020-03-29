@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.domain.airport.Airport;
-import com.kerneldc.flightlogserver.domain.airport.AirportResourceAssembler;
+import com.kerneldc.flightlogserver.domain.airport.AirportModelAssembler;
 import com.kerneldc.flightlogserver.repository.AirportRepository;
 import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
 import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
@@ -56,7 +56,7 @@ public class AirportControllerTests extends AbstractBaseTest {
 	@MockBean
 	private AirportRepository airportRepository;
 	@SpyBean // Note we are Mockito spy bean
-	private AirportResourceAssembler airportResourceAssembler;
+	private AirportModelAssembler airportModelAssembler;
 	@MockBean
 	private RepositoryEntityLinks repositoryEntityLinks;
 
@@ -89,13 +89,13 @@ public class AirportControllerTests extends AbstractBaseTest {
 		Mockito.when(airportRepository.findAll(ArgumentMatchers.<Specification<Airport>>any(), ArgumentMatchers.<Pageable>any()))
 			.thenReturn(returnPage);
 
-		Mockito.when(repositoryEntityLinks.linkToSingleResource(airport))
+		Mockito.when(repositoryEntityLinks.linkToItemResource(airport, Airport.idExtractor))
 			.thenReturn(new Link("http://mocked-link"));
 
 		
 		MvcResult mvcResult = mockMvc.perform(get(BASE_URI + "/findAll").param("search", "name=CYOO"))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaTypes.HAL_JSON_UTF8))
+        .andExpect(content().contentType(MediaTypes.HAL_JSON))
         .andExpect(jsonPath("$._embedded.airports[0].identifier", is(airport.getIdentifier())))
         .andExpect(jsonPath("$._embedded.airports[0].name", is(airport.getName())))
         .andReturn()
