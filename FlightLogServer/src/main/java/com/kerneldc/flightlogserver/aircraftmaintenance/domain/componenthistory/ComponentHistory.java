@@ -1,6 +1,7 @@
 package com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory;
 
 import java.util.Date;
+import java.util.function.Function;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,8 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.springframework.hateoas.Identifiable;
 
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
@@ -32,11 +31,13 @@ import lombok.Setter;
 @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
 @Builder
-public class ComponentHistory extends AbstractPersistableEntity implements Identifiable<Long> {
+public class ComponentHistory extends AbstractPersistableEntity {
 
 	private static final long serialVersionUID = 1L;
 
 	public static final String PROPERTY_PART = "part";
+
+	public static final Function<ComponentHistory, Object> idExtractor = ComponentHistory::getId;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "component_history_seq_gen")

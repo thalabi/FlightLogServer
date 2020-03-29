@@ -3,6 +3,7 @@ package com.kerneldc.flightlogserver.aircraftmaintenance.domain.component;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,8 +23,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.springframework.hateoas.Identifiable;
 
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistory;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
@@ -51,12 +50,14 @@ import lombok.Setter;
 @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
 @Builder
-public class Component extends AbstractPersistableEntity implements Identifiable<Long> {
+public class Component extends AbstractPersistableEntity {
 
 	private static final long serialVersionUID = 1L;
 
 	public static final String PROPERTY_PART = "part";
 	public static final String PROPERTY_COMPONENT_HISTORY_SET = "componentHistorySet";
+
+	public static final Function<Component, Object> idExtractor = Component::getId;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "component_seq_gen")

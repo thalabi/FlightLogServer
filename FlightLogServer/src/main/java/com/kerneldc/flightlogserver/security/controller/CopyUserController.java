@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,12 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 import com.kerneldc.flightlogserver.security.bean.CopyUserRequest;
-import com.kerneldc.flightlogserver.security.domain.user.User;
 import com.kerneldc.flightlogserver.security.service.SecurityPersistenceService;
 
 @RestController
 @RequestMapping("copyUserController")
-@ExposesResourceFor(User.class) // needed for unit test to create entity links
+//@ExposesResourceFor(User.class) // needed for unit test to create entity links
 public class CopyUserController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

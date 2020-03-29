@@ -1,6 +1,7 @@
 package com.kerneldc.flightlogserver.aircraftmaintenance.domain.componentandhistoryview;
 
 import java.util.Date;
+import java.util.function.Function;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,6 +24,8 @@ import lombok.ToString;
 @Builder
 @ToString
 public class ComponentAndHistoryV {
+
+	public static final Function<ComponentAndHistoryV, Object> idExtractor = ComponentAndHistoryV::getId;
 
 	@Id
 	private Long id;

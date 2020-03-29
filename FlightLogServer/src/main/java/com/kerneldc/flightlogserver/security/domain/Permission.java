@@ -9,12 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.springframework.hateoas.Identifiable;
+import javax.persistence.Transient;
 
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
 import com.kerneldc.flightlogserver.security.domain.group.Group;
@@ -24,7 +22,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class Permission extends AbstractPersistableEntity implements Identifiable<Long> {
+public class Permission extends AbstractPersistableEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -37,7 +35,8 @@ public class Permission extends AbstractPersistableEntity implements Identifiabl
     private String name; 
     private String description; 
     
-    @ManyToMany(mappedBy = "permissionSet")
+//    @ManyToMany(mappedBy = "permissionSet")
+    @Transient
     private Set<Group> groupSet = new HashSet<>(); 
 
 

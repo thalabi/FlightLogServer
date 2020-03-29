@@ -1,7 +1,7 @@
 package com.kerneldc.flightlogserver.domain.significantEvent;
 
-import org.springframework.hateoas.ResourceSupport;
-import org.springframework.hateoas.core.Relation;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Relation(collectionRelation = "significantEvents")
-public class SignificantEventResource extends ResourceSupport {
+public class SignificantEventModel extends RepresentationModel<SignificantEventModel> {
 
 	@JsonUnwrapped
 	private SignificantEvent significantEvent;

@@ -18,8 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
 import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
-import com.kerneldc.flightlogserver.domain.flightLog.FlightLogResource;
-import com.kerneldc.flightlogserver.domain.flightLog.FlightLogResourceAssembler;
+import com.kerneldc.flightlogserver.domain.flightLog.FlightLogModel;
+import com.kerneldc.flightlogserver.domain.flightLog.FlightLogModelAssembler;
 import com.kerneldc.flightlogserver.repository.FlightLogRepository;
 
 import lombok.Getter;
@@ -47,13 +47,13 @@ public class FlightLogController {
 
     private FlightLogRepository flightLogRepository;
     
-	private FlightLogResourceAssembler flightLogResourceAssembler;
+	private FlightLogModelAssembler flightLogModelAssembler;
 	
 	private EntityManager flightLogEntityManager;
 
-    public FlightLogController(FlightLogRepository flightLogRepository, FlightLogResourceAssembler flightLogResourceAssembler) {
+    public FlightLogController(FlightLogRepository flightLogRepository, FlightLogModelAssembler flightLogModelAssembler) {
         this.flightLogRepository = flightLogRepository;
-        this.flightLogResourceAssembler = flightLogResourceAssembler;
+        this.flightLogModelAssembler = flightLogModelAssembler;
     }
 
     @GetMapping("/count")
@@ -76,7 +76,7 @@ public class FlightLogController {
 	}
 
     @GetMapping("/findAll")
-	public HttpEntity<PagedResources<FlightLogResource>> findAll(
+	public HttpEntity<PagedModel<FlightLogModel>> findAll(
 			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<FlightLog> pagedResourcesAssembler) {
     	Objects.requireNonNull(pagedResourcesAssembler, "pagedResourcesAssembler cannot be null for this controller to work");
     	LOGGER.info("search: {}", search);
@@ -84,15 +84,13 @@ public class FlightLogController {
     	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
     	EntitySpecificationsBuilder<FlightLog> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
         Page<FlightLog> flightLogPage = flightLogRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);
-		Link link = ControllerLinkBuilder
-				.linkTo(ControllerLinkBuilder.methodOn(FlightLogController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
-		
-		PagedResources<FlightLogResource> flightLogPagedResources =
-				pagedResourcesAssembler.toResource(flightLogPage, flightLogResourceAssembler, link);
+		Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FlightLogController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
+		PagedModel<FlightLogModel> flightLogPagedResources =
+				pagedResourcesAssembler.toModel(flightLogPage, flightLogModelAssembler, link);
 		
 		LOGGER.debug("flightLogPagedResources: {}", flightLogPagedResources);
 		
-		HttpEntity<PagedResources<FlightLogResource>> r = ResponseEntity.status(HttpStatus.OK).body(flightLogPagedResources);
+		HttpEntity<PagedModel<FlightLogModel>> r = ResponseEntity.status(HttpStatus.OK).body(flightLogPagedResources);
 		
 		LOGGER.debug("r: {}", r);
 		return r;
