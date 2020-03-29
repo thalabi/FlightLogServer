@@ -11,6 +11,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -59,6 +60,7 @@ public class SimpleControllerTests extends AbstractBaseTest {
 		mockMvc = webAppContextSetup(webApplicationContext).build();
 	}
 
+	@Ignore
 	@Test
 	public void testCount( ) throws Exception {
 		
