@@ -56,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 		// Comment to turn on security
-		httpSecurity.authorizeRequests().mvcMatchers("/**").permitAll();
+		//httpSecurity.authorizeRequests().mvcMatchers("/**").permitAll();
 
 		httpSecurity
 			.cors()
