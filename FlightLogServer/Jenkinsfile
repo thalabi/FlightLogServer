@@ -7,7 +7,6 @@ pipeline {
     stages {
         stage ('Initialize') {
             steps {
-                #sh 'java -version'
                 sh 'echo "PATH = ${PATH}"'
             }
         }
