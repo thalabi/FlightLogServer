@@ -1,22 +1,26 @@
 pipeline {
     agent any
     tools { 
-        maven 'Maven 3.3.9' 
-        jdk 'jdk8' 
+        maven 'Maven 3.5.2' 
+        jdk 'jdk-13.0.1+9' 
     }
     stages {
         stage ('Initialize') {
             steps {
                 sh '''
-                    echo "PATH = ${PATH}"
-                    echo "M2_HOME = ${M2_HOME}"
-                ''' 
+                echo "PATH = ${PATH}"
+                echo "M2_HOME = ${M2_HOME}"
+                java -version
+                '''
             }
         }
 
         stage ('Build') {
             steps {
-                echo 'This is a minimal pipeline.'
+                sh '''
+                cd FlightLogServer
+                mvn clean package
+                '''
             }
         }
     }
