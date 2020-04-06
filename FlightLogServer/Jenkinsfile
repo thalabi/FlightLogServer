@@ -10,6 +10,7 @@ pipeline {
                 sh '''
                 echo "PATH = ${PATH}"
                 echo "M2_HOME = ${M2_HOME}"
+                echo "BRANCH_NAME = ${BRANCH_NAME}"
                 java -version
                 '''
             }
@@ -28,7 +29,6 @@ pipeline {
             steps {
                 sh '''
                 cd FlightLogServer
-                echo "BRANCH_NAME = ${BRANCH_NAME}"
                 '''
             }
         }
