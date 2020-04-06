@@ -20,15 +20,21 @@ pipeline {
             steps {
                 sh '''
                 cd FlightLogServer
-                mvn clean deploy
+                mvn clean package
                 '''
             }
 		}
 		
         stage ('Deploy') {
-            steps {
+			when {
+			    not {
+			        branch 'master'
+			    }
+			}
+			steps {
                 sh '''
                 cd FlightLogServer
+                mvn deploy -Dmaven.test.skip=true
                 '''
             }
         }
