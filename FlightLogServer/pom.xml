@@ -229,10 +229,21 @@
 <!-- 	</pluginRepositories> -->
 
 	<distributionManagement>
+		<!-- <repository> -->
+		<!-- <id>localRepo</id> -->
+		<!-- <url>file:${deploy.folder}</url> -->
+		<!-- </repository> -->
+
 		<repository>
-			<id>localRepo</id>
-			<url>file:${deploy.folder}</url>
+			<id>kerneldc-nexus</id>
+			<name>Releases</name>
+			<url>http://kerneldc.com:8081/repository/maven-snapshots</url>
 		</repository>
+
+		<snapshotRepository>
+			<id>kerneldc-nexus</id>
+			<url>http://kerneldc.com:8081/repository/maven-snapshots</url>
+		</snapshotRepository>
 	</distributionManagement>
 
 	<scm>
