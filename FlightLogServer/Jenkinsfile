@@ -22,6 +22,14 @@ pipeline {
                 mvn clean deploy
                 '''
             }
+
+        stage ('Deploy') {
+            steps {
+                sh '''
+                cd FlightLogServer
+                echo "BRANCH_NAME = ${BRANCH_NAME}"
+                '''
+            }
         }
     }
 }
