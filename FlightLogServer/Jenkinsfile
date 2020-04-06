@@ -19,7 +19,7 @@ pipeline {
             steps {
                 sh '''
                 cd FlightLogServer
-                mvn clean package
+                mvn clean deploy
                 '''
             }
         }
