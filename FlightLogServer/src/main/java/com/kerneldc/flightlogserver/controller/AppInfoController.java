@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("appInfoController")
 public class AppInfoController {
 
-	@Value("${build.timestamp}")
+	@Value("${build.version}_${build.timestamp}")
 	private String buildTimestamp;
 
     @GetMapping("/getBuildTimestamp")
