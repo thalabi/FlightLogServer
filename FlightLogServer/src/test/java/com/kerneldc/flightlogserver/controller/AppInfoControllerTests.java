@@ -46,7 +46,7 @@ public class AppInfoControllerTests extends AbstractBaseTest {
 	@MockBean
 	private JwtTokenProvider jwtTokenProvider;
 
-	@Value("${build.timestamp}")
+	@Value("${build.version}_${build.timestamp}")
 	private String buildTimestamp;
 
 	private MediaType contentType = new MediaType(MediaType.TEXT_PLAIN.getType(), MediaType.TEXT_PLAIN.getSubtype(), Charset.forName("utf8"));
