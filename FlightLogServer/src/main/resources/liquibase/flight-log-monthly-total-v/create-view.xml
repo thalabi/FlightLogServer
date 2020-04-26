@@ -13,11 +13,32 @@
 	    </preConditions>
         <comment>Create flight_log_monthly_total_v</comment>
 
-    	<createView viewName="flight_log_monthly_total_v" replaceIfExists="true">
+    	<createView viewName="flight_log_monthly_total_sub_v" replaceIfExists="true">
 			<![CDATA[
 select
     year(flight_date)*100+month(flight_date) as id,
 	year(flight_date)||'-'||lpad(month(flight_date),2,'0') as year_month,
+    day_dual, 
+    day_solo, 
+    instrument_flight_sim, 
+    instrument_imc,
+    instrument_no_ifr_appr, 
+    instrument_simulated,
+    night_dual,
+    night_solo,
+    tos_ldgs_day,
+    tos_ldgs_night,
+    x_country_day,
+    x_country_night
+from flight_log
+			]]>    
+		</createView>
+
+    	<createView viewName="flight_log_monthly_total_v" replaceIfExists="true">
+			<![CDATA[
+select
+    id,
+	year_month,
     round(sum(day_dual),1) as day_dual, 
     round(sum(day_solo),1) as day_solo, 
     round(sum(instrument_flight_sim),1) as instrument_flight_sim, 
@@ -30,7 +51,7 @@ select
     sum(tos_ldgs_night) as tos_ldgs_night,
     round(sum(x_country_day),1) as x_country_day,
     round(sum(x_country_night),1) as x_country_night
- from flight_log
+ from flight_log_monthly_total_sub_v
 group by id, year_month
 			]]>    
 		</createView>
