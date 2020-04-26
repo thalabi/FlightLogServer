@@ -11,7 +11,7 @@
 	    <preConditions onFail="CONTINUE" onFailMessage="">
 	        <dbms type="h2" />
 	    </preConditions>
-        <comment>Create flight_log_monthly_total_v</comment>
+        <comment>Create flight_log_last_x_days_total_v</comment>
 
     	<createView viewName="flight_log_last_x_days_total_v" replaceIfExists="true">
 			<![CDATA[
@@ -113,7 +113,7 @@ where flight_date >= truncate(sysdate)-360
 	    <preConditions onFail="CONTINUE">
 	        <dbms type="oracle" />
 	    </preConditions>
-        <comment>Create flight_log_monthly_total_v</comment>
+        <comment>Create flight_log_last_x_days_total_v</comment>
 
     	<createView viewName="flight_log_last_x_days_total_v" replaceIfExists="true">
 			<![CDATA[
