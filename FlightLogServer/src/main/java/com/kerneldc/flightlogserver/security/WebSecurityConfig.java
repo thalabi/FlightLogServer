@@ -1,7 +1,12 @@
 package com.kerneldc.flightlogserver.security;
 
+import java.lang.invoke.MethodHandles;
+
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,12 +30,17 @@ import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	private static final String READ_TABLE_SUFFIX = " read";
 	private static final String WRITE_TABLE_SUFFIX = " write";
 	@Autowired
     private CustomUserDetailsService customUserDetailsService;
 	@Autowired
 	private UnauthorizedHandler unauthorizedHandler;
+	
+	@Value("${application.disableSecurity}")
+	private boolean disableSecurity;
     
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -55,8 +65,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
 	@Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-		// Comment to turn on security
-		//httpSecurity.authorizeRequests().mvcMatchers("/**").permitAll();
+		if (disableSecurity) {
+			LOGGER.warn("*** appliction security is currently disabled ***");;
+			LOGGER.warn("*** to enable set application.disableSecurity to false ***");;
+			httpSecurity.authorizeRequests().mvcMatchers("/**").permitAll();
+		}
 
 		httpSecurity
 			.cors()
