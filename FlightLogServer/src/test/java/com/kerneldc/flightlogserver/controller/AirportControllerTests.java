@@ -38,7 +38,7 @@ import com.kerneldc.flightlogserver.domain.airport.Airport;
 import com.kerneldc.flightlogserver.domain.airport.AirportModelAssembler;
 import com.kerneldc.flightlogserver.repository.AirportRepository;
 import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
-import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
+import com.kerneldc.flightlogserver.security.service.CustomUserDetailsServiceOld;
 import com.kerneldc.flightlogserver.security.util.JwtTokenProviderOld;
 
 @RunWith(SpringRunner.class)
@@ -61,7 +61,7 @@ public class AirportControllerTests extends AbstractBaseTest {
 	private RepositoryEntityLinks repositoryEntityLinks;
 
 	@MockBean
-	private CustomUserDetailsService customUserDetailsService;
+	private CustomUserDetailsServiceOld customUserDetailsServiceOld;
 	@MockBean
 	private UnauthorizedHandler unauthorizedHandler;
 	@MockBean

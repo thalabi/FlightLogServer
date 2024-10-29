@@ -80,9 +80,9 @@ public class JobLauncherController {
         return jobExecutionService.runJob(JobEnum.ENABLE_SIGNIFICANT_EVENT_TRIGGERS);
     }
     
-    @GetMapping("/copyAircraftMaintenanceTables")
-    public JobExecutionBean copyAircraftMaintenanceTables() throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException {
-        return jobExecutionService.runJob(JobEnum.COPY_AIRCRAFT_MAINTENANCE_TABLES);
-    }
+//    @GetMapping("/copyAircraftMaintenanceTables")
+//    public JobExecutionBean copyAircraftMaintenanceTables() throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException {
+//        return jobExecutionService.runJob(JobEnum.COPY_AIRCRAFT_MAINTENANCE_TABLES);
+//    }
     
 }

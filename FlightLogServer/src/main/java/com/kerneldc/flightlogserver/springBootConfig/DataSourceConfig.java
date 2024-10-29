@@ -42,11 +42,11 @@ public class DataSourceConfig {
     	return DataSourceBuilder.create().build();
     }
 
-    @Bean
-    @ConfigurationProperties("input.datasource.h2")
-    public DataSource inputDataSourceH2() {
-    	return DataSourceBuilder.create().build();
-    }
+    //@Bean
+    //@ConfigurationProperties("input.datasource.h2")
+//    public DataSource inputDataSourceH2() {
+//    	return DataSourceBuilder.create().build();
+//    }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {

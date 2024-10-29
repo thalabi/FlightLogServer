@@ -42,7 +42,7 @@ import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
 import com.kerneldc.flightlogserver.domain.flightLog.FlightLogModelAssembler;
 import com.kerneldc.flightlogserver.repository.FlightLogRepository;
 import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
-import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
+import com.kerneldc.flightlogserver.security.service.CustomUserDetailsServiceOld;
 import com.kerneldc.flightlogserver.security.util.JwtTokenProviderOld;
 
 @RunWith(SpringRunner.class)
@@ -64,7 +64,7 @@ public class FlightLogControllerTests extends AbstractBaseTest {
 	private RepositoryEntityLinks repositoryEntityLinks;
 
 	@MockBean
-	private CustomUserDetailsService customUserDetailsService;
+	private CustomUserDetailsServiceOld customUserDetailsServiceOld;
 	@MockBean
 	private UnauthorizedHandler unauthorizedHandler;
 	@MockBean

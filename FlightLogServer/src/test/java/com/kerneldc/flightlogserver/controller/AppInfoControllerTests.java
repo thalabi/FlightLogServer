@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
-import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
+import com.kerneldc.flightlogserver.security.service.CustomUserDetailsServiceOld;
 import com.kerneldc.flightlogserver.security.util.JwtTokenProviderOld;
 
 @RunWith(SpringRunner.class)
@@ -40,7 +40,7 @@ public class AppInfoControllerTests extends AbstractBaseTest {
 	private MockMvc mockMvc;
 	
 	@MockBean
-	private CustomUserDetailsService customUserDetailsService;
+	private CustomUserDetailsServiceOld customUserDetailsServiceOld;
 	@MockBean
 	private UnauthorizedHandler unauthorizedHandler;
 	@MockBean

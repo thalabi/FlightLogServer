@@ -37,7 +37,7 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.repository.PartRepositor
 import com.kerneldc.flightlogserver.aircraftmaintenance.service.ComponentPersistenceService;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
-import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
+import com.kerneldc.flightlogserver.security.service.CustomUserDetailsServiceOld;
 import com.kerneldc.flightlogserver.security.util.JwtTokenProviderOld;
 
 @RunWith(SpringRunner.class)
@@ -62,7 +62,7 @@ public class ComponentControllerTest {
 	@MockBean
 	private ComponentModelAssembler componentModelAssembler;
 	@MockBean
-	private CustomUserDetailsService customUserDetailsService;
+	private CustomUserDetailsServiceOld customUserDetailsServiceOld;
 	@MockBean
 	private UnauthorizedHandler unauthorizedHandler;
 	@MockBean

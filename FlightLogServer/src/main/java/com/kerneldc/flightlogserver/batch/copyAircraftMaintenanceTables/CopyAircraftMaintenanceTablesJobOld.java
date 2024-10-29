@@ -4,7 +4,6 @@ import javax.sql.DataSource;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.job.builder.FlowBuilder;
@@ -16,11 +15,6 @@ import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.Component;
@@ -29,30 +23,30 @@ import com.kerneldc.flightlogserver.batch.tasklet.BeforeCopyTableTasklet;
 import com.kerneldc.flightlogserver.batch.tasklet.CreateTableFromTableTasklet;
 import com.kerneldc.flightlogserver.domain.EntityEnum;
 
-@Configuration
-@EnableBatchProcessing
-public class CopyAircraftMaintenanceTablesJob {
+//@Configuration
+//@EnableBatchProcessing
+public class CopyAircraftMaintenanceTablesJobOld {
 
-	@Autowired
-	@Qualifier("inputDataSourceH2")
+	//@Autowired
+	//@Qualifier("inputDataSourceH2")
 	public DataSource inputDataSourceH2;
 	
-	@Autowired
-	@Qualifier("outputDataSource")
+//	@Autowired
+//	@Qualifier("outputDataSource")
 	public DataSource outputDataSource;
 
-	@Autowired
+//	@Autowired
 	private PartCachingService partCachingService;
 	
-    @Autowired
-    @Lazy
+//    @Autowired
+//    @Lazy
     public JobBuilderFactory jobBuilderFactory;
 
-    @Autowired
-    @Lazy
+//    @Autowired
+//    @Lazy
     public StepBuilderFactory stepBuilderFactory;
 
-    @Bean
+//    @Bean
     public JdbcCursorItemReader<OldPart> oldPartReader() {
     	return new JdbcCursorItemReaderBuilder<OldPart>()
                 .dataSource(inputDataSourceH2)
@@ -62,7 +56,7 @@ public class CopyAircraftMaintenanceTablesJob {
                 .build();
     }
 
-    @Bean
+//    @Bean
     public JdbcBatchItemWriter<Part> partWriter() {
         return new JdbcBatchItemWriterBuilder<Part>()
             .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Part>())
@@ -71,7 +65,7 @@ public class CopyAircraftMaintenanceTablesJob {
             .build();
     }
 
-    @Bean
+//    @Bean
     public JdbcCursorItemReader<OldComponent> oldComponentReader() {
     	return new JdbcCursorItemReaderBuilder<OldComponent>()
                 .dataSource(inputDataSourceH2)
@@ -83,7 +77,7 @@ public class CopyAircraftMaintenanceTablesJob {
                 .build();
     }
 
-    @Bean
+//    @Bean
     public JdbcBatchItemWriter<Component> componentWriter() {
         return new JdbcBatchItemWriterBuilder<Component>()
             .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Component>())
@@ -104,7 +98,7 @@ public class CopyAircraftMaintenanceTablesJob {
      * @param copyComponentTableStep6 Copied component table
      * @return
      */
-    @Bean
+//    @Bean
 	public Job copyAircraftMaintenanceTables(Flow parallelBackupFlow, Step purgeTablesStep1,
 			Step purgeTablesStep2, Step purgeTablesStep3, Step purgeTablesStep4, Step copyPartTableStep5,
 			Step copyComponentTableStep6) {
@@ -121,51 +115,51 @@ public class CopyAircraftMaintenanceTablesJob {
             .build(); // build job
     }
 
-    @Bean
+//    @Bean
     public Step backupPartTableStep1() {
         return stepBuilderFactory.get("backupPartTableStep1")
         	.tasklet(new CreateTableFromTableTasklet(outputDataSource, EntityEnum.PART))
             .build();
     }
 
-    @Bean
+//    @Bean
     public Step backupComponentComponentHistoryTableStep2() {
         return stepBuilderFactory.get("backupComponentComponentHistoryTableStep2")
         	.tasklet(new CreateTableFromTableTasklet(outputDataSource, EntityEnum.COMPONENT_COMPONENT_HISTORY))
             .build();
     }
 
-    @Bean
+//    @Bean
     public Step backupComponentHistoryTableStep3() {
         return stepBuilderFactory.get("backupComponentHistoryTableStep3")
         	.tasklet(new CreateTableFromTableTasklet(outputDataSource, EntityEnum.COMPONENT_HISTORY))
             .build();
     }
 
-    @Bean
+//    @Bean
     public Step backupComponentTableStep4() {
         return stepBuilderFactory.get("backupComponentTableStep4")
         	.tasklet(new CreateTableFromTableTasklet(outputDataSource, EntityEnum.COMPONENT))
             .build();
     }
 
-	@Bean
+//	@Bean
 	public Flow backupFlow1(Step backupPartTableStep1) {
 		return new FlowBuilder<SimpleFlow>("backupFlow1").start(backupPartTableStep1).build();
 	}
-	@Bean
+//	@Bean
 	public Flow backupFlow2(Step backupComponentComponentHistoryTableStep2) {
 		return new FlowBuilder<SimpleFlow>("backupFlow2").start(backupComponentComponentHistoryTableStep2).build();
 	}
-	@Bean
+//	@Bean
 	public Flow backupFlow3(Step backupComponentHistoryTableStep3) {
 		return new FlowBuilder<SimpleFlow>("backupFlow3").start(backupComponentHistoryTableStep3).build();
 	}
-	@Bean
+//	@Bean
 	public Flow backupFlow4(Step backupComponentTableStep4) {
 		return new FlowBuilder<SimpleFlow>("backupFlow4").start(backupComponentTableStep4).build();
 	}
-	@Bean
+//	@Bean
 	public Flow parallelBackupFlow(Flow backupFlow1, Flow backupFlow2, Flow backupFlow3, Flow backupFlow4) {
 	    return new FlowBuilder<SimpleFlow>("parallelBackupFlow")
 	        .split(new SimpleAsyncTaskExecutor())
@@ -173,35 +167,35 @@ public class CopyAircraftMaintenanceTablesJob {
 	        .build();
 	}
 	
-    @Bean
+//    @Bean
     public Step purgeTablesStep1() {
         return stepBuilderFactory.get("purgeTablesStep1")
         	.tasklet(new BeforeCopyTableTasklet(outputDataSource, "component_component_history"))
             .build();
     }
 
-    @Bean
+//    @Bean
     public Step purgeTablesStep2() {
         return stepBuilderFactory.get("purgeTablesStep2")
         	.tasklet(new BeforeCopyTableTasklet(outputDataSource, "component_history"))
             .build();
     }
 
-    @Bean
+//    @Bean
     public Step purgeTablesStep3() {
         return stepBuilderFactory.get("purgeTablesStep3")
         	.tasklet(new BeforeCopyTableTasklet(outputDataSource, "component"))
             .build();
     }
 
-    @Bean
+//    @Bean
     public Step purgeTablesStep4() {
         return stepBuilderFactory.get("purgeTablesStep4")
         	.tasklet(new BeforeCopyTableTasklet(outputDataSource, "part"))
             .build();
     }
 
-    @Bean
+//    @Bean
     public Step copyPartTableStep5(JdbcCursorItemReader<OldPart> oldPartReader, JdbcBatchItemWriter<Part> partWriter) {
         return stepBuilderFactory.get("copyPartTableStep5")
             .<OldPart, Part> chunk(1000)
@@ -211,7 +205,7 @@ public class CopyAircraftMaintenanceTablesJob {
             .build();
     }
 
-    @Bean
+//    @Bean
     public Step copyComponentTableStep6(JdbcCursorItemReader<OldComponent> oldComponentReader, JdbcBatchItemWriter<Component> componentWriter) {
         return stepBuilderFactory.get("copyComponentTableStep6")
             .<OldComponent, Component> chunk(1000)

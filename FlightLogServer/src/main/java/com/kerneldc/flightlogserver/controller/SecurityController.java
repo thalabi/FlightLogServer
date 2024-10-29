@@ -25,13 +25,12 @@ public class SecurityController {
 
 	@GetMapping("/getUserInfo")
 	public UserInfo getUserInfo() {
-		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Jwt) {
+		if (SecurityContextHolder.getContext().getAuthentication() instanceof JwtAuthenticationToken jwtAuthenticationToken
+				&& jwtAuthenticationToken.getPrincipal() instanceof Jwt jwt) {
 			
-			var jwtAuthenticationToken= (JwtAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 			LOGGER.info("jwtAuthenticationToken: {}" ,jwtAuthenticationToken);
 			LOGGER.info("jwtAuthenticationToken.name: {}" ,jwtAuthenticationToken.getName());
 			
-			var jwt = (Jwt)jwtAuthenticationToken.getPrincipal();
 			//LOGGER.info("jwt id: {}, claims: {}", jwt.getId(), jwt.getClaims());
 			LOGGER.info("jwt id: {}, claims: ", jwt.getId());
 			for (Entry<String, Object> entry : jwt.getClaims().entrySet()) {
