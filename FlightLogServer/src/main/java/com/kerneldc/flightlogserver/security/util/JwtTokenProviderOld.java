@@ -4,16 +4,11 @@ import java.lang.invoke.MethodHandles;
 import java.security.Key;
 import java.util.Date;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kerneldc.flightlogserver.security.bean.AppUserDetails;
@@ -24,24 +19,24 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 
-@Component
-public class JwtTokenProvider {
+//@Component
+public class JwtTokenProviderOld {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	private static final String APP_USER_DETAILS = "appUserDetails";
 
-	@Value("${security.jwtTokenProvider.jwtExpirationInMs}")
+	//@Value("${security.jwtTokenProvider.jwtExpirationInMs}")
     private int jwtExpirationInMs;
 	
-	@Autowired
-	private SecretKeyProvider secretKeyProvider;
+	//@Autowired
+	private SecretKeyProviderOld secretKeyProviderOld;
 
 	private Key secretKey;
 	
-	@PostConstruct
+	//@PostConstruct
 	public void init() {
-		secretKey = secretKeyProvider.getSecretKey();
+		secretKey = secretKeyProviderOld.getSecretKey();
 		LOGGER.debug("secretKey.getEncoded(): {}", secretKey.getEncoded());
 	}
 

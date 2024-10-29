@@ -22,7 +22,7 @@ import com.kerneldc.flightlogserver.domain.pilot.PilotModelAssembler;
 import com.kerneldc.flightlogserver.repository.PilotRepository;
 
 @RestController
-@RequestMapping("pilotController")
+@RequestMapping("/protected/pilotController")
 //@ExposesResourceFor(Pilot.class) // needed for unit test to create entity links
 public class PilotController {
 

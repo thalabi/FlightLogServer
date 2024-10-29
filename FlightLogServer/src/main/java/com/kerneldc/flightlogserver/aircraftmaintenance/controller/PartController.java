@@ -22,7 +22,7 @@ import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
 
 @RestController
-@RequestMapping("partController")
+@RequestMapping("/protected/partController")
 //@ExposesResourceFor(Part.class) // needed for unit test to create entity links
 public class PartController {
 

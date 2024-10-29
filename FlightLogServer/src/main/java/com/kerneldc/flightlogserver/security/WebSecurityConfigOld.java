@@ -5,65 +5,59 @@ import java.lang.invoke.MethodHandles;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.kerneldc.flightlogserver.domain.EntityEnum;
-import com.kerneldc.flightlogserver.security.config.JwtAuthenticationFilter;
+import com.kerneldc.flightlogserver.security.config.JwtAuthenticationFilterOld;
 import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
 import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
 
-@Configuration
-@EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+//@Configuration
+//@EnableWebSecurity
+public class WebSecurityConfigOld /*extends WebSecurityConfigurerAdapter*/ {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private static final String READ_TABLE_SUFFIX = " read";
 	private static final String WRITE_TABLE_SUFFIX = " write";
-	@Autowired
+	//@Autowired
     private CustomUserDetailsService customUserDetailsService;
-	@Autowired
+	//@Autowired
 	private UnauthorizedHandler unauthorizedHandler;
 	
 	@Value("${application.disableSecurity}")
 	private boolean disableSecurity;
     
-    @Bean
+    //@Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    @Override
+    //@Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
                 .userDetailsService(customUserDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    @Override
+    //@Bean(BeanIds.AUTHENTICATION_MANAGER)
+    //@Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+        //return super.authenticationManagerBean();
+        return null;
     }
     
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
+    //@Bean
+    public JwtAuthenticationFilterOld jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilterOld();
     }
     
-	@Override
+	//@Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 		if (disableSecurity) {
 			LOGGER.warn("*** appliction security is currently disabled ***");;
@@ -133,6 +127,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		
 		// Add our jwtAuthenticationFilter
-		httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+		//httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

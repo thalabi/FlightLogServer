@@ -25,7 +25,7 @@ import com.kerneldc.flightlogserver.domain.airport.AirportModelAssembler;
 import com.kerneldc.flightlogserver.repository.AirportRepository;
 
 @RestController
-@RequestMapping("airportController")
+@RequestMapping("/protected/airportController")
 //@ExposesResourceFor(Airport.class) // needed for unit test to create entity links
 public class AirportController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

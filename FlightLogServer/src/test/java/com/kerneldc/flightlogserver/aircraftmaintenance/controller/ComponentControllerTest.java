@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Date;
 
 import org.apache.commons.lang3.SerializationUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
@@ -38,7 +38,7 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.service.ComponentPersist
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
 import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
-import com.kerneldc.flightlogserver.security.util.JwtTokenProvider;
+import com.kerneldc.flightlogserver.security.util.JwtTokenProviderOld;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = ComponentController.class)
@@ -66,7 +66,7 @@ public class ComponentControllerTest {
 	@MockBean
 	private UnauthorizedHandler unauthorizedHandler;
 	@MockBean
-	private JwtTokenProvider jwtTokenProvider;
+	private JwtTokenProviderOld jwtTokenProviderOld;
 	
 	@Test
 	@WithMockUser(authorities = COMPONENT_WRITE)

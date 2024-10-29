@@ -43,7 +43,7 @@ import com.kerneldc.flightlogserver.domain.flightLog.FlightLogModelAssembler;
 import com.kerneldc.flightlogserver.repository.FlightLogRepository;
 import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
 import com.kerneldc.flightlogserver.security.service.CustomUserDetailsService;
-import com.kerneldc.flightlogserver.security.util.JwtTokenProvider;
+import com.kerneldc.flightlogserver.security.util.JwtTokenProviderOld;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = FlightLogController.class)
@@ -68,7 +68,7 @@ public class FlightLogControllerTests extends AbstractBaseTest {
 	@MockBean
 	private UnauthorizedHandler unauthorizedHandler;
 	@MockBean
-	private JwtTokenProvider jwtTokenProvider;
+	private JwtTokenProviderOld jwtTokenProviderOld;
 
 	@Test
 	@WithMockUser(authorities = "flight_log read")

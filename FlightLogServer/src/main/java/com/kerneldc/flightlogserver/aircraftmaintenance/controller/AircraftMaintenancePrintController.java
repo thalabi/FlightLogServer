@@ -31,7 +31,7 @@ import com.kerneldc.flightlogserver.exception.ApplicationException;
 
 
 @RestController
-@RequestMapping("aircraftMaintenancePrintController")
+@RequestMapping("/protected/aircraftMaintenancePrintController")
 //@ExposesResourceFor(Component.class) // needed for unit test to create entity links
 public class AircraftMaintenancePrintController {
 

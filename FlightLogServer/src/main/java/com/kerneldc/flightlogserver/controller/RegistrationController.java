@@ -22,7 +22,7 @@ import com.kerneldc.flightlogserver.domain.registration.RegistrationModelAssembl
 import com.kerneldc.flightlogserver.repository.RegistrationRepository;
 
 @RestController
-@RequestMapping("registrationController")
+@RequestMapping("/protected/registrationController")
 //@ExposesResourceFor(Registration.class) // needed for unit test to create entity links
 public class RegistrationController {
 

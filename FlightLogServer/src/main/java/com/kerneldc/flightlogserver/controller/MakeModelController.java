@@ -22,7 +22,7 @@ import com.kerneldc.flightlogserver.domain.makeModel.MakeModelModelAssembler;
 import com.kerneldc.flightlogserver.repository.MakeModelRepository;
 
 @RestController
-@RequestMapping("makeModelController")
+@RequestMapping("/protected/makeModelController")
 //@ExposesResourceFor(MakeModel.class) // needed for unit test to create entity links
 public class MakeModelController {
 

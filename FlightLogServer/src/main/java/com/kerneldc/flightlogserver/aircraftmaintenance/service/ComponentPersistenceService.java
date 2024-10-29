@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.apache.commons.beanutils.BeanUtils;
@@ -24,7 +25,6 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepo
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.PartRepository;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 
-import liquibase.util.StringUtils;
 
 @Service
 public class ComponentPersistenceService {

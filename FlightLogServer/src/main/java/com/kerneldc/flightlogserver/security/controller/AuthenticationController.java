@@ -15,18 +15,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 import com.kerneldc.flightlogserver.security.bean.AppUserDetails;
 import com.kerneldc.flightlogserver.security.bean.ChangePasswordRequest;
 import com.kerneldc.flightlogserver.security.bean.LoginRequest;
 import com.kerneldc.flightlogserver.security.service.SecurityPersistenceService;
-import com.kerneldc.flightlogserver.security.util.JwtTokenProvider;
+import com.kerneldc.flightlogserver.security.util.JwtTokenProviderOld;
 
-@RestController
-@RequestMapping("authenticationController")
+//@RestController
+//@RequestMapping("authenticationController")
 public class AuthenticationController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -35,7 +33,7 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
 	
 	@Autowired
-	private JwtTokenProvider jwtTokenProvider;
+	private JwtTokenProviderOld jwtTokenProviderOld;
 	
 	@Autowired
     private SecurityPersistenceService securityPersistenceService;
@@ -51,7 +49,7 @@ public class AuthenticationController {
 		AppUserDetails appUserDetails = (AppUserDetails)authentication.getPrincipal();
 		appUserDetails.setPassword(StringUtils.EMPTY);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtTokenProvider.generateJwt(authentication);
+		String jwt = jwtTokenProviderOld.generateJwt(authentication);
 		appUserDetails.setToken(jwt);
 		LOGGER.debug("End ...");
 		return ResponseEntity.ok(appUserDetails);

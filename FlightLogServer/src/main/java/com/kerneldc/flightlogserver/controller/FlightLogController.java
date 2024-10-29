@@ -39,7 +39,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @RestController
-@RequestMapping("flightLogController")
+@RequestMapping("/protected/flightLogController")
 //@Import(HateoasAwareSpringDataWebConfiguration.class)
 //@ExposesResourceFor(FlightLog.class) // needed for unit test to create entity links
 public class FlightLogController {

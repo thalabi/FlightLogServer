@@ -21,7 +21,7 @@ import com.kerneldc.flightlogserver.domain.EntityEnum;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 
 @RestController
-@RequestMapping("replicationController")
+@RequestMapping("/protected/replicationController")
 public class ReplicationController {
 	
 	@Autowired

@@ -14,7 +14,7 @@ import com.kerneldc.flightlogserver.batch.JobExecutionService;
 import com.kerneldc.flightlogserver.batch.bean.JobExecutionBean;
 
 @RestController
-@RequestMapping("jobLauncherController")
+@RequestMapping("/protected/jobLauncherController")
 public class JobLauncherController {
 
 	@Autowired

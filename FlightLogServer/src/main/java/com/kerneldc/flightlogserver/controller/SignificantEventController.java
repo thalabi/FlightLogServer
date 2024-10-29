@@ -22,7 +22,7 @@ import com.kerneldc.flightlogserver.domain.significantEvent.SignificantEventMode
 import com.kerneldc.flightlogserver.repository.SignificantEventRepository;
 
 @RestController
-@RequestMapping("significantEventController")
+@RequestMapping("/protected/significantEventController")
 //@ExposesResourceFor(SignificantEvent.class) // needed for unit test to create entity links
 public class SignificantEventController {
 

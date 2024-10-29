@@ -28,7 +28,7 @@ public class SecurityPersistenceService {
 	@Autowired
     private UserRepository userRepository;
 
-	@Autowired
+	//@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Transactional()

@@ -16,26 +16,25 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.kerneldc.flightlogserver.security.constants.SecurityConstants;
-import com.kerneldc.flightlogserver.security.util.JwtTokenProvider;
+import com.kerneldc.flightlogserver.security.util.JwtTokenProviderOld;
 
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilterOld {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	@Autowired
-	private JwtTokenProvider jwtTokenProvider;
+	private JwtTokenProviderOld jwtTokenProviderOld;
 
-	@Override
+	//@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		LOGGER.debug("Begin ...");
 		LOGGER.debug("url: {}", request.getRequestURL() + "?" + request.getQueryString());
 		String jwt = getJwtFromRequest(request);
-		if (StringUtils.isNotEmpty(jwt) && jwtTokenProvider.validateToken(jwt)) {
-			UserDetails userDetails = jwtTokenProvider.getAppUserDetailsFromJwt(jwt);
+		if (StringUtils.isNotEmpty(jwt) && jwtTokenProviderOld.validateToken(jwt)) {
+			UserDetails userDetails = jwtTokenProviderOld.getAppUserDetailsFromJwt(jwt);
 			
 			UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
 					new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

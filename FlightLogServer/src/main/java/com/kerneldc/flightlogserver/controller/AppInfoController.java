@@ -9,11 +9,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("appInfoController")
 public class AppInfoController {
 
-	@Value("${build.version}_${build.timestamp}")
+	// See application.properties to see how Maven properties are assigned to Spring properties
+
+	@Value("${build.version}")
+	private String buildVersion;
+
+	@Value("${build.timestamp}")
 	private String buildTimestamp;
 
-    @GetMapping("/getBuildTimestamp")
-	public String getBuildTimestamp() {
-		return buildTimestamp;
+	@GetMapping("/getBuildInfo")
+	public String getBuildInfo() {
+		return buildVersion + "_" + buildTimestamp;
 	}
 }

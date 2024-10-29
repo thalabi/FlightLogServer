@@ -46,7 +46,7 @@ import com.kerneldc.flightlogserver.domain.SearchCriteria;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 
 @RestController
-@RequestMapping("componentController")
+@RequestMapping("/protected/componentController")
 //@ExposesResourceFor(Component.class) // needed for unit test to create entity links
 public class ComponentController {
 
