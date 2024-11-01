@@ -24,6 +24,11 @@ pipeline {
                 '''
             }
 		}
+		post {
+	        always {
+	            junit '**/target/surefire-reports/*.xml'
+	        }
+		}
 		
         stage ('Deploy') {
 			when {
