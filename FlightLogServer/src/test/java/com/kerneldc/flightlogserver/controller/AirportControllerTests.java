@@ -6,20 +6,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -28,8 +26,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -37,22 +36,25 @@ import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.domain.airport.Airport;
 import com.kerneldc.flightlogserver.domain.airport.AirportModelAssembler;
 import com.kerneldc.flightlogserver.repository.AirportRepository;
-import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
-import com.kerneldc.flightlogserver.security.service.CustomUserDetailsServiceOld;
-import com.kerneldc.flightlogserver.security.util.JwtTokenProviderOld;
+import com.kerneldc.flightlogserver.springBootConfig.UnauthorizedHandler;
+import com.kerneldc.flightlogserver.springBootConfig.WebSecurityConfig;
 
-@RunWith(SpringRunner.class)
-//@SpringBootTest(classes = FlightLogServerApplication.class)
+import lombok.extern.slf4j.Slf4j;
+
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = AirportController.class)
+@Import(WebSecurityConfig.class)
+@Slf4j
+class AirportControllerTests extends AbstractBaseTest {
 
-public class AirportControllerTests extends AbstractBaseTest {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	private static final String BASE_URI = "/airportController";
+	private static final String AIRPORT_READ = WebSecurityConfig.AUTHORITY_PREFIX + "airport" + WebSecurityConfig.READ_TABLE_SUFFIX;
+	private static final String BASE_URI = "/protected/airportController";
 	
 	@Autowired
 	private MockMvc mockMvc;
-	
+    @MockBean
+    private JwtDecoder jwtDecoder;
+
 	@MockBean
 	private AirportRepository airportRepository;
 	@SpyBean // Note we are Mockito spy bean
@@ -60,16 +62,16 @@ public class AirportControllerTests extends AbstractBaseTest {
 	@MockBean
 	private RepositoryEntityLinks repositoryEntityLinks;
 
-	@MockBean
-	private CustomUserDetailsServiceOld customUserDetailsServiceOld;
+//	@MockBean
+//	private CustomUserDetailsServiceOld customUserDetailsServiceOld;
 	@MockBean
 	private UnauthorizedHandler unauthorizedHandler;
-	@MockBean
-	private JwtTokenProviderOld jwtTokenProviderOld;
+//	@MockBean
+//	private JwtTokenProviderOld jwtTokenProviderOld;
 
 	@Test
-	@WithMockUser(authorities = "airport read")
-	public void testFindAll( ) throws Exception {
+	@WithMockUser(authorities = AIRPORT_READ)
+	void testFindAll( ) throws Exception {
 		Airport airport = new Airport();
 		airport.setId(7l);
 		airport.setVersion(0l);
@@ -90,7 +92,7 @@ public class AirportControllerTests extends AbstractBaseTest {
 			.thenReturn(returnPage);
 
 		Mockito.when(repositoryEntityLinks.linkToItemResource(airport, Airport.idExtractor))
-			.thenReturn(new Link("http://mocked-link"));
+			.thenReturn(Link.of("http://mocked-link"));
 
 		
 		MvcResult mvcResult = mockMvc.perform(get(BASE_URI + "/findAll").param("search", "name=CYOO"))

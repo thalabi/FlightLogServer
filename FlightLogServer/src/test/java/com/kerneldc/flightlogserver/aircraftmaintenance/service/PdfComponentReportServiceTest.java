@@ -10,7 +10,7 @@ import java.util.Date;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.bean.ComponentAndHistory
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componentandhistoryview.ComponentAndHistoryV;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 
-public class PdfComponentReportServiceTest {
+class PdfComponentReportServiceTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
@@ -63,13 +63,13 @@ public class PdfComponentReportServiceTest {
 	}
 	
 	@Test
-    public void testBeanToXml() throws JAXBException {
+    void testBeanToXml() throws JAXBException {
 		byte[] xmlBytes = fixture.beanToXml(componentAndHistoryVS, StringUtils.EMPTY);
 		LOGGER.info("xmlBytes: {}", new String(xmlBytes));
 	}
 
 	@Test
-    public void testGenerateReport() throws JAXBException, ApplicationException, IOException {
+    void testGenerateReport() throws JAXBException, ApplicationException, IOException {
 		byte[] pdfBytes = fixture.generateReport(componentAndHistoryVS, StringUtils.EMPTY, StringUtils.EMPTY);
 		LOGGER.info("pdfBytes: {}", new String(pdfBytes));
 		File tempFile = File.createTempFile("test", ".pdf");

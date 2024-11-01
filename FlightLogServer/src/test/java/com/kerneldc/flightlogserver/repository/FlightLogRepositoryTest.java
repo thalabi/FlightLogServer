@@ -10,13 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.domain.EntitySpecification;
@@ -24,9 +24,9 @@ import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
 import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class FlightLogRepositoryTest extends AbstractBaseTest {
+class FlightLogRepositoryTest extends AbstractBaseTest {
 
 	@Autowired
     private TestEntityManager entityManager;
@@ -42,7 +42,7 @@ public class FlightLogRepositoryTest extends AbstractBaseTest {
     private FlightLogRepository flightLogRepository;
 	
 	@Test
-	public void testFindAll_Registration_Success() {
+	void testFindAll_Registration_Success() {
 		FlightLog savedFlightLog = entityManager.persist(FLIGHT_LOG1);
 		SearchCriteria searchCriteria = new SearchCriteria("registration", "=", "GYAX");
 		EntitySpecificationsBuilder<FlightLog> flightLogSpecificationsBuilder = new EntitySpecificationsBuilder<>();
@@ -55,7 +55,7 @@ public class FlightLogRepositoryTest extends AbstractBaseTest {
 	}
 
 	@Test
-	public void testFindAll_DaySolo_Success() {
+	void testFindAll_DaySolo_Success() {
 		FlightLog savedFlightLog = entityManager.persist(FLIGHT_LOG2);
 		EntitySpecification<FlightLog> spec = new EntitySpecification<>(new SearchCriteria("daySolo", ">", "4"));
 		List<FlightLog> results = flightLogRepository.findAll(Specification.where(spec));

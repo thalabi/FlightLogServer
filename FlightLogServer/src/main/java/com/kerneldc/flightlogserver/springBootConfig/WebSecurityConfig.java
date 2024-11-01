@@ -28,9 +28,9 @@ public class WebSecurityConfig {
 	@Value("${application.security.disableSecurity:false}")
 	private boolean disableSecurity;
 
-	private static final String AUTHORITY_PREFIX = "ROLE_realm_";
-	private static final String READ_TABLE_SUFFIX = " read";
-	private static final String WRITE_TABLE_SUFFIX = " write";
+	public static final String AUTHORITY_PREFIX = "ROLE_realm_";
+	public static final String READ_TABLE_SUFFIX = " read";
+	public static final String WRITE_TABLE_SUFFIX = " write";
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, /* CorsConfigurationSource corsConfigurationSource, */ KeycloakJwtRolesConverter keycloakJwtRolesConverter) throws Exception {
@@ -88,6 +88,7 @@ public class WebSecurityConfig {
 				// spring security 5.6
 				.antMatchers("/appInfoController/getBuildInfo", "/appInfoController/*", "/pingController/*", "/actuator/*").permitAll()
 				.antMatchers("/protected/securityController/getUserInfo").authenticated()
+				.antMatchers(HttpMethod.GET, "/protected/simpleController/findAll").hasAuthority(AUTHORITY_PREFIX + "pilot" + READ_TABLE_SUFFIX)
 				// spring security 6.1
 				//.requestMatchers("/appInfoController/*", "/pingController/*", "/actuator/*").permitAll()
 				//.requestMatchers("/protected/securityController/getUserInfo").authenticated()

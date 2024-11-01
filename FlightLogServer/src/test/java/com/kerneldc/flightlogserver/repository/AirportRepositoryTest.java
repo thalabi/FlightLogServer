@@ -10,25 +10,25 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
 import com.kerneldc.flightlogserver.domain.airport.Airport;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class AirportRepositoryTest extends AbstractBaseTest {
+class AirportRepositoryTest extends AbstractBaseTest {
 
 	@Autowired
     private TestEntityManager entityManager;
@@ -100,7 +100,7 @@ public class AirportRepositoryTest extends AbstractBaseTest {
     private AirportRepository airportRepository;
 	
 	@Test
-	public void testFindAll_ByIdentifier_Success() {
+	void testFindAll_ByIdentifier_Success() {
 		Airport savedAirport = entityManager.persist(AIRPORT1);
 		SearchCriteria searchCriteria = new SearchCriteria("identifier", "=", "CYOO");
 		EntitySpecificationsBuilder<Airport> airportSpecificationsBuilder = new EntitySpecificationsBuilder<>();
@@ -113,7 +113,7 @@ public class AirportRepositoryTest extends AbstractBaseTest {
 	}
 
 	@Test
-	public void testFindAll_ByName_Success() {
+	void testFindAll_ByName_Success() {
 		Airport savedAirport = entityManager.persist(AIRPORT2);
 		SearchCriteria searchCriteria = new SearchCriteria("name", "=", "Peterborough Municipal Airport");
 		EntitySpecificationsBuilder<Airport> airportSpecificationsBuilder = new EntitySpecificationsBuilder<>();
@@ -126,7 +126,7 @@ public class AirportRepositoryTest extends AbstractBaseTest {
 	}
 	
 	@Test
-	public void testFindAll_ByCountry_Success() {
+	void testFindAll_ByCountry_Success() {
 		entityManager.persist(AIRPORT3);
 		entityManager.persist(AIRPORT4);
 		SearchCriteria searchCriteria = new SearchCriteria("country", "=", "Canada");
@@ -137,7 +137,7 @@ public class AirportRepositoryTest extends AbstractBaseTest {
 	}
 
 	@Test
-	public void testFindAll_ByProvinceAndCountry_Success() {
+	void testFindAll_ByProvinceAndCountry_Success() {
 		entityManager.persist(AIRPORT5);
 		entityManager.persist(AIRPORT6);
 		SearchCriteria searchCriteria1 = new SearchCriteria("province", "=", "Ontario");

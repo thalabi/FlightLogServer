@@ -7,33 +7,29 @@ import static org.hamcrest.Matchers.startsWith;
 
 import java.sql.SQLException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.WebRequest;
 
-import com.kerneldc.flightlogserver.exception.ApplicationException;
-import com.kerneldc.flightlogserver.exception.ExceptionBean;
-import com.kerneldc.flightlogserver.exception.RestResponseEntityExceptionHandler;
-
 import oracle.jdbc.OracleDatabaseException;
 
-public class RestResponseEntityExceptionHandlerTest {
+class RestResponseEntityExceptionHandlerTest {
 
 	private RestResponseEntityExceptionHandler fixture;
 	
 	@Mock
 	private WebRequest webRequest;
 	
-	@Before
-	public void setup() {
+	@BeforeEach
+	void setup() {
 		fixture = new RestResponseEntityExceptionHandler();
 	}
 	
 	@Test
-    public void handleApplicationExceptionTest() {
+    void handleApplicationExceptionTest() {
 		String message = "Exception message";
 		ApplicationException applicationException = new ApplicationException(message);
 		
@@ -47,7 +43,7 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 	
 	@Test
-	public void handleSqlExceptionTest() {
+	void handleSqlExceptionTest() {
 		String message = "SQL exception message";
 		SQLException sqlException = new SQLException(message);
 		

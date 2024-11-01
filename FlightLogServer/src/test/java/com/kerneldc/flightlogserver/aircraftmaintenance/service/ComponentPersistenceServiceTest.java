@@ -2,18 +2,19 @@ package com.kerneldc.flightlogserver.aircraftmaintenance.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Date;
 import java.util.Optional;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.kerneldc.flightlogserver.aircraftmaintenance.bean.ComponentHistoryVo;
 import com.kerneldc.flightlogserver.aircraftmaintenance.bean.ComponentRequest;
@@ -24,8 +25,8 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepo
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.PartRepository;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComponentPersistenceServiceTest {
+@ExtendWith(SpringExtension.class)
+class ComponentPersistenceServiceTest {
 
 	@InjectMocks
 	private ComponentPersistenceService componentPersistenceService;
@@ -36,7 +37,7 @@ public class ComponentPersistenceServiceTest {
     private PartRepository partRepository;
 
 	@Test
-	public void testParseAndFindComponent_ValidComponentUri_Success() throws ApplicationException {
+	void testParseAndFindComponent_ValidComponentUri_Success() throws ApplicationException {
 		String componentUri = "http://localhost:6001/components/7";
 		Part part = Part.builder().id(25l).name("part 25").build();
 		Component component = Component.builder().id(7l).part(part).name("component 7").build();
@@ -52,15 +53,16 @@ public class ComponentPersistenceServiceTest {
 	}
 	
 	
-	@Test(expected = ApplicationException.class)
-	public void testParseAndFindComponent_InvalidComponentUri_Failure() throws ApplicationException {
+	@Test
+	void testParseAndFindComponent_InvalidComponentUri_Failure() throws ApplicationException {
 		String componentUri = "http://localhost:6001/componentsXXX/7";
 		
-		componentPersistenceService.parseAndFindComponent(componentUri);
+		assertThrows(ApplicationException.class,
+				() -> componentPersistenceService.parseAndFindComponent(componentUri));
 	}
 	
 	@Test
-	public void testUpdateComponentAndHistory_ModifyComponentWithNoHistory_Success() throws ApplicationException {
+	void testUpdateComponentAndHistory_ModifyComponentWithNoHistory_Success() throws ApplicationException {
 		ComponentRequest componentRequest = ComponentRequest.builder()
 				.componentUri("http://localhost:6001/components/7").name("OilFilter").description("Champion CH48110")
 				.workPerformed("replaced").datePerformed(new Date()).hoursPerformed(1000f).dateDue(new Date())
@@ -87,7 +89,7 @@ public class ComponentPersistenceServiceTest {
 	}
 
 	@Test
-	public void testUpdateComponentAndHistory_ModifyComponentAndAddHistoryRecord_Success() throws ApplicationException {
+	void testUpdateComponentAndHistory_ModifyComponentAndAddHistoryRecord_Success() throws ApplicationException {
 		// Set up request component
 		ComponentRequest componentRequest = ComponentRequest.builder()
 				.componentUri("http://localhost:6001/components/7").name("OilFilter").description("Champion CH48110")
@@ -123,7 +125,7 @@ public class ComponentPersistenceServiceTest {
 	}
 
 	@Test
-	public void testUpdateComponentAndHistory_ModifyComponentAndModifyHistoryRecord_Success() throws ApplicationException {
+	void testUpdateComponentAndHistory_ModifyComponentAndModifyHistoryRecord_Success() throws ApplicationException {
 		// Set up request component
 		ComponentRequest componentRequest = ComponentRequest.builder()
 				.componentUri("http://localhost:6001/components/7").name("OilFilter").description("Champion CH48110")
@@ -169,7 +171,7 @@ public class ComponentPersistenceServiceTest {
 	}
 
 	@Test
-	public void testUpdateComponentAndHistory_ModifyComponentAndDeleteHistoryRecord_Success() throws ApplicationException {
+	void testUpdateComponentAndHistory_ModifyComponentAndDeleteHistoryRecord_Success() throws ApplicationException {
 		// Set up request component with no history record
 		ComponentRequest componentRequest = ComponentRequest.builder()
 				.componentUri("http://localhost:6001/components/7").name("OilFilter").description("Champion CH48110")

@@ -10,7 +10,7 @@ import com.kerneldc.flightlogserver.domain.pilot.Pilot;
 import com.kerneldc.flightlogserver.repository.PilotRepository;
 
 @RestController
-@RequestMapping("simpleController")
+@RequestMapping("/protected/simpleController")
 public class SimpleController {
 
 	private PilotRepository pilotRepository;

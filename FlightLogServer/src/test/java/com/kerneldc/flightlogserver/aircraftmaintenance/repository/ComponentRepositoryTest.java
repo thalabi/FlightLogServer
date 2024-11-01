@@ -9,20 +9,20 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.Component;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistory;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class ComponentRepositoryTest {
+class ComponentRepositoryTest {
 
 	@Autowired
     private ComponentRepository componentRepository;
@@ -30,7 +30,7 @@ public class ComponentRepositoryTest {
     private TestEntityManager testEntityManager;
 
 	@Test
-	public void testDelete_CheckComponentHistoryDeleted_Success() {
+	void testDelete_CheckComponentHistoryDeleted_Success() {
 		
 		Part part = Part.builder().name("Champion HD1408").build();
 		part = testEntityManager.persist(part);

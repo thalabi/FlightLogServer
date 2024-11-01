@@ -6,20 +6,20 @@ import static org.hamcrest.Matchers.hasSize;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.Component;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistory;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class RepositoryTest {
+class RepositoryTest {
 
 	@Autowired
     private TestEntityManager entityManager;
@@ -33,7 +33,7 @@ public class RepositoryTest {
 	private static final String COMPONENT_NAME = "Component 1";
 
 	@Test
-	public void testFind_Part_Success() {
+	void testFind_Part_Success() {
 		Part part1 = new Part();
 		part1.setName(PART1_NAME);
 		entityManager.persist(part1);
@@ -41,7 +41,7 @@ public class RepositoryTest {
 		assertThat(partList, hasSize(1));
 	}
 	@Test
-	public void testFind_Component_Success() {
+	void testFind_Component_Success() {
 		Part part1 = new Part();
 		part1.setName(PART1_NAME);
 		Part savedPart1 = entityManager.persist(part1);
@@ -51,7 +51,7 @@ public class RepositoryTest {
 		assertThat(componentList, hasSize(1));
 	}
 	@Test
-	public void testFind_Component_With_History_Success() {
+	void testFind_Component_With_History_Success() {
 		Part part1 = new Part();
 		part1.setName(PART1_NAME);
 		Part savedPart1 = entityManager.persist(part1);

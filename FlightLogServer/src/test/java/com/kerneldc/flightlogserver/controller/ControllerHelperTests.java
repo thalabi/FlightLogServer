@@ -5,18 +5,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
 
-@RunWith(SpringRunner.class)
-public class ControllerHelperTests extends AbstractBaseTest {
+@ExtendWith(SpringExtension.class)
+class ControllerHelperTests extends AbstractBaseTest {
 
 	@Test
-	public void testSearchStringToSearchCriteriaList_GreaterOrEqual_Success() {
+	void testSearchStringToSearchCriteriaList_GreaterOrEqual_Success() {
 		
 		String search = "daySolo>=7,";
     	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
@@ -24,7 +24,7 @@ public class ControllerHelperTests extends AbstractBaseTest {
 	}
 
 	@Test
-	public void testSearchStringToSearchCriteriaList_Equal_Success() {
+	void testSearchStringToSearchCriteriaList_Equal_Success() {
 		String search = "routeTo=CYHU,";
     	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
 		assertThat(searchCriteriaList.size(), equalTo(1));

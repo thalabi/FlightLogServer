@@ -14,16 +14,18 @@ import java.util.Date;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,18 +38,20 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepo
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.PartRepository;
 import com.kerneldc.flightlogserver.aircraftmaintenance.service.ComponentPersistenceService;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
-import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
-import com.kerneldc.flightlogserver.security.service.CustomUserDetailsServiceOld;
-import com.kerneldc.flightlogserver.security.util.JwtTokenProviderOld;
+import com.kerneldc.flightlogserver.springBootConfig.WebSecurityConfig;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = ComponentController.class)
-public class ComponentControllerTest {
+@Import(WebSecurityConfig.class)
+class ComponentControllerTest {
 
-	private static final String COMPONENT_WRITE = "component write";
+	private static final String COMPONENT_WRITE = WebSecurityConfig.AUTHORITY_PREFIX + "component" + WebSecurityConfig.WRITE_TABLE_SUFFIX;
+	private static final String CONTROLLER_URL = "/protected/componentController";
 	
     @Autowired
     private MockMvc mockMvc;
+    @MockBean
+    private JwtDecoder jwtDecoder;
     @Autowired
     private ObjectMapper objectMapper;
     
@@ -61,16 +65,12 @@ public class ComponentControllerTest {
 	private ComponentPersistenceService componentPersistenceService;
 	@MockBean
 	private ComponentModelAssembler componentModelAssembler;
-	@MockBean
-	private CustomUserDetailsServiceOld customUserDetailsServiceOld;
-	@MockBean
-	private UnauthorizedHandler unauthorizedHandler;
-	@MockBean
-	private JwtTokenProviderOld jwtTokenProviderOld;
+	
+    
 	
 	@Test
 	@WithMockUser(authorities = COMPONENT_WRITE)
-	public void testAdd_success() throws Exception {
+	void testAdd_success() throws Exception {
 		ComponentRequest componentRequest = ComponentRequest.builder().name("OilFilter").description("Champion CH48110")
 				.workPerformed("replaced").datePerformed(new Date()).hoursPerformed(1000f).dateDue(new Date())
 				.hoursDue(1500f).partUri("http://localhost:6001/parts/258").build();
@@ -83,9 +83,9 @@ public class ComponentControllerTest {
 		
 		when(componentPersistenceService.parseAndFindPart(componentRequest.getPartUri())).thenReturn(part);
 		
-		mockMvc.perform(post("/componentController/add")
+		mockMvc.perform(post(CONTROLLER_URL + "/add")
 				.content(objectMapper.writeValueAsBytes(componentRequest))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andDo(print());
 		
@@ -103,7 +103,7 @@ public class ComponentControllerTest {
 
 	@Test
 	@WithMockUser(authorities = COMPONENT_WRITE)
-	public void testAdd_partNotFound_failure() throws Exception {
+	void testAdd_partNotFound_failure() throws Exception {
 		ComponentRequest componentRequest = ComponentRequest.builder().name("OilFilter").description("Champion CH48110")
 				.workPerformed("replaced").datePerformed(new Date()).hoursPerformed(1000f).dateDue(new Date())
 				.hoursDue(1500f).partUri("http://localhost:6001/parts/666").build();
@@ -114,9 +114,9 @@ public class ComponentControllerTest {
 		
 		when(componentPersistenceService.parseAndFindPart(componentRequest.getPartUri())).thenThrow(new ApplicationException(String.format("Part ID: %d not found", partId)));
 		
-		mockMvc.perform(post("/componentController/add")
+		mockMvc.perform(post(CONTROLLER_URL + "/add")
 				.content(objectMapper.writeValueAsBytes(componentRequest))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.message", equalTo(String.format("Part ID: %d not found", partId))))
 				.andExpect(jsonPath("$.stackTrace", startsWith(ApplicationException.class.getName())))
@@ -125,15 +125,15 @@ public class ComponentControllerTest {
 
 	@Test
 	@WithMockUser(authorities = COMPONENT_WRITE)
-	public void testAdd_partIdNotParsable_failure() throws Exception {
+	void testAdd_partIdNotParsable_failure() throws Exception {
 		ComponentRequest componentRequest = ComponentRequest.builder().name("OilFilter").description("Champion CH48110")
 				.workPerformed("replaced").datePerformed(new Date()).hoursPerformed(1000f).dateDue(new Date())
 				.hoursDue(1500f).partUri("http://localhost:6001/parts/abc").build();
 		when(componentPersistenceService.parseAndFindPart(componentRequest.getPartUri())).thenThrow(new ApplicationException(String.format("Could not parse part ID from uri: %s", componentRequest.getPartUri())));
 		
-		mockMvc.perform(post("/componentController/add")
+		mockMvc.perform(post(CONTROLLER_URL + "/add")
 				.content(objectMapper.writeValueAsBytes(componentRequest))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.message", equalTo(String.format("Could not parse part ID from uri: %s", componentRequest.getPartUri()))))
 				.andExpect(jsonPath("$.stackTrace", startsWith(ApplicationException.class.getName())))

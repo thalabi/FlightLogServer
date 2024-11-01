@@ -9,20 +9,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -32,8 +30,9 @@ import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -41,21 +40,25 @@ import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
 import com.kerneldc.flightlogserver.domain.flightLog.FlightLogModelAssembler;
 import com.kerneldc.flightlogserver.repository.FlightLogRepository;
-import com.kerneldc.flightlogserver.security.config.UnauthorizedHandler;
-import com.kerneldc.flightlogserver.security.service.CustomUserDetailsServiceOld;
-import com.kerneldc.flightlogserver.security.util.JwtTokenProviderOld;
+import com.kerneldc.flightlogserver.springBootConfig.WebSecurityConfig;
 
-@RunWith(SpringRunner.class)
+import lombok.extern.slf4j.Slf4j;
+
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = FlightLogController.class)
+@Import(WebSecurityConfig.class)
+@Slf4j
+class FlightLogControllerTests extends AbstractBaseTest {
 
-public class FlightLogControllerTests extends AbstractBaseTest {
+	private static final String FLIGHT_LOG_READ = WebSecurityConfig.AUTHORITY_PREFIX + "flight_log" + WebSecurityConfig.READ_TABLE_SUFFIX;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	private static final String BASE_URI = "/flightLogController";
+	private static final String BASE_URI = "/protected/flightLogController";
 	
 	@Autowired
 	private MockMvc mockMvc;
-	
+    @MockBean
+    private JwtDecoder jwtDecoder;
+
 	@MockBean
 	private FlightLogRepository flightLogRepository;
 	@SpyBean // Note we are Mockito spy bean
@@ -63,16 +66,10 @@ public class FlightLogControllerTests extends AbstractBaseTest {
 	@MockBean
 	private RepositoryEntityLinks repositoryEntityLinks;
 
-	@MockBean
-	private CustomUserDetailsServiceOld customUserDetailsServiceOld;
-	@MockBean
-	private UnauthorizedHandler unauthorizedHandler;
-	@MockBean
-	private JwtTokenProviderOld jwtTokenProviderOld;
 
 	@Test
-	@WithMockUser(authorities = "flight_log read")
-	public void testCount( ) throws Exception {
+	@WithMockUser(authorities = FLIGHT_LOG_READ)
+	void testCount( ) throws Exception {
 		Mockito.when(flightLogRepository.count())
 			.thenReturn(1l);
 		
@@ -84,8 +81,8 @@ public class FlightLogControllerTests extends AbstractBaseTest {
 	}
 	
 	@Test
-	@WithMockUser(authorities = "flight_log read")
-	public void testFindAll( ) throws Exception {
+	@WithMockUser(authorities = FLIGHT_LOG_READ)
+	void testFindAll( ) throws Exception {
 		FlightLog flightLog = new FlightLog();
 		flightLog.setId(7l);
 		flightLog.setVersion(0l);
@@ -110,7 +107,7 @@ public class FlightLogControllerTests extends AbstractBaseTest {
 			.thenReturn(returnPage);
 
 		Mockito.when(repositoryEntityLinks.linkToItemResource(flightLog, FlightLog.idExtractor))
-			.thenReturn(new Link("http://mocked-link"));
+			.thenReturn(Link.of("http://mocked-link"));
 		
 		MvcResult mvcResult = mockMvc.perform(get(BASE_URI + "/findAll").param("search", "routeFrom=CYOO").contentType(MediaType.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
@@ -120,7 +117,7 @@ public class FlightLogControllerTests extends AbstractBaseTest {
         .andExpect(jsonPath("$._embedded.flightLogs[0].pic", is(flightLog.getPic())))
         .andExpect(jsonPath("$._embedded.flightLogs[0].daySolo", closeTo(flightLog.getDaySolo(), 0.0)))
         .andExpect(jsonPath("$._embedded.flightLogs[0].tosLdgsDay", equalTo(flightLog.getTosLdgsDay())))
-        .andExpect(jsonPath("$._links.self.href", is("http://localhost/flightLogController/findAll?search=routeFrom%3DCYOO")))
+        .andExpect(jsonPath("$._links.self.href", is("http://localhost"+BASE_URI+"/findAll?search=routeFrom%3DCYOO")))
         .andDo(print())
         .andReturn()
         ;
