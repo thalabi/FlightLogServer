@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    
+    <changeSet id="fix-total-month-in-oracle-view" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE">
+	        <dbms type="oracle" />
+	    </preConditions>
+        <comment>Fix total_month column</comment>
+
+    	<createView viewName="flight_log_monthly_total_v" replaceIfExists="true">
+			<![CDATA[
+select
+    extract (year from flight_date)*100+extract (month from flight_date) as id,
+    to_char(trunc(flight_date, 'month'),'yyyy-mm') as year_month,
+    round(sum(day_solo), 1) day_solo,
+    round(sum(day_dual), 1) day_dual,
+    round(sum(night_solo), 1) night_solo,
+    round(sum(night_dual), 1) night_dual,
+    round(sum(instrument_simulated), 1) instrument_simulated,
+    round(sum(instrument_flight_sim), 1) instrument_flight_sim,
+    round(sum(instrument_imc), 1) instrument_imc,
+    sum(instrument_no_ifr_appr) instrument_no_ifr_appr,
+    round(sum(x_country_day), 1) x_country_day,
+    round(sum(x_country_night), 1) x_country_night,
+    sum(tos_ldgs_day) tos_ldgs_day,
+    sum(tos_ldgs_night) tos_ldgs_night,
+    round(sum(nvl(day_solo,0)+nvl(day_dual,0)+nvl(night_solo,0)+nvl(night_dual,0)), 1) total_month
+  from flight_log
+ group by extract (year from flight_date)*100+extract (month from flight_date), trunc(flight_date, 'month')
+ order by id
+ 			]]>    
+		</createView>
+
+    </changeSet>
+</databaseChangeLog>

@@ -65,4 +65,9 @@
 	<include file="liquibase/aircraft-maintenance/component-component-history/data/insert.xml"/>
 	
 	<include file="liquibase/aircraft-maintenance/component-and-history-v/create-view.xml"/>
+
+	<include file="liquibase/flight-log-monthly-total-v/add-total-month-to-h2-view.xml"/>
+	<include file="liquibase/flight-log-monthly-total-v/fix-total-month-in-oracle-view.xml"/> 
+	<include file="liquibase/flight-log-yearly-total-v/add-total-year.xml"/> 
+
 </databaseChangeLog>

@@ -34,5 +34,7 @@ public class FlightLogMonthlyTotalV {
 	private Integer instrumentNoIfrAppr;
 	private Integer tosLdgsDay;
 	private Integer tosLdgsNight;
+	
+	private Float totalMonth;
 
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="add-total-month-to-h2-view" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE" onFailMessage="">
+	        <dbms type="h2" />
+	    </preConditions>
+        <comment>Add missing column total_month</comment>
+
+    	<createView viewName="flight_log_monthly_total_v" replaceIfExists="true">
+			<![CDATA[
+select
+    id,
+	year_month,
+    round(sum(day_dual),1) as day_dual, 
+    round(sum(day_solo),1) as day_solo, 
+    round(sum(instrument_flight_sim),1) as instrument_flight_sim, 
+    round(sum(instrument_imc), 1) as instrument_imc,
+    sum(instrument_no_ifr_appr) as instrument_no_ifr_appr, 
+    round(sum(instrument_simulated),1) as instrument_simulated,
+    round(sum(night_dual),1) as night_dual,
+    round(sum(night_solo),1) as night_solo,
+    sum(tos_ldgs_day) as tos_ldgs_day,
+    sum(tos_ldgs_night) as tos_ldgs_night,
+    round(sum(x_country_day),1) as x_country_day,
+    round(sum(x_country_night),1) as x_country_night,
+    round(sum(nvl(day_solo,0)+nvl(day_dual,0)+nvl(night_solo,0)+nvl(night_dual,0)), 1) total_month
+ from flight_log_monthly_total_sub_v
+group by id, year_month
+			]]>    
+		</createView>
+
+    </changeSet>
+
+</databaseChangeLog>

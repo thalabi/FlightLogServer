@@ -64,6 +64,8 @@ public class WebSecurityConfig {
 			LOGGER.warn("*** appliction security is currently disabled ***");
 			LOGGER.warn("*** to enable set application.security.disableSecurity to false ***");
 			httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests.anyRequest().permitAll());
+			// to allow h2 console to display using frames
+			httpSecurity.headers().frameOptions().sameOrigin();
 		} else {
 			
 			defineHttpAuthorizedRequests(httpSecurity);
