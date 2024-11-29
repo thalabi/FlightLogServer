@@ -1,5 +1,7 @@
 package com.kerneldc.flightlogserver.domain;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -19,7 +21,7 @@ public class FlightLogMonthlyTotalV {
 
 	@Id
 	private Long id;
-	private String yearMonth;
+	private Date month;
 	private Float dayDual;
 	private Float daySolo;
 	private Float nightDual;

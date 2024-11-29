@@ -74,7 +74,9 @@ class ComponentControllerTest {
 		ComponentRequest componentRequest = ComponentRequest.builder().name("OilFilter").description("Champion CH48110")
 				.workPerformed("replaced").datePerformed(new Date()).hoursPerformed(1000f).dateDue(new Date())
 				.hoursDue(1500f).partUri("http://localhost:6001/parts/258").build();
-		Part part = Part.builder().id(258l).build();
+		//Part part = Part.builder().id(258l).build();
+		Part part = new Part();
+		part.setId(258l);
 		Component component = new Component();
 		BeanUtils.copyProperties(componentRequest, component);
 		component.setPart(part);

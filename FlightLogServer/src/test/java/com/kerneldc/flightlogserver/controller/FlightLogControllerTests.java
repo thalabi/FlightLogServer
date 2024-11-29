@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -80,6 +81,7 @@ class FlightLogControllerTests extends AbstractBaseTest {
         ;
 	}
 	
+	@Disabled // method findAll removed from FlightLogController. GenereicEntityController is now used instead
 	@Test
 	@WithMockUser(authorities = FLIGHT_LOG_READ)
 	void testFindAll( ) throws Exception {

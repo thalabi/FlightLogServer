@@ -4,8 +4,6 @@ import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Objects;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -14,24 +12,10 @@ import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.PagedModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
-import com.kerneldc.flightlogserver.domain.SearchCriteria;
-import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
-import com.kerneldc.flightlogserver.domain.flightLog.FlightLogModel;
 import com.kerneldc.flightlogserver.domain.flightLog.FlightLogModelAssembler;
 import com.kerneldc.flightlogserver.repository.FlightLogRepository;
 
@@ -47,13 +31,13 @@ public class FlightLogController {
 
     private FlightLogRepository flightLogRepository;
     
-	private FlightLogModelAssembler flightLogModelAssembler;
+//	private FlightLogModelAssembler flightLogModelAssembler;
 	
 	private EntityManager flightLogEntityManager;
 
     public FlightLogController(FlightLogRepository flightLogRepository, FlightLogModelAssembler flightLogModelAssembler) {
         this.flightLogRepository = flightLogRepository;
-        this.flightLogModelAssembler = flightLogModelAssembler;
+//        this.flightLogModelAssembler = flightLogModelAssembler;
     }
 
     @GetMapping("/count")
@@ -75,26 +59,26 @@ public class FlightLogController {
 		return new Count(flightLogRepository.count());
 	}
 
-    @GetMapping("/findAll")
-	public HttpEntity<PagedModel<FlightLogModel>> findAll(
-			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<FlightLog> pagedResourcesAssembler) {
-    	Objects.requireNonNull(pagedResourcesAssembler, "pagedResourcesAssembler cannot be null for this controller to work");
-    	LOGGER.info("search: {}", search);
-    	LOGGER.info("pageable: {}", pageable);
-    	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
-    	EntitySpecificationsBuilder<FlightLog> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
-        Page<FlightLog> flightLogPage = flightLogRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);
-		Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FlightLogController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
-		PagedModel<FlightLogModel> flightLogPagedResources =
-				pagedResourcesAssembler.toModel(flightLogPage, flightLogModelAssembler, link);
-		
-		LOGGER.debug("flightLogPagedResources: {}", flightLogPagedResources);
-		
-		HttpEntity<PagedModel<FlightLogModel>> r = ResponseEntity.status(HttpStatus.OK).body(flightLogPagedResources);
-		
-		LOGGER.debug("r: {}", r);
-		return r;
-    }
+//    @GetMapping("/findAll")
+//	public HttpEntity<PagedModel<FlightLogModel>> findAll(
+//			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<FlightLog> pagedResourcesAssembler) {
+//    	Objects.requireNonNull(pagedResourcesAssembler, "pagedResourcesAssembler cannot be null for this controller to work");
+//    	LOGGER.info("search: {}", search);
+//    	LOGGER.info("pageable: {}", pageable);
+//    	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
+//    	EntitySpecificationsBuilder<FlightLog> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
+//        Page<FlightLog> flightLogPage = flightLogRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);
+//		Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(FlightLogController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
+//		PagedModel<FlightLogModel> flightLogPagedResources =
+//				pagedResourcesAssembler.toModel(flightLogPage, flightLogModelAssembler, link);
+//		
+//		LOGGER.debug("flightLogPagedResources: {}", flightLogPagedResources);
+//		
+//		HttpEntity<PagedModel<FlightLogModel>> r = ResponseEntity.status(HttpStatus.OK).body(flightLogPagedResources);
+//		
+//		LOGGER.debug("r: {}", r);
+//		return r;
+//    }
     
     @Getter @Setter
     class Count {

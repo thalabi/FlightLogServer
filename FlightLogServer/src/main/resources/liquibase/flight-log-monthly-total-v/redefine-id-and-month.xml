@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    
+    <changeSet id="redefine-id-and-month-oracle" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE">
+	        <dbms type="oracle" />
+	    </preConditions>
+        <comment>Redefine id and change year_month to month as a date type</comment>
+
+    	<createView viewName="flight_log_monthly_total_v" replaceIfExists="true">
+			<![CDATA[
+  with
+flight_log_monthly_total_no_id as (
+select
+    trunc(flight_date, 'month') as month,
+    round(sum(day_solo), 1) day_solo,
+    round(sum(day_dual), 1) day_dual,
+    round(sum(night_solo), 1) night_solo,
+    round(sum(night_dual), 1) night_dual,
+    round(sum(instrument_simulated), 1) instrument_simulated,
+    round(sum(instrument_flight_sim), 1) instrument_flight_sim,
+    round(sum(instrument_imc), 1) instrument_imc,
+    sum(instrument_no_ifr_appr) instrument_no_ifr_appr,
+    round(sum(x_country_day), 1) x_country_day,
+    round(sum(x_country_night), 1) x_country_night,
+    sum(tos_ldgs_day) tos_ldgs_day,
+    sum(tos_ldgs_night) tos_ldgs_night,
+    round(sum(nvl(day_solo,0)+nvl(day_dual,0)+nvl(night_solo,0)+nvl(night_dual,0)), 1) total_month
+  from flight_log
+ group by trunc(flight_date, 'month')
+)
+select 
+row_number() over (order by month) as id, flmtni."MONTH",flmtni."DAY_SOLO",flmtni."DAY_DUAL",flmtni."NIGHT_SOLO",flmtni."NIGHT_DUAL",flmtni."INSTRUMENT_SIMULATED",flmtni."INSTRUMENT_FLIGHT_SIM",flmtni."INSTRUMENT_IMC",flmtni."INSTRUMENT_NO_IFR_APPR",flmtni."X_COUNTRY_DAY",flmtni."X_COUNTRY_NIGHT",flmtni."TOS_LDGS_DAY",flmtni."TOS_LDGS_NIGHT",flmtni."TOTAL_MONTH"
+from flight_log_monthly_total_no_id flmtni
+order by id
+ 			]]>    
+		</createView>
+
+    </changeSet>
+    <changeSet id="redefine-id-and-month-h2" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE">
+	        <dbms type="h2" />
+	    </preConditions>
+        <comment>Redefine id and change year_month to month as a date type</comment>
+
+    	<createView viewName="flight_log_monthly_total_v" replaceIfExists="true">
+			<![CDATA[
+  with
+flight_log_monthly_total_no_id as (
+select
+    date_trunc('month', flight_date) as month,
+    round(sum(day_solo), 1) day_solo,
+    round(sum(day_dual), 1) day_dual,
+    round(sum(night_solo), 1) night_solo,
+    round(sum(night_dual), 1) night_dual,
+    round(sum(instrument_simulated), 1) instrument_simulated,
+    round(sum(instrument_flight_sim), 1) instrument_flight_sim,
+    round(sum(instrument_imc), 1) instrument_imc,
+    sum(instrument_no_ifr_appr) instrument_no_ifr_appr,
+    round(sum(x_country_day), 1) x_country_day,
+    round(sum(x_country_night), 1) x_country_night,
+    sum(tos_ldgs_day) tos_ldgs_day,
+    sum(tos_ldgs_night) tos_ldgs_night,
+    round(sum(nvl(day_solo,0)+nvl(day_dual,0)+nvl(night_solo,0)+nvl(night_dual,0)), 1) total_month
+  from flight_log
+ group by date_trunc('month', flight_date)
+)
+select 
+row_number() over (order by month) as id, flmtni."MONTH",flmtni."DAY_SOLO",flmtni."DAY_DUAL",flmtni."NIGHT_SOLO",flmtni."NIGHT_DUAL",flmtni."INSTRUMENT_SIMULATED",flmtni."INSTRUMENT_FLIGHT_SIM",flmtni."INSTRUMENT_IMC",flmtni."INSTRUMENT_NO_IFR_APPR",flmtni."X_COUNTRY_DAY",flmtni."X_COUNTRY_NIGHT",flmtni."TOS_LDGS_DAY",flmtni."TOS_LDGS_NIGHT",flmtni."TOTAL_MONTH"
+from flight_log_monthly_total_no_id flmtni
+order by id
+ 			]]>    
+		</createView>
+
+    </changeSet></databaseChangeLog>

@@ -69,5 +69,13 @@
 	<include file="liquibase/flight-log-monthly-total-v/add-total-month-to-h2-view.xml"/>
 	<include file="liquibase/flight-log-monthly-total-v/fix-total-month-in-oracle-view.xml"/> 
 	<include file="liquibase/flight-log-yearly-total-v/add-total-year.xml"/> 
+	<include file="liquibase/flight-log-running-total-v/create-view.xml"/>
 
+	<include file="liquibase/flight-log-monthly-total-v/redefine-id-and-month.xml"/>
+	<include file="liquibase/flight-log-yearly-total-v/redefine-id-and-year.xml"/>
+	<include file="liquibase/flight-log-monthly-total-v/drop-h2-intermediate-view.xml"/>
+	
+	<include file="liquibase/flight-log-totals-v/create-view-oracle.xml"/>
+	<include file="liquibase/flight-log-monthly-total-v/reorder-solo-and-dual-columns.xml"/>
+	<include file="liquibase/flight-log-yearly-total-v/reorder-solo-and-dual-columns.xml"/>
 </databaseChangeLog>

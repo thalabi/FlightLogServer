@@ -3,30 +3,54 @@ package com.kerneldc.flightlogserver.domain;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @MappedSuperclass
-//@XmlAccessorType(XmlAccessType.FIELD)
 @Getter @Setter
-public abstract class AbstractPersistableEntity implements Serializable {
+public abstract class AbstractPersistableEntity extends AbstractEntity implements Serializable {
 	
+	protected AbstractPersistableEntity() {
+		this.logicalKeyHolder = new LogicalKeyHolder();
+	}
+
 	private static final long serialVersionUID = 1L;
 
-	public AbstractPersistableEntity() {
-        super();
-    }
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "default_seq_gen")
+	private Long id;
+	
+	@Embedded
+	@JsonIgnore
+	private LogicalKeyHolder logicalKeyHolder;
 	
 	@Version
 	@Column(name = "version")
 	private Long version;
+	// expose version here since Spring JPA rest does not
+	public Long getRowVersion() {
+		return version;
+	}
+	public void setRowVersion(Long rowVersion) {
+		version = rowVersion;
+	}
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+//	@CsvBindByName
+//	@CsvIgnore(profiles = "csvWrite") // ignore column sourceCsvLineNumber when writing out csv file (when profile is set to csvWrite)
+//	@Transient
+//	private Long sourceCsvLineNumber;
+//	@Transient
+//	private String[] sourceCsvLine;
+	
+    protected abstract void setLogicalKeyHolder();
+    
 }

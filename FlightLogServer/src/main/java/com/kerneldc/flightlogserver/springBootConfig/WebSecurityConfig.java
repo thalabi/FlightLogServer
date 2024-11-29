@@ -94,12 +94,16 @@ public class WebSecurityConfig {
 				// spring security 6.1
 				//.requestMatchers("/appInfoController/*", "/pingController/*", "/actuator/*").permitAll()
 				//.requestMatchers("/protected/securityController/getUserInfo").authenticated()
+		//.antMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll?tableName=flight_log_totals_v**")
+		.antMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll*/**")
+		.hasAuthority(AUTHORITY_PREFIX+"flight_log"+READ_TABLE_SUFFIX)
 				);
 		for (EntityEnum entityEnum : EntityEnum.values()) {
 			var entityName = entityEnum.getEntityName();
 			var tableAuthorityPrefix = AUTHORITY_PREFIX + entityEnum.getTableName();
 			httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 		            .antMatchers(HttpMethod.GET, "/protected/"+entityName+"Controller/findAll/**").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
+		            
 		            .antMatchers(HttpMethod.GET, "/protected/"+entityName+"Controller/count").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
 		            .antMatchers(HttpMethod.GET, "/protected/data-rest/"+entityName+"s").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
 		            .antMatchers(HttpMethod.GET, "/protected/data-rest/"+entityName+"s/**").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)

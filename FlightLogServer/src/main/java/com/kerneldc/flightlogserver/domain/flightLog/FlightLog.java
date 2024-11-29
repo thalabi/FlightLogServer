@@ -1,13 +1,9 @@
 package com.kerneldc.flightlogserver.domain.flightLog;
 
 import java.util.Date;
-import java.util.function.Function;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -18,18 +14,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@SequenceGenerator(name = "default_seq_gen", sequenceName = "flight_log_seq", allocationSize = 1)
 @Getter @Setter
 public class FlightLog extends AbstractPersistableEntity {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final Function<FlightLog, Object> idExtractor = FlightLog::getId;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "flight_log_seq_gen")
-	@SequenceGenerator(name = "flight_log_seq_gen", sequenceName = "flight_log_seq", allocationSize = 1)
-	private Long id;
-	
 	@Temporal(TemporalType.DATE)
 	private Date flightDate;
 	private String makeModel;
@@ -57,5 +47,10 @@ public class FlightLog extends AbstractPersistableEntity {
 	private Date created;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
+	
+	@Override
+	protected void setLogicalKeyHolder() {
+		// TODO need to add lk column to table and implement this method
+	}
 
 }

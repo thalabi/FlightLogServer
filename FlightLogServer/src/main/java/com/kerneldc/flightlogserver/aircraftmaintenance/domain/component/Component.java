@@ -8,9 +8,6 @@ import java.util.function.Function;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
@@ -35,6 +32,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@SequenceGenerator(name = "default_seq_gen", sequenceName = "component_seq", allocationSize = 1)
 @NamedEntityGraphs({
 	@NamedEntityGraph(
 		name = "componentPartGraph",
@@ -58,11 +56,6 @@ public class Component extends AbstractPersistableEntity {
 	public static final String PROPERTY_COMPONENT_HISTORY_SET = "componentHistorySet";
 
 	public static final Function<Component, Object> idExtractor = Component::getId;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "component_seq_gen")
-	@SequenceGenerator(name = "component_seq_gen", sequenceName = "component_seq", allocationSize = 1)
-	private Long id;
 
 	@Column(unique = true)
     private String name;
@@ -93,5 +86,10 @@ public class Component extends AbstractPersistableEntity {
 	private Date created;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
+
+	@Override
+	protected void setLogicalKeyHolder() {
+		// TODO need to add lk column to table and implement this method
+	}
 
 }

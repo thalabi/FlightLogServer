@@ -62,4 +62,9 @@ public class ComponentHistory extends AbstractPersistableEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
 
+	@Override
+	protected void setLogicalKeyHolder() {
+		// TODO need to add lk column to table and implement this method
+	}
+
 }

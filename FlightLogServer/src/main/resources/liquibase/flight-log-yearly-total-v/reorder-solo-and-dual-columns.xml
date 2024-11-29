@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="redefine-id-and-year-h2" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE" onFailMessage="">
+	        <dbms type="h2" />
+	    </preConditions>
+        <comment>Redefine id and change year date type</comment>
+
+    	<createView viewName="flight_log_yearly_total_v" replaceIfExists="true">
+			<![CDATA[
+with
+flight_log_yearly_total_no_id as (
+select
+    date_trunc('year', flight_date) as year,
+    round(sum(day_dual), 1) day_dual,
+    round(sum(day_solo), 1) day_solo,
+    round(sum(night_dual), 1) night_dual,
+    round(sum(night_solo), 1) night_solo,
+    round(sum(instrument_simulated), 1) instrument_simulated,
+    round(sum(instrument_flight_sim), 1) instrument_flight_sim,
+    round(sum(instrument_imc), 1) instrument_imc,
+    sum(instrument_no_ifr_appr) instrument_no_ifr_appr,
+    round(sum(x_country_day), 1) x_country_day,
+    round(sum(x_country_night), 1) x_country_night,
+    sum(tos_ldgs_day) tos_ldgs_day,
+    sum(tos_ldgs_night) tos_ldgs_night,
+    round(sum(nvl(day_solo,0)+nvl(day_dual,0)+nvl(night_solo,0)+nvl(night_dual,0)), 1) total_year
+  from flight_log
+ group by date_trunc('year', flight_date)
+)
+	select 
+		row_number() over (order by year) as id,
+		flytni.year,
+		flytni.day_dual,
+		flytni.day_solo,
+		flytni.night_dual,
+		flytni.night_solo,
+		flytni.instrument_simulated,
+		flytni.instrument_flight_sim,
+		flytni.instrument_imc,
+		flytni.instrument_no_ifr_appr,
+		flytni.x_country_day,
+		flytni.x_country_night,
+		flytni.tos_ldgs_day,
+		flytni.tos_ldgs_night,
+		flytni.total_year
+	from flight_log_yearly_total_no_id flytni
+	order by id
+			]]>    
+		</createView>
+
+    </changeSet>
+
+    <changeSet id="redefine-id-and-year-oracle" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE">
+	        <dbms type="oracle" />
+	    </preConditions>
+        <comment>Redefine id and change year date type</comment>
+
+    	<createView viewName="flight_log_yearly_total_v" replaceIfExists="true">
+			<![CDATA[
+with
+flight_log_yearly_total_no_id as (
+select
+    trunc(flight_date, 'year') as year,
+    round(sum(day_dual), 1) day_dual,
+    round(sum(day_solo), 1) day_solo,
+    round(sum(night_dual), 1) night_dual,
+    round(sum(night_solo), 1) night_solo,
+    round(sum(instrument_simulated), 1) instrument_simulated,
+    round(sum(instrument_flight_sim), 1) instrument_flight_sim,
+    round(sum(instrument_imc), 1) instrument_imc,
+    sum(instrument_no_ifr_appr) instrument_no_ifr_appr,
+    round(sum(x_country_day), 1) x_country_day,
+    round(sum(x_country_night), 1) x_country_night,
+    sum(tos_ldgs_day) tos_ldgs_day,
+    sum(tos_ldgs_night) tos_ldgs_night,
+    round(sum(nvl(day_solo,0)+nvl(day_dual,0)+nvl(night_solo,0)+nvl(night_dual,0)), 1) total_year
+  from flight_log
+ group by trunc(flight_date, 'year')
+)
+	select 
+		row_number() over (order by year) as id,
+		flytni.year,
+		flytni.day_dual,
+		flytni.day_solo,
+		flytni.night_dual,
+		flytni.night_solo,
+		flytni.instrument_simulated,
+		flytni.instrument_flight_sim,
+		flytni.instrument_imc,
+		flytni.instrument_no_ifr_appr,
+		flytni.x_country_day,
+		flytni.x_country_night,
+		flytni.tos_ldgs_day,
+		flytni.tos_ldgs_night,
+		flytni.total_year
+	from flight_log_yearly_total_no_id flytni
+	order by id
+			]]>    
+		</createView>
+
+    </changeSet>
+</databaseChangeLog>

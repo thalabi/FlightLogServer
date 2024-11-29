@@ -39,8 +39,10 @@ class ComponentPersistenceServiceTest {
 	@Test
 	void testParseAndFindComponent_ValidComponentUri_Success() throws ApplicationException {
 		String componentUri = "http://localhost:6001/components/7";
-		Part part = Part.builder().id(25l).name("part 25").build();
-		Component component = Component.builder().id(7l).part(part).name("component 7").build();
+		Part part = Part.builder().name("part 25").build();
+		part.setId(25l);
+		Component component = Component.builder().part(part).name("component 7").build();
+		component.setId(7l);
 		Optional<Component> optionalComponent = Optional.of(component);
 		when(componentRepository.findById(7l)).thenReturn(optionalComponent);
 		
@@ -68,9 +70,12 @@ class ComponentPersistenceServiceTest {
 				.workPerformed("replaced").datePerformed(new Date()).hoursPerformed(1000f).dateDue(new Date())
 				.hoursDue(1500f).partUri("http://localhost:6001/parts/258").build();
 		
-		Part oldPart = Part.builder().id(25l).build();
-		Part newPart = Part.builder().id(258l).name("part 258 name").build();
-		Component oldComponent = Component.builder().id(7l).part(oldPart).name("old name").build();
+		Part oldPart = Part.builder().build();
+		oldPart.setId(25l);
+		Part newPart = Part.builder().name("part 258 name").build();
+		newPart.setId(258l);
+		Component oldComponent = Component.builder().part(oldPart).name("old name").build();
+		oldComponent.setId(7l);
 
 		Optional<Component> optionalComponent = Optional.of(oldComponent);
 		when(componentRepository.findById(7l)).thenReturn(optionalComponent);
@@ -101,10 +106,14 @@ class ComponentPersistenceServiceTest {
 				.hoursPerformed(1000f).partUri("http://localhost:6001/parts/259").build();
 		componentRequest.getHistoryRequestSet().add(componentHistoryVo);
 		
-		Part oldPart = Part.builder().id(25l).build();
-		Part newPart = Part.builder().id(258l).name("part 258 name").build();
-		Part newHistoryPart = Part.builder().id(259l).name("part 259 name").build();
-		Component oldComponent = Component.builder().id(7l).part(oldPart).name("old name").build();
+		Part oldPart = Part.builder().build();
+		oldPart.setId(25l);
+		Part newPart = Part.builder().name("part 258 name").build();
+		newPart.setId(258l);
+		Part newHistoryPart = Part.builder().name("part 259 name").build();
+		newHistoryPart.setId(259l);
+		Component oldComponent = Component.builder().part(oldPart).name("old name").build();
+		oldComponent.setId(7l);
 
 		Optional<Component> optionalComponent = Optional.of(oldComponent);
 		when(componentRepository.findById(7l)).thenReturn(optionalComponent);
@@ -138,12 +147,17 @@ class ComponentPersistenceServiceTest {
 				.hoursPerformed(1000f).partUri("http://localhost:6001/parts/259").build();
 		componentRequest.getHistoryRequestSet().add(componentHistoryVo);
 		
-		Part oldPart = Part.builder().id(25l).build();
-		Part oldHistoryPart = Part.builder().id(259l).name("part 259 name").build();
-		Part newPart = Part.builder().id(258l).name("part 258 name").build();
-		Part newHistoryPart = Part.builder().id(259l).name("new part 259 name").build();
+		Part oldPart = Part.builder().build();
+		oldPart.setId(25l);
+		Part oldHistoryPart = Part.builder().name("part 259 name").build();
+		oldHistoryPart.setId(259l);
+		Part newPart = Part.builder().name("part 258 name").build();
+		newPart.setId(258l);
+		Part newHistoryPart = Part.builder().name("new part 259 name").build();
+		newHistoryPart.setId(259l);
 		// Create old component with one history record
-		Component oldComponent = Component.builder().id(7l).part(oldPart).name("old name").build();
+		Component oldComponent = Component.builder().part(oldPart).name("old name").build();
+		oldComponent.setId(7l);
 		ComponentHistory oldComponentHistory = ComponentHistory.builder().id(24l).name("OilFilter")
 				.description("Tempest CH48110").workPerformed("replaced").datePerformed(new Date())
 				.hoursPerformed(1000f).part(oldHistoryPart).build();
@@ -178,11 +192,15 @@ class ComponentPersistenceServiceTest {
 				.workPerformed("replaced").datePerformed(new Date()).hoursPerformed(1000f).dateDue(new Date())
 				.hoursDue(1500f).partUri("http://localhost:6001/parts/258").build();
 		
-		Part oldPart = Part.builder().id(25l).build();
-		Part oldHistoryPart = Part.builder().id(259l).name("part 259 name").build();
-		Part newPart = Part.builder().id(258l).name("part 258 name").build();
+		Part oldPart = Part.builder().build();
+		oldPart.setId(25l);
+		Part oldHistoryPart = Part.builder().name("part 259 name").build();
+		oldHistoryPart.setId(259l);
+		Part newPart = Part.builder().name("part 258 name").build();
+		newPart.setId(258l);
 		// Create old component with one history record
-		Component oldComponent = Component.builder().id(7l).part(oldPart).name("old name").build();
+		Component oldComponent = Component.builder().part(oldPart).name("old name").build();
+		oldComponent.setId(7l);
 		ComponentHistory oldComponentHistory = ComponentHistory.builder().id(24l).name("OilFilter")
 				.description("Tempest CH48110").workPerformed("replaced").datePerformed(new Date())
 				.hoursPerformed(1000f).part(oldHistoryPart).build();
