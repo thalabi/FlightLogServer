@@ -27,10 +27,12 @@ public class ComponentItemProcessor implements ItemProcessor<OldComponent, Compo
 		LOGGER.info("Looked up id {} for {}", partId, item.getPartName());
 		Float hoursPerformed = item.getHoursPerformed() == 0 ? null : item.getHoursPerformed();
 		Float hoursDue = item.getHoursDue() == 0 ? null : item.getHoursDue();
-		return Component.builder().workPerformed(item.getActivityPerformed()).datePerformed(item.getDatePerformed())
+		var component = Component.builder().workPerformed(item.getActivityPerformed()).datePerformed(item.getDatePerformed())
 				.hoursPerformed(hoursPerformed).dateDue(item.getDateDue()).hoursDue(hoursDue)
-				.part(Part.builder().name(item.getPartName()).id(partId).build())
+				.part(Part.builder().name(item.getPartName()).build())
 				.build();
+		component.setId(partId);
+		return component;
 	}
 }
 
