@@ -30,9 +30,9 @@ import com.kerneldc.flightlogserver.exception.ApplicationException;
 public class ComponentPersistenceService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	private static final UriTemplate PART_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/parts/{id}");
-	private static final UriTemplate COMPONENT_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/components/{id}");
-	private static final UriTemplate COMPONENT_HISTORY_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/componentHistories/{id}");
+	private static final UriTemplate PART_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/protected/data-rest/parts/{id}");
+	private static final UriTemplate COMPONENT_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/protected/data-rest/components/{id}");
+	private static final UriTemplate COMPONENT_HISTORY_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/protected/data-rest/componentHistories/{id}");
 
 	private PartRepository partRepository;
 	private ComponentRepository componentRepository;
