@@ -35,10 +35,12 @@ class ComponentPersistenceServiceTest {
     private ComponentRepository componentRepository;
 	@Mock
     private PartRepository partRepository;
+	
+	private final String BASE_URI = "http://localhost:6001/protected/data-rest";
 
 	@Test
 	void testParseAndFindComponent_ValidComponentUri_Success() throws ApplicationException {
-		String componentUri = "http://localhost:6001/components/7";
+		String componentUri = BASE_URI + "/components/7";
 		Part part = Part.builder().name("part 25").build();
 		part.setId(25l);
 		Component component = Component.builder().part(part).name("component 7").build();
@@ -57,7 +59,7 @@ class ComponentPersistenceServiceTest {
 	
 	@Test
 	void testParseAndFindComponent_InvalidComponentUri_Failure() throws ApplicationException {
-		String componentUri = "http://localhost:6001/componentsXXX/7";
+		String componentUri = BASE_URI + "/componentsXXX/7";
 		
 		assertThrows(ApplicationException.class,
 				() -> componentPersistenceService.parseAndFindComponent(componentUri));
@@ -66,9 +68,9 @@ class ComponentPersistenceServiceTest {
 	@Test
 	void testUpdateComponentAndHistory_ModifyComponentWithNoHistory_Success() throws ApplicationException {
 		ComponentRequest componentRequest = ComponentRequest.builder()
-				.componentUri("http://localhost:6001/components/7").name("OilFilter").description("Champion CH48110")
+				.componentUri(BASE_URI + "/components/7").name("OilFilter").description("Champion CH48110")
 				.workPerformed("replaced").datePerformed(new Date()).hoursPerformed(1000f).dateDue(new Date())
-				.hoursDue(1500f).partUri("http://localhost:6001/parts/258").build();
+				.hoursDue(1500f).partUri(BASE_URI + "/parts/258").build();
 		
 		Part oldPart = Part.builder().build();
 		oldPart.setId(25l);
@@ -97,13 +99,13 @@ class ComponentPersistenceServiceTest {
 	void testUpdateComponentAndHistory_ModifyComponentAndAddHistoryRecord_Success() throws ApplicationException {
 		// Set up request component
 		ComponentRequest componentRequest = ComponentRequest.builder()
-				.componentUri("http://localhost:6001/components/7").name("OilFilter").description("Champion CH48110")
+				.componentUri(BASE_URI + "/components/7").name("OilFilter").description("Champion CH48110")
 				.workPerformed("replaced").datePerformed(new Date()).hoursPerformed(1000f).dateDue(new Date())
-				.hoursDue(1500f).partUri("http://localhost:6001/parts/258").build();
+				.hoursDue(1500f).partUri(BASE_URI + "/parts/258").build();
 		// Set up request history record
 		ComponentHistoryVo componentHistoryVo = ComponentHistoryVo.builder().name("OilFilter")
 				.description("Tempest CH48110").workPerformed("replaced").datePerformed(new Date())
-				.hoursPerformed(1000f).partUri("http://localhost:6001/parts/259").build();
+				.hoursPerformed(1000f).partUri(BASE_URI + "/parts/259").build();
 		componentRequest.getHistoryRequestSet().add(componentHistoryVo);
 		
 		Part oldPart = Part.builder().build();
@@ -137,14 +139,14 @@ class ComponentPersistenceServiceTest {
 	void testUpdateComponentAndHistory_ModifyComponentAndModifyHistoryRecord_Success() throws ApplicationException {
 		// Set up request component
 		ComponentRequest componentRequest = ComponentRequest.builder()
-				.componentUri("http://localhost:6001/components/7").name("OilFilter").description("Champion CH48110")
+				.componentUri(BASE_URI + "/components/7").name("OilFilter").description("Champion CH48110")
 				.workPerformed("replaced").datePerformed(new Date()).hoursPerformed(1000f).dateDue(new Date())
-				.hoursDue(1500f).partUri("http://localhost:6001/parts/258").build();
+				.hoursDue(1500f).partUri(BASE_URI + "/parts/258").build();
 		// Set up request history record
 		ComponentHistoryVo componentHistoryVo = ComponentHistoryVo.builder()
-				.historyUri("ttp://localhost:6001/componentHistories/24").name("OilFilter")
+				.historyUri(BASE_URI + "/componentHistories/24").name("OilFilter")
 				.description("Tempest CH48110").workPerformed("replaced").datePerformed(new Date())
-				.hoursPerformed(1000f).partUri("http://localhost:6001/parts/259").build();
+				.hoursPerformed(1000f).partUri(BASE_URI + "/parts/259").build();
 		componentRequest.getHistoryRequestSet().add(componentHistoryVo);
 		
 		Part oldPart = Part.builder().build();
@@ -188,9 +190,9 @@ class ComponentPersistenceServiceTest {
 	void testUpdateComponentAndHistory_ModifyComponentAndDeleteHistoryRecord_Success() throws ApplicationException {
 		// Set up request component with no history record
 		ComponentRequest componentRequest = ComponentRequest.builder()
-				.componentUri("http://localhost:6001/components/7").name("OilFilter").description("Champion CH48110")
+				.componentUri(BASE_URI + "/components/7").name("OilFilter").description("Champion CH48110")
 				.workPerformed("replaced").datePerformed(new Date()).hoursPerformed(1000f).dateDue(new Date())
-				.hoursDue(1500f).partUri("http://localhost:6001/parts/258").build();
+				.hoursDue(1500f).partUri(BASE_URI + "/parts/258").build();
 		
 		Part oldPart = Part.builder().build();
 		oldPart.setId(25l);

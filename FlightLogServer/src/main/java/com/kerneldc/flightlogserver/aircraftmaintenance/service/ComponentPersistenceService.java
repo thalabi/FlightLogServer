@@ -57,6 +57,7 @@ public class ComponentPersistenceService {
     	List<Long> requestHistoryIdList = componentRequest.getHistoryRequestSet().stream()
     		.map(historyRequest -> {
     			String historyUri = historyRequest.getHistoryUri();
+    			LOGGER.info("BASE_URI: [{}]", historyUri);
     			return StringUtils.isNotEmpty(historyUri) ? parseId(historyUri, COMPONENT_HISTORY_URI_TEMPLATE) : null;
     		}).collect(Collectors.toList());
     	LOGGER.debug("requestHistoryIdList: {}", requestHistoryIdList);
