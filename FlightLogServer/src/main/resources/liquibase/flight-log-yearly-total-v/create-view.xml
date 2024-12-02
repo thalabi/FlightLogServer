@@ -17,7 +17,7 @@
 			<![CDATA[
 select
     year(flight_date) as id,
-	year(flight_date)+0 as year,
+	year(flight_date)+0 as "YEAR",
     round(sum(day_dual),1) as day_dual, 
     round(sum(day_solo),1) as day_solo, 
     round(sum(instrument_flight_sim),1) as instrument_flight_sim, 
@@ -31,7 +31,7 @@ select
     round(sum(x_country_day),1) as x_country_day,
     round(sum(x_country_night),1) as x_country_night
  from flight_log
-group by id, year
+group by id, "YEAR"
 			]]>    
 		</createView>
 

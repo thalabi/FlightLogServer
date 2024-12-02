@@ -31,7 +31,7 @@ select
     round(sum(x_country_day), 1) as x_country_day, 
     round(sum(x_country_night), 1) as x_country_night
 from public.flight_log 
-where flight_date >= truncate(sysdate)-30
+where flight_date >= CURRENT_DATE()-30
 union
 select 
 	2 id, 
@@ -49,7 +49,7 @@ select
     round(sum(x_country_day), 1) as x_country_day, 
     round(sum(x_country_night), 1) as x_country_night
 from public.flight_log 
-where flight_date >= truncate(sysdate)-60
+where flight_date >= CURRENT_DATE()-60
 union
 select 
 	3 id, 
@@ -67,7 +67,7 @@ select
     round(sum(x_country_day), 1) as x_country_day, 
     round(sum(x_country_night), 1) as x_country_night
 from public.flight_log 
-where flight_date >= truncate(sysdate)-90
+where flight_date >= CURRENT_DATE()-90
 union
 select 
 	4 id, 
@@ -85,7 +85,7 @@ select
     round(sum(x_country_day), 1) as x_country_day, 
     round(sum(x_country_night), 1) as x_country_night
 from public.flight_log 
-where flight_date >= truncate(sysdate)-180
+where flight_date >= CURRENT_DATE()-180
 union
 select 
 	5 id, 
@@ -103,7 +103,7 @@ select
     round(sum(x_country_day), 1) as x_country_day, 
     round(sum(x_country_night), 1) as x_country_night
 from public.flight_log 
-where flight_date >= truncate(sysdate)-360
+where flight_date >= CURRENT_DATE()-360
 			]]>    
 		</createView>
 
