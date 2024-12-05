@@ -1,5 +1,7 @@
 package com.kerneldc.flightlogserver.search;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EntitySpecificationNew<T> implements Specification<T> {
 
 	private static final long serialVersionUID = 1L;
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
 	private enum QueryOperatorEnum {
 		EQUALS("equals"), NOT_EQUALS("notEquals"), GREATER_THAN("greaterThan"), GT("gt"),
@@ -91,6 +94,9 @@ public class EntitySpecificationNew<T> implements Specification<T> {
 		case "LocalDateTime" -> {
 			return handleLocalDateTimeFieldType(inputFilter, field, value);
 		}
+		case "Date" -> {
+			return handleDateFieldType(inputFilter, field, value);
+		}
 		default -> {
 			var exceptionMessage = String.format("Field data type [%s], not supported.", fieldType);
 			LOGGER.error(exceptionMessage);
@@ -115,6 +121,32 @@ public class EntitySpecificationNew<T> implements Specification<T> {
 			return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThan(root.get(field), localDateTimeValue);
 		}
 		default -> throw new IllegalArgumentException("Unexpected value: " + inputFilter.operator());
+		}
+	}
+
+	private Specification<T> handleDateFieldType(Filter inputFilter, String field, String value) {
+		//var localDateTimeValue = LocalDateTime.parse(value, DateTimeFormatter.ISO_DATE_TIME);
+		try {
+			var date = DATE_FORMAT.parse(value);
+			switch (inputFilter.operator()) {
+			case DATE_IS -> {
+					return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(field), date);
+			}
+			case DATE_IS_NOT -> {
+					return (root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get(field), date);
+			}
+			case DATE_BEFORE -> {
+				return (root, query, criteriaBuilder) -> criteriaBuilder.lessThan(root.get(field), date);
+			}
+			case DATE_AFTER -> {
+				return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThan(root.get(field), date);
+			}
+			default -> throw new IllegalArgumentException("Unexpected value: " + inputFilter.operator());
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new IllegalArgumentException("Unable to parse value: " + inputFilter.value());
 		}
 	}
 

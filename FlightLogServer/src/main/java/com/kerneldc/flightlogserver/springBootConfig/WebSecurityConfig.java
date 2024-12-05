@@ -95,8 +95,11 @@ public class WebSecurityConfig {
 				//.requestMatchers("/appInfoController/*", "/pingController/*", "/actuator/*").permitAll()
 				//.requestMatchers("/protected/securityController/getUserInfo").authenticated()
 		//.antMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll?tableName=flight_log_totals_v**")
-		.antMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll*/**")
-		.hasAuthority(AUTHORITY_PREFIX+"flight_log"+READ_TABLE_SUFFIX)
+		//.antMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll*/**")
+		.regexMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll\\?tableName=flight_log_totals_v.*")
+			.hasAuthority(AUTHORITY_PREFIX+"flight_log"+READ_TABLE_SUFFIX)
+//		.antMatchers(HttpMethod.GET, "/protected/data-rest/profile/flightLogTotalsVs")
+//			.hasAuthority(AUTHORITY_PREFIX+"flight_log"+READ_TABLE_SUFFIX)
 				);
 		for (EntityEnum entityEnum : EntityEnum.values()) {
 			var entityName = entityEnum.getEntityName();
