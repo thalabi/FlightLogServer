@@ -28,8 +28,8 @@ public class EntitySpecificationNew<T> implements Specification<T> {
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
 	private enum QueryOperatorEnum {
-		EQUALS("equals"), NOT_EQUALS("notEquals"), GREATER_THAN("greaterThan"), GT("gt"),
-		GREATER_THAN_OR_EQUAL_TO("greaterThanOrEqualTo"), LESS_THAN("lessThan"), LT("lt"), LESS_THAN_OR_EQUAL_TO("lessThanOrEqualTo"),
+		EQUALS("equals"), NOT_EQUALS("notEquals"),
+		GT("gt"), GTE("gte"), LT("lt"), LTE("lte"),
 		STARTS_WITH("startsWith"), CONTAINS("contains"), NOT_CONTAINS("notContains"), ENDS_WITH("endsWith"),
 		DATE_IS("dateIs"), DATE_IS_NOT("dateIsNot"), DATE_BEFORE("dateBefore"), DATE_AFTER("dateAfter");
 
@@ -53,11 +53,11 @@ public class EntitySpecificationNew<T> implements Specification<T> {
 	private transient List<Filter> filterList = new ArrayList<>();
 	private transient EntityType<? extends AbstractEntity> entityMetamodel;
 
-	public EntitySpecificationNew(EntityType<? extends AbstractEntity> entityMetamodel, String searchCriteria) {
+	public EntitySpecificationNew(EntityType<? extends AbstractEntity> entityMetaModel, String searchCriteria) {
 		if (StringUtils.isEmpty(searchCriteria)) {
 			return;
 		}
-		this.entityMetamodel = entityMetamodel;
+		this.entityMetamodel = entityMetaModel;
 		filterList = Arrays.asList(searchCriteria.split(",")).stream().map(criterion -> {
 			var criterionParts = criterion.split("\\|");
 			LOGGER.info("criterionParts: {}", Arrays.asList(criterionParts));
@@ -65,7 +65,12 @@ public class EntitySpecificationNew<T> implements Specification<T> {
 		}).toList();
 	}
 
-	private Specification<T> getSpecificationFromFilters() {
+	@Override
+	public Predicate toPredicate(Root<T> entity, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+		return buildSpecificationFromFilters().toPredicate(entity, query, criteriaBuilder);
+	}
+
+	private Specification<T> buildSpecificationFromFilters() {
 		if (filterList.isEmpty()) {
 			return Specification.where(null);
 		}
@@ -88,7 +93,7 @@ public class EntitySpecificationNew<T> implements Specification<T> {
 		case "String" -> {
 			return handleStringFieldType(inputFilter, field, value);
 		}
-		case "Double", "Float", "BigDecimal", "Short" -> {
+		case "Short", "Integer", "Double", "Float", "BigDecimal" -> {
 			return handleNumberFieldType(inputFilter, field, value);
 		}
 		case "LocalDateTime" -> {
@@ -99,7 +104,6 @@ public class EntitySpecificationNew<T> implements Specification<T> {
 		}
 		default -> {
 			var exceptionMessage = String.format("Field data type [%s], not supported.", fieldType);
-			LOGGER.error(exceptionMessage);
 			throw new IllegalArgumentException(exceptionMessage);
 		}
 		}
@@ -109,66 +113,40 @@ public class EntitySpecificationNew<T> implements Specification<T> {
 		var localDateTimeValue = LocalDateTime.parse(value, DateTimeFormatter.ISO_DATE_TIME);
 		switch (inputFilter.operator()) {
 		case DATE_IS -> {
-				return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(field), localDateTimeValue);
+				return (entity, query, criteriaBuilder) -> criteriaBuilder.equal(entity.get(field), localDateTimeValue);
 		}
 		case DATE_IS_NOT -> {
-				return (root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get(field), localDateTimeValue);
+				return (entity, query, criteriaBuilder) -> criteriaBuilder.notEqual(entity.get(field), localDateTimeValue);
 		}
 		case DATE_BEFORE -> {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.lessThan(root.get(field), localDateTimeValue);
+			return (entity, query, criteriaBuilder) -> criteriaBuilder.lessThan(entity.get(field), localDateTimeValue);
 		}
 		case DATE_AFTER -> {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThan(root.get(field), localDateTimeValue);
+			return (entity, query, criteriaBuilder) -> criteriaBuilder.greaterThan(entity.get(field), localDateTimeValue);
 		}
 		default -> throw new IllegalArgumentException("Unexpected value: " + inputFilter.operator());
-		}
-	}
-
-	private Specification<T> handleDateFieldType(Filter inputFilter, String field, String value) {
-		//var localDateTimeValue = LocalDateTime.parse(value, DateTimeFormatter.ISO_DATE_TIME);
-		try {
-			var date = DATE_FORMAT.parse(value);
-			switch (inputFilter.operator()) {
-			case DATE_IS -> {
-					return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(field), date);
-			}
-			case DATE_IS_NOT -> {
-					return (root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get(field), date);
-			}
-			case DATE_BEFORE -> {
-				return (root, query, criteriaBuilder) -> criteriaBuilder.lessThan(root.get(field), date);
-			}
-			case DATE_AFTER -> {
-				return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThan(root.get(field), date);
-			}
-			default -> throw new IllegalArgumentException("Unexpected value: " + inputFilter.operator());
-			}
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new IllegalArgumentException("Unable to parse value: " + inputFilter.value());
 		}
 	}
 
 	private Specification<T> handleStringFieldType(Filter inputFilter, String field, String value) {
 		switch (inputFilter.operator()) {
 		case EQUALS -> {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.equal(criteriaBuilder.lower(root.get(field)), value.toLowerCase());
+			return (entity, query, criteriaBuilder) -> criteriaBuilder.equal(criteriaBuilder.lower(entity.get(field)), value.toLowerCase());
 		}
 		case NOT_EQUALS -> {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.notEqual(criteriaBuilder.lower(root.get(field)), value.toLowerCase());
+			return (entity, query, criteriaBuilder) -> criteriaBuilder.notEqual(criteriaBuilder.lower(entity.get(field)), value.toLowerCase());
 		}
 		case STARTS_WITH -> {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(field)), value.toLowerCase() + "%");
+			return (entity, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(entity.get(field)), value.toLowerCase() + "%");
 		}
 		case CONTAINS -> {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(field)), "%" + value.toLowerCase() + "%");
+			return (entity, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(entity.get(field)), "%" + value.toLowerCase() + "%");
 		}
 		case NOT_CONTAINS -> {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.not(criteriaBuilder.like(criteriaBuilder.lower(root.get(field)), "%" + value.toLowerCase() + "%"));
+			return (entity, query, criteriaBuilder) -> criteriaBuilder.not(criteriaBuilder.like(criteriaBuilder.lower(entity.get(field)), "%" + value.toLowerCase() + "%"));
 		}
 		case ENDS_WITH -> {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get(field)), "%" + value.toLowerCase());
+			return (entity, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(entity.get(field)), "%" + value.toLowerCase());
 		}
 		default -> throw new IllegalArgumentException("Unexpected value: " + inputFilter.operator());
 		}
@@ -177,31 +155,50 @@ public class EntitySpecificationNew<T> implements Specification<T> {
 	private Specification<T> handleNumberFieldType(Filter inputFilter, String field, String value) {
 		switch (inputFilter.operator()) {
 		case EQUALS -> {
-				return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(field), value);
+				return (entity, query, criteriaBuilder) -> criteriaBuilder.equal(entity.get(field), value);
 		}
 		case NOT_EQUALS -> {
-				return (root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get(field), value);
+				return (entity, query, criteriaBuilder) -> criteriaBuilder.notEqual(entity.get(field), value);
 		}
-		case GREATER_THAN, GT -> {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThan(root.get(field), value);
+		case GT -> {
+			return (entity, query, criteriaBuilder) -> criteriaBuilder.greaterThan(entity.get(field), value);
 		}
-		case GREATER_THAN_OR_EQUAL_TO -> {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get(field), value);
+		case GTE -> {
+			return (entity, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(entity.get(field), value);
 		}
-		case LESS_THAN, LT -> {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.lessThan(root.get(field), value);
+		case LT -> {
+			return (entity, query, criteriaBuilder) -> criteriaBuilder.lessThan(entity.get(field), value);
 		}
-		case LESS_THAN_OR_EQUAL_TO -> {
-			return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(field), value);
+		case LTE -> {
+			return (entity, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(entity.get(field), value);
 		}
 		default -> throw new IllegalArgumentException("Unexpected value: " + inputFilter.operator());
 		}
 	}
 
-
-	@Override
-	public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-		return getSpecificationFromFilters().toPredicate(root, query, criteriaBuilder);
+	private Specification<T> handleDateFieldType(Filter inputFilter, String field, String value) {
+		try {
+			var date = DATE_FORMAT.parse(value);
+			switch (inputFilter.operator()) {
+			case DATE_IS -> {
+					return (entity, query, criteriaBuilder) -> criteriaBuilder.equal(entity.get(field), date);
+			}
+			case DATE_IS_NOT -> {
+					return (entity, query, criteriaBuilder) -> criteriaBuilder.notEqual(entity.get(field), date);
+			}
+			case DATE_BEFORE -> {
+				return (entity, query, criteriaBuilder) -> criteriaBuilder.lessThan(entity.get(field), date);
+			}
+			case DATE_AFTER -> {
+				return (entity, query, criteriaBuilder) -> criteriaBuilder.greaterThan(entity.get(field), date);
+			}
+			default -> throw new IllegalArgumentException("Unexpected value: " + inputFilter.operator());
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new IllegalArgumentException("Unable to parse value: " + inputFilter.value());
+		}
 	}
 
 }
