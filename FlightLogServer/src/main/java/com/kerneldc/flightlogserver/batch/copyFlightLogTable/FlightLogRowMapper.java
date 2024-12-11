@@ -59,8 +59,8 @@ public class FlightLogRowMapper implements RowMapper<FlightLog> {
 		flightLog.setRouteTo(rs.getString(ROUTE_TO_COLUMN));
 		flightLog.setTosLdgsDay(rs.getInt(TOS_LDGS_DAY_COLUMN));
 		flightLog.setTosLdgsNight(rs.getInt(TOS_LDGS_NIGHT_COLUMN));
-		flightLog.setXcountryDay(rs.getFloat(X_COUNTRY_DAY_COLUMN));
-		flightLog.setXcountryNight(rs.getFloat(X_COUNTRY_NIGHT_COLUMN));
+		flightLog.setXCountryDay(rs.getFloat(X_COUNTRY_DAY_COLUMN));
+		flightLog.setXCountryNight(rs.getFloat(X_COUNTRY_NIGHT_COLUMN));
 		return flightLog;
 	}
 

@@ -8,6 +8,8 @@ import javax.persistence.Id;
 
 import org.hibernate.annotations.Immutable;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,9 +17,6 @@ import lombok.Setter;
 @Immutable
 @Getter @Setter
 public class FlightLogMonthlyTotalV {
-
-	public FlightLogMonthlyTotalV() {
-	}
 
 	@Id
 	private Long id;
@@ -29,9 +28,11 @@ public class FlightLogMonthlyTotalV {
 	private Float instrumentSimulated;
 	private Float instrumentFlightSim;
 	@Column(name = "x_country_day")
-	private Float xcountryDay;
+	@JsonProperty("xCountryDay")
+	private Float xCountryDay;
 	@Column(name = "x_country_night")
-	private Float xcountryNight;
+	@JsonProperty("xCountryNight")
+	private Float xCountryNight;
 	private Float instrumentImc;
 	private Integer instrumentNoIfrAppr;
 	private Integer tosLdgsDay;

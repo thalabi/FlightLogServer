@@ -10,6 +10,8 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Immutable;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,9 +19,6 @@ import lombok.Setter;
 @Immutable
 @Getter @Setter
 public class FlightLogTotalsV extends AbstractImmutableEntity {
-
-	public FlightLogTotalsV() {
-	}
 
 	@Id
 	private Long id;
@@ -41,8 +40,10 @@ public class FlightLogTotalsV extends AbstractImmutableEntity {
 	private Float instrumentFlightSim;
 	private Integer instrumentNoIfrAppr;
 	@Column(name = "x_country_day")
+	@JsonProperty("xCountryDay")
 	private Float xCountryDay;
 	@Column(name = "x_country_night")
+	@JsonProperty("xCountryNight")
 	private Float xCountryNight;
 	private Integer tosLdgsDay;
 	private Integer tosLdgsNight;
