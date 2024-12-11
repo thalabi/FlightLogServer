@@ -119,7 +119,7 @@ class ComponentControllerTest {
 		mockMvc.perform(post(CONTROLLER_URL + "/add")
 				.content(objectMapper.writeValueAsBytes(componentRequest))
 				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isBadRequest())
+				.andExpect(status().isInternalServerError())
 				.andExpect(jsonPath("$.message", equalTo(String.format("Part ID: %d not found", partId))))
 				.andExpect(jsonPath("$.stackTrace", startsWith(ApplicationException.class.getName())))
 				.andDo(print());
@@ -136,7 +136,7 @@ class ComponentControllerTest {
 		mockMvc.perform(post(CONTROLLER_URL + "/add")
 				.content(objectMapper.writeValueAsBytes(componentRequest))
 				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isBadRequest())
+				.andExpect(status().isInternalServerError())
 				.andExpect(jsonPath("$.message", equalTo(String.format("Could not parse part ID from uri: %s", componentRequest.getPartUri()))))
 				.andExpect(jsonPath("$.stackTrace", startsWith(ApplicationException.class.getName())))
 				.andDo(print());

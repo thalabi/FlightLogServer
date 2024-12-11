@@ -1,5 +1,6 @@
 package com.kerneldc.flightlogserver.exception;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
@@ -9,23 +10,23 @@ import java.sql.SQLException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.context.request.WebRequest;
+
+import com.kerneldc.flightlogserver.exception.RestControllerExceptionHandler.ErrorBody;
 
 import oracle.jdbc.OracleDatabaseException;
 
 class RestResponseEntityExceptionHandlerTest {
 
-	private RestResponseEntityExceptionHandler fixture;
+	private RestControllerExceptionHandler fixture;
 	
-	@Mock
-	private WebRequest webRequest;
+//	@Mock
+//	private WebRequest webRequest;
 	
 	@BeforeEach
 	void setup() {
-		fixture = new RestResponseEntityExceptionHandler();
+		fixture = new RestControllerExceptionHandler();
 	}
 	
 	@Test
@@ -33,13 +34,30 @@ class RestResponseEntityExceptionHandlerTest {
 		String message = "Exception message";
 		ApplicationException applicationException = new ApplicationException(message);
 		
-		ResponseEntity<Object> responseEntity = fixture.handleApplicationException(applicationException, webRequest);
+		ResponseEntity<ErrorBody> responseEntity = fixture.handleApplicationException(applicationException);
 		
-		assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
-		assertThat(responseEntity.getBody(), instanceOf(ExceptionBean.class));
-		ExceptionBean exceptionBean = (ExceptionBean)responseEntity.getBody();
-		assertThat(exceptionBean.getMessage(), equalTo(message));
-		assertThat(exceptionBean.getStackTrace(), startsWith(ApplicationException.class.getName()));
+		assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+		assertThat(responseEntity.getBody(), instanceOf(ErrorBody.class));
+		ErrorBody erroBody = responseEntity.getBody();
+		assertThat(erroBody.message(), equalTo(message));
+		assertThat(erroBody.stackTrace(), startsWith(ApplicationException.class.getName()));
+    }
+	@Test
+    void handleApplicationExceptionTest_withMessageList() {
+		String message = "Exception message";
+		String message2 = "Exception message two";
+		String message3 = "Exception message three";
+		ApplicationException applicationException = new ApplicationException(message);
+		applicationException.addMessage(message2);
+		applicationException.addMessage(message3);
+		
+		ResponseEntity<ErrorBody> responseEntity = fixture.handleApplicationException(applicationException);
+		
+		assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+		assertThat(responseEntity.getBody(), instanceOf(ErrorBody.class));
+		ErrorBody errorBody = responseEntity.getBody();
+		assertThat(errorBody.message(), equalTo(String.join(RestControllerExceptionHandler.MESSAGE_SEPERATOR, message, message2, message3)));
+		assertThat(errorBody.stackTrace(), startsWith(ApplicationException.class.getName()));
     }
 	
 	@Test
@@ -56,17 +74,16 @@ class RestResponseEntityExceptionHandlerTest {
 		
 		sqlException.initCause(OracleDatabaseException);
 		
-		ResponseEntity<Object> responseEntity = fixture.handleSqlException(sqlException, webRequest);
+		ResponseEntity<ErrorBody> responseEntity = fixture.handleSqlException(sqlException);
 
-		assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
-		assertThat(responseEntity.getBody(), instanceOf(ExceptionBean.class));
-		ExceptionBean exceptionBean = (ExceptionBean)responseEntity.getBody();
-		assertThat(exceptionBean.getMessage(), equalTo(message));
-		assertThat(exceptionBean.getStackTrace(), startsWith(SQLException.class.getName()));
-		
-		assertThat(exceptionBean.getOracleSqlError(), equalTo(oracleErrorNumber));
-		assertThat(exceptionBean.getOracleSqlMessage(), equalTo(oracleErrorMessage));
-		assertThat(exceptionBean.getSqlStatement(), equalTo(sql));
-		assertThat(exceptionBean.getOriginalSqlStatement(), equalTo(originalSql));
+		assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+		assertThat(responseEntity.getBody(), instanceOf(ErrorBody.class));
+		ErrorBody exceptionBean = responseEntity.getBody();
+		assertThat(exceptionBean.message(), containsString(message));
+		assertThat(exceptionBean.message(), containsString(oracleErrorNumber+""));
+		assertThat(exceptionBean.stackTrace(), startsWith(SQLException.class.getName()));
+		assertThat(exceptionBean.message(), containsString(oracleErrorMessage));
+		assertThat(exceptionBean.message(), containsString(sql));
+		assertThat(exceptionBean.message(), containsString(originalSql));
 	}
 }
