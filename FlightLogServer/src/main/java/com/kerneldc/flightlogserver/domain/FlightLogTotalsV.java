@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -20,8 +19,6 @@ import lombok.Setter;
 @Getter @Setter
 public class FlightLogTotalsV extends AbstractImmutableEntity {
 
-	@Id
-	private Long id;
 	@Temporal(TemporalType.DATE)
 	private Date flightDate;
 	private String makeModel;

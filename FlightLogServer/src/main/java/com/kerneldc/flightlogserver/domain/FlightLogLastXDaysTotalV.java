@@ -2,7 +2,6 @@ package com.kerneldc.flightlogserver.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 import org.hibernate.annotations.Immutable;
 
@@ -14,10 +13,8 @@ import lombok.Setter;
 @Entity(name="flight_log_last_x_days_total_v")
 @Immutable
 @Getter @Setter
-public class FlightLogLastXDaysTotalV {
+public class FlightLogLastXDaysTotalV extends AbstractImmutableEntity {
 
-	@Id
-	private Long id;
 	private Long days;
 	private Float dayDual;
 	private Float daySolo;

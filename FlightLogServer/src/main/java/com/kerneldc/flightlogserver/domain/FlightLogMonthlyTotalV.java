@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 import org.hibernate.annotations.Immutable;
 
@@ -16,10 +15,8 @@ import lombok.Setter;
 @Entity(name="flight_log_monthly_total_v")
 @Immutable
 @Getter @Setter
-public class FlightLogMonthlyTotalV {
+public class FlightLogMonthlyTotalV extends AbstractImmutableEntity {
 
-	@Id
-	private Long id;
 	private Date month;
 	private Float dayDual;
 	private Float daySolo;
