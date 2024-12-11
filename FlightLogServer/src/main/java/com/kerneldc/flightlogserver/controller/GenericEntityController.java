@@ -1,17 +1,14 @@
 package com.kerneldc.flightlogserver.controller;
 
-import java.util.Objects;
-
 import javax.persistence.EntityManager;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,15 +37,15 @@ public class GenericEntityController {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping("/findAll")
 	public ResponseEntity<PagedModel<AbstractEntity>> findAll(
-			@RequestParam @NotNull String tableName, @RequestParam String search,
-			Pageable pageable, PagedResourcesAssembler<AbstractEntity> pagedResourcesAssembler) {
+			@RequestParam @NotBlank String tableName, @RequestParam String search,
+			Pageable pageable, @NotNull PagedResourcesAssembler<AbstractEntity> pagedResourcesAssembler) {
 
-		Objects.requireNonNull(pagedResourcesAssembler, "pagedResourcesAssembler cannot be null for this controller to work");
+//		Objects.requireNonNull(pagedResourcesAssembler, "pagedResourcesAssembler cannot be null for this controller to work");
     	
-		if (StringUtils.isBlank(tableName)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-		}
-    	
+//		if (StringUtils.isBlank(tableName)) {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//		}
+//    	
 		IEntityEnum entityEnum = getEntityEnum(tableName);
     	LOGGER.info("search: {}", search);
     	LOGGER.info("pageable: {}", pageable);
@@ -56,7 +53,7 @@ public class GenericEntityController {
     	var entityRepository = entityRepositoryFactory.getRepository(entityEnum);
     	var entityMetamodel = em.getMetamodel().entity(entityEnum.getEntity());
     	
-    	var entitySpecification = new EntitySpecificationNew<AbstractEntity>(entityMetamodel, search);
+    	var entitySpecification = new EntitySpecificationNew<>(entityMetamodel, search);
     	
 		var page = entityRepository.findAll((Specification)entitySpecification, pageable);
         PagedModel<?> pagedModel; 
