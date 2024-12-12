@@ -3,6 +3,7 @@ package com.kerneldc.flightlogserver.domain;
 import java.util.Arrays;
 
 import com.google.common.base.Enums;
+import com.kerneldc.flightlogserver.domain.airport.Airport;
 
 public enum FlightLogEntityEnum implements IEntityEnum {
 //	INSTRUMENT(Instrument.class, false, new String[] {"NAME","TICKER","EXCHANGE","CURRENCY"}),
@@ -19,6 +20,7 @@ public enum FlightLogEntityEnum implements IEntityEnum {
 	FLIGHT_LOG_MONTHLY_TOTAL_V(FlightLogMonthlyTotalV.class, true),
 	FLIGHT_LOG_YEARLY_TOTAL_V(FlightLogYearlyTotalV.class, true),
 	FLIGHT_LOG_LAST_X_DAYS_TOTAL_V(FlightLogLastXDaysTotalV.class, true),
+	AIRPORT(Airport.class, false),
 //	PRICE(Price.class, false, new String[] {"TICKER", "EXCHANGE", "PRICE", "PRICE_TIMESTAMP", "PRICE_TIMESTAMP_FROM_SOURCE"/*, "SOURCECSVLINENUMBER"*/}),
 //	INSTRUMENT_BY_ACCOUNT_V(InstrumentByAccountV.class, true, new String[] {"TICKER_EXCHANGE", "INSTRUMENT_NAME", "QUANTITY", "ACCOUNT_NUMBER", "ACCOUNT_NAME"}),
 //	INSTRUMENT_DUE_V(InstrumentDueV.class, true, new String[] {}),

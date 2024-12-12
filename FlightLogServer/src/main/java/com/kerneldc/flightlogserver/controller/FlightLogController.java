@@ -40,10 +40,10 @@ public class FlightLogController {
 //        this.flightLogModelAssembler = flightLogModelAssembler;
     }
 
-    @GetMapping("/count")
-	public Count count() {
-    	return new Count(flightLogRepository.count());
-    }
+//    @GetMapping("/count")
+//	public Count count() {
+//    	return new Count(flightLogRepository.count());
+//    }
 
     @GetMapping("/getLastXDaysSum")
     @Transactional

@@ -98,6 +98,8 @@ public class WebSecurityConfig {
 		//.antMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll*/**")
 		.regexMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll\\?tableName=flight_log_totals_v.*")
 			.hasAuthority(AUTHORITY_PREFIX+"flight_log"+READ_TABLE_SUFFIX)
+		.regexMatchers(HttpMethod.GET, "/protected/genericEntityController/countAll\\?tableName=flight_log_totals_v")
+			.hasAuthority(AUTHORITY_PREFIX+"flight_log"+READ_TABLE_SUFFIX)
 //		.antMatchers(HttpMethod.GET, "/protected/data-rest/profile/flightLogTotalsVs")
 //			.hasAuthority(AUTHORITY_PREFIX+"flight_log"+READ_TABLE_SUFFIX)
 				);

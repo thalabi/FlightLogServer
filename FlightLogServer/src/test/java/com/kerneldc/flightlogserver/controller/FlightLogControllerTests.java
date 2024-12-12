@@ -68,18 +68,18 @@ class FlightLogControllerTests extends AbstractBaseTest {
 	private RepositoryEntityLinks repositoryEntityLinks;
 
 
-	@Test
-	@WithMockUser(authorities = FLIGHT_LOG_READ)
-	void testCount( ) throws Exception {
-		Mockito.when(flightLogRepository.count())
-			.thenReturn(1l);
-		
-		mockMvc.perform(get(BASE_URI + "/count"))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.count", is(1)))
-        ;
-	}
+//	@Test
+//	@WithMockUser(authorities = FLIGHT_LOG_READ)
+//	void testCount( ) throws Exception {
+//		Mockito.when(flightLogRepository.count())
+//			.thenReturn(1l);
+//		
+//		mockMvc.perform(get(BASE_URI + "/count"))
+//        .andExpect(status().isOk())
+//        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//        .andExpect(jsonPath("$.count", is(1)))
+//        ;
+//	}
 	
 	@Disabled // method findAll removed from FlightLogController. GenereicEntityController is now used instead
 	@Test
