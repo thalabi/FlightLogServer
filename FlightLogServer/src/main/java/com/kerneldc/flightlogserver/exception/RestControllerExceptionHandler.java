@@ -85,4 +85,13 @@ public class RestControllerExceptionHandler /*extends ResponseEntityExceptionHan
 //		sqlExceptionBean.setOriginalSqlStatement(oracleDatabaseException.getOriginalSql());
 //		sqlExceptionBean.setSqlStatement(oracleDatabaseException.getSql());
 //	}
+	@ExceptionHandler(RuntimeException.class)
+	protected ResponseEntity<ErrorBody> handleRuntimeException(RuntimeException runtimeException) {
+		runtimeException.printStackTrace();
+
+		LOGGER.info(LOG_MESSAGE_PREFIX + "handleNullPointerException()");
+		return new ResponseEntity<>(
+				new ErrorBody(runtimeException.getMessage(), ExceptionUtils.getStackTrace(runtimeException)),
+				HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

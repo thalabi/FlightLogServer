@@ -96,18 +96,22 @@ public class WebSecurityConfig {
 				//.requestMatchers("/protected/securityController/getUserInfo").authenticated()
 		//.antMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll?tableName=flight_log_totals_v**")
 		//.antMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll*/**")
-		.regexMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll\\?tableName=flight_log_totals_v.*")
-			.hasAuthority(AUTHORITY_PREFIX+"flight_log"+READ_TABLE_SUFFIX)
-		.regexMatchers(HttpMethod.GET, "/protected/genericEntityController/countAll\\?tableName=flight_log_totals_v")
-			.hasAuthority(AUTHORITY_PREFIX+"flight_log"+READ_TABLE_SUFFIX)
-//		.antMatchers(HttpMethod.GET, "/protected/data-rest/profile/flightLogTotalsVs")
-//			.hasAuthority(AUTHORITY_PREFIX+"flight_log"+READ_TABLE_SUFFIX)
+				
 				);
 		for (EntityEnum entityEnum : EntityEnum.values()) {
 			var entityName = entityEnum.getEntityName();
-			var tableAuthorityPrefix = AUTHORITY_PREFIX + entityEnum.getTableName();
+			var tableName = entityEnum.getTableName();
+			var tableAuthorityPrefix = AUTHORITY_PREFIX + tableName;
+			LOGGER.info("entityName: [{}], tableName: [{}], tableAuthorityPrefix: [{}]", entityName, tableName, tableAuthorityPrefix);
 			httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-		            .antMatchers(HttpMethod.GET, "/protected/"+entityName+"Controller/findAll/**").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
+					
+					.regexMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll\\?tableName="+tableName+".*")
+						.hasAuthority(AUTHORITY_PREFIX+tableName+READ_TABLE_SUFFIX)
+					.regexMatchers(HttpMethod.GET, "/protected/genericEntityController/countAll\\?tableName="+tableName)
+						.hasAuthority(AUTHORITY_PREFIX+tableName+READ_TABLE_SUFFIX)
+
+					
+					.antMatchers(HttpMethod.GET, "/protected/"+entityName+"Controller/findAll/**").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
 		            
 		            .antMatchers(HttpMethod.GET, "/protected/"+entityName+"Controller/count").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
 		            .antMatchers(HttpMethod.GET, "/protected/data-rest/"+entityName+"s").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)

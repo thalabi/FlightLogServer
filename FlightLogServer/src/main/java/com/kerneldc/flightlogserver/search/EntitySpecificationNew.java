@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EntitySpecificationNew<T> implements Specification<T> {
 
 	private static final long serialVersionUID = 1L;
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	private enum QueryOperatorEnum {
 		EQUALS("equals"), NOT_EQUALS("notEquals"),
@@ -178,7 +178,7 @@ public class EntitySpecificationNew<T> implements Specification<T> {
 
 	private Specification<T> handleDateFieldType(Filter inputFilter, String field, String value) {
 		try {
-			var date = DATE_FORMAT.parse(value);
+			var date = dateFormat.parse(value);
 			switch (inputFilter.operator()) {
 			case DATE_IS -> {
 					return (entity, query, criteriaBuilder) -> criteriaBuilder.equal(entity.get(field), date);

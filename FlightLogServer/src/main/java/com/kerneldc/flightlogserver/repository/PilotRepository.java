@@ -2,11 +2,16 @@ package com.kerneldc.flightlogserver.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-
+import com.kerneldc.flightlogserver.domain.FlightLogEntityEnum;
+import com.kerneldc.flightlogserver.domain.IEntityEnum;
 import com.kerneldc.flightlogserver.domain.pilot.Pilot;
 
-public interface PilotRepository extends JpaRepository<Pilot, Long>, JpaSpecificationExecutor<Pilot> {
+public interface PilotRepository extends BaseTableRepository<Pilot, Long> {
 	List<Pilot> findAllByOrderByPilot();
+	
+	@Override
+	default IEntityEnum canHandle() {
+		return FlightLogEntityEnum.PILOT;
+	}
+
 }

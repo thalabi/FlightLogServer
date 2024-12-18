@@ -7,6 +7,7 @@ import lombok.Getter;
 
 public enum EntityEnum {
 	FLIGHT_LOG("flightLog", "flight_log", null),
+	FLIGHT_LOG_TOTALS_V("flightLogTotalsV", "flight_log_totals_v", null),
 	AIRPORT("airport", "airport", null),
 	PILOT("pilot", "pilot", null),
 	REGISTRATION("registration", "registration", null),
