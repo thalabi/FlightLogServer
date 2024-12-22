@@ -2,13 +2,18 @@ package com.kerneldc.flightlogserver.aircraftmaintenance.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
+import com.kerneldc.flightlogserver.domain.FlightLogEntityEnum;
+import com.kerneldc.flightlogserver.domain.IEntityEnum;
+import com.kerneldc.flightlogserver.repository.BaseTableRepository;
 
-public interface PartRepository extends JpaRepository<Part, Long>, JpaSpecificationExecutor<Part> {
+public interface PartRepository extends BaseTableRepository<Part, Long> {
 
 	List<Part> findAllByOrderByName();
+
+	@Override
+	default IEntityEnum canHandle() {
+		return FlightLogEntityEnum.PART;
+	}
 
 }

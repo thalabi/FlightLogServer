@@ -3,6 +3,7 @@ package com.kerneldc.flightlogserver.domain;
 import java.util.Arrays;
 
 import com.google.common.base.Enums;
+import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.domain.airport.Airport;
 import com.kerneldc.flightlogserver.domain.makeModel.MakeModel;
 import com.kerneldc.flightlogserver.domain.pilot.Pilot;
@@ -29,6 +30,7 @@ public enum FlightLogEntityEnum implements IEntityEnum {
 	PILOT(Pilot.class, false),
 	REGISTRATION(Registration.class, false),
 	SIGNIFICANT_EVENT(SignificantEvent.class, false),
+	PART(Part.class, false),
 //	PRICE(Price.class, false, new String[] {"TICKER", "EXCHANGE", "PRICE", "PRICE_TIMESTAMP", "PRICE_TIMESTAMP_FROM_SOURCE"/*, "SOURCECSVLINENUMBER"*/}),
 //	INSTRUMENT_BY_ACCOUNT_V(InstrumentByAccountV.class, true, new String[] {"TICKER_EXCHANGE", "INSTRUMENT_NAME", "QUANTITY", "ACCOUNT_NUMBER", "ACCOUNT_NAME"}),
 //	INSTRUMENT_DUE_V(InstrumentDueV.class, true, new String[] {}),
