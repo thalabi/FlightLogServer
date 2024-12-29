@@ -8,12 +8,15 @@ import static org.hamcrest.Matchers.hasSize;
 
 import java.util.List;
 
+import javax.persistence.metamodel.EntityType;
+
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.kerneldc.flightlogserver.AbstractBaseTest;
@@ -46,8 +49,8 @@ class FlightLogRepositoryTest extends AbstractBaseTest {
 	void testFindAll_Registration_Success() {
 		FlightLog savedFlightLog = testEntityManager.persist(FLIGHT_LOG1);
 		
-		var<FlightLog> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(FlightLog.class);
-		var<FlightLog> entitySpecification = new EntitySpecification<FlightLog>(entityMetamodel, "registration|Equals|GYAX");
+		EntityType<FlightLog> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(FlightLog.class);
+		Specification<FlightLog> entitySpecification = new EntitySpecification<FlightLog>(entityMetamodel, "registration|Equals|GYAX");
 
 		List<FlightLog> results = flightLogRepository.findAll(entitySpecification);
 		assertThat(results, hasSize(1));
@@ -61,8 +64,8 @@ class FlightLogRepositoryTest extends AbstractBaseTest {
 		testEntityManager.persist(FLIGHT_LOG2);
 		FlightLog savedFlightLog = testEntityManager.persist(FLIGHT_LOG3);
 		
-		var<FlightLog> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(FlightLog.class);
-		var<FlightLog> entitySpecification = new EntitySpecification<FlightLog>(entityMetamodel, "daySolo|GT|4,instrumentNoIfrAppr|equals|1");
+		EntityType<FlightLog> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(FlightLog.class);
+		Specification<FlightLog> entitySpecification = new EntitySpecification<FlightLog>(entityMetamodel, "daySolo|GT|4,instrumentNoIfrAppr|equals|1");
 		
 		List<FlightLog> results = flightLogRepository.findAll(entitySpecification);
 		assertThat(results, hasSize(1));
