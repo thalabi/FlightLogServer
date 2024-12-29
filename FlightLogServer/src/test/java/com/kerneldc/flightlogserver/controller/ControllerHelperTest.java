@@ -13,7 +13,7 @@ import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.domain.SearchCriteria;
 
 @ExtendWith(SpringExtension.class)
-class ControllerHelperTests extends AbstractBaseTest {
+class ControllerHelperTest extends AbstractBaseTest {
 
 	@Test
 	void testSearchStringToSearchCriteriaList_GreaterOrEqual_Success() {

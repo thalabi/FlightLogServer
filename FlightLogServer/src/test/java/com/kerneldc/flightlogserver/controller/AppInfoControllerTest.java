@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @WebMvcTest(controllers = AppInfoController.class)
 @Import(WebSecurityConfig.class)
 @Slf4j
-class AppInfoControllerTests extends AbstractBaseTest {
+class AppInfoControllerTest extends AbstractBaseTest {
 
 
 	private static final String BASE_URI = "/appInfoController";

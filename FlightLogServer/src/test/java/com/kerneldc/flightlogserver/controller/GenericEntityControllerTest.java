@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 @WebMvcTest(controllers = FlightLogController.class)
 @Import(WebSecurityConfig.class)
 @Slf4j
-class FlightLogControllerTests extends AbstractBaseTest {
+class GenericEntityControllerTest extends AbstractBaseTest {
 
 	private static final String FLIGHT_LOG_READ = WebSecurityConfig.AUTHORITY_PREFIX + "flight_log" + WebSecurityConfig.READ_TABLE_SUFFIX;
 
