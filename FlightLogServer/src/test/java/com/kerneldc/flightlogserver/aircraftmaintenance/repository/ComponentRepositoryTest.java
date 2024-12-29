@@ -2,6 +2,7 @@ package com.kerneldc.flightlogserver.aircraftmaintenance.repository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -25,10 +26,57 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 class ComponentRepositoryTest {
 
 	@Autowired
-    private ComponentRepository componentRepository;
-	@Autowired
     private TestEntityManager testEntityManager;
+	@Autowired
+    private PartRepository partRepository;
+	@Autowired
+    private ComponentRepository componentRepository;
 
+	private static final String PART1_NAME = "Oil";
+	private static final String PART2_NAME = "Oil Filter";
+	private static final String COMPONENT_NAME = "Component 1";
+
+	@Test
+	void testFind_Part_Success() {
+		Part part1 = new Part();
+		part1.setName(PART1_NAME);
+		testEntityManager.persist(part1);
+		List<Part> partList = partRepository.findAll();
+		assertThat(partList, hasSize(1));
+	}
+	@Test
+	void testFind_Component_Success() {
+		Part part1 = new Part();
+		part1.setName(PART1_NAME);
+		Part savedPart1 = testEntityManager.persist(part1);
+		Component component1 = Component.builder().name(COMPONENT_NAME).deleted(false).part(savedPart1).build();
+		testEntityManager.persist(component1);
+		List<Component> componentList = componentRepository.findAll();
+		assertThat(componentList, hasSize(1));
+	}
+	@Test
+	void testFind_Component_With_History_Success() {
+		Part part1 = new Part();
+		part1.setName(PART1_NAME);
+		Part savedPart1 = testEntityManager.persist(part1);
+		Component component1 = Component.builder().name(COMPONENT_NAME).deleted(false).part(savedPart1).build();
+		
+		ComponentHistory ch = ComponentHistory.builder().workPerformed("Changed").hoursPerformed(50f)
+				.datePerformed(new Date()).build();
+		ComponentHistory savedComponentHistory = testEntityManager.persist(ch);
+		
+		component1.getComponentHistorySet().add(savedComponentHistory);
+		
+		testEntityManager.persist(component1);
+		testEntityManager.flush();
+		List<Component> componentList = componentRepository.findAll();
+		assertThat(componentList, hasSize(1));
+		assertThat(componentList.get(0).getComponentHistorySet(), hasSize(1));
+		componentList.get(0).getComponentHistorySet().forEach(ch2 -> {
+			System.out.println(ch2.getWorkPerformed());
+		});
+	}
+	
 	@Test
 	void testDelete_CheckComponentHistoryDeleted_Success() {
 		

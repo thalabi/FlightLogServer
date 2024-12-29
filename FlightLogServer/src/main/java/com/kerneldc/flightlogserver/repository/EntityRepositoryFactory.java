@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EntityRepositoryFactory <T extends AbstractEntity, ID extends Serializable>{
 
 	private Map<IEntityEnum, BaseEntityRepository<T, ID>> baseEntityRepositoryMap = new HashMap<>();
+	
 
 	public EntityRepositoryFactory(Collection<BaseEntityRepository<T, ID>> baseEntityRepositories) {
 		
@@ -45,7 +46,7 @@ public class EntityRepositoryFactory <T extends AbstractEntity, ID extends Seria
 
 	public BaseEntityRepository<T, ID> getRepository(IEntityEnum entityEnum) {
 		BaseEntityRepository<T, ID> repository = baseEntityRepositoryMap.get(entityEnum);
-		Preconditions.checkArgument(repository != null, "Can not find a repository to handle: %s", entityEnum);
+		Preconditions.checkArgument(repository != null, "Can not find a repository to handle entity: %s", entityEnum);
 		return repository;
 	}
 
