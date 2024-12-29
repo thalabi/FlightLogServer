@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,6 +68,8 @@ class FlightLogControllerTests extends AbstractBaseTest {
 	private FlightLogModelAssembler flightLogModelAssembler;
 	@MockBean
 	private RepositoryEntityLinks repositoryEntityLinks;
+	@MockBean
+	private EntityManager entityManager;
 
 
 //	@Test

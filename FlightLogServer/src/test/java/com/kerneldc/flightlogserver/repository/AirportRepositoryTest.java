@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.hamcrest.Matchers;
@@ -15,15 +14,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.kerneldc.flightlogserver.AbstractBaseTest;
-import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
-import com.kerneldc.flightlogserver.domain.SearchCriteria;
 import com.kerneldc.flightlogserver.domain.airport.Airport;
+import com.kerneldc.flightlogserver.search.EntitySpecification;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -31,7 +28,7 @@ import com.kerneldc.flightlogserver.domain.airport.Airport;
 class AirportRepositoryTest extends AbstractBaseTest {
 
 	@Autowired
-    private TestEntityManager entityManager;
+    private TestEntityManager testEntityManager;
 	
 	private static final Airport AIRPORT1 = new Airport();
 	private static final Airport AIRPORT2 = new Airport();
@@ -101,10 +98,11 @@ class AirportRepositoryTest extends AbstractBaseTest {
 	
 	@Test
 	void testFindAll_ByIdentifier_Success() {
-		Airport savedAirport = entityManager.persist(AIRPORT1);
-		SearchCriteria searchCriteria = new SearchCriteria("identifier", "=", "CYOO");
-		EntitySpecificationsBuilder<Airport> airportSpecificationsBuilder = new EntitySpecificationsBuilder<>();
-		Specification<Airport> spec = airportSpecificationsBuilder.with(Arrays.asList(searchCriteria)).build();
+		Airport savedAirport = testEntityManager.persist(AIRPORT1);
+
+		var<Airport> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(Airport.class);
+		
+		var<Airport> spec = new EntitySpecification<Airport>(entityMetamodel, "identifier|equals|CYOO");
 		List<Airport> results = airportRepository.findAll(spec);
 		assertThat(results, hasSize(1));
 		assertThat(results, hasItem(allOf(
@@ -114,10 +112,11 @@ class AirportRepositoryTest extends AbstractBaseTest {
 
 	@Test
 	void testFindAll_ByName_Success() {
-		Airport savedAirport = entityManager.persist(AIRPORT2);
-		SearchCriteria searchCriteria = new SearchCriteria("name", "=", "Peterborough Municipal Airport");
-		EntitySpecificationsBuilder<Airport> airportSpecificationsBuilder = new EntitySpecificationsBuilder<>();
-		Specification<Airport> spec = airportSpecificationsBuilder.with(Arrays.asList(searchCriteria)).build();
+		Airport savedAirport = testEntityManager.persist(AIRPORT2);
+
+		var<Airport> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(Airport.class);
+
+		var<Airport> spec = new EntitySpecification<Airport>(entityMetamodel, "name|equals|Peterborough Municipal Airport");
 		List<Airport> results = airportRepository.findAll(spec);
 		assertThat(results, hasSize(1));
 		assertThat(results, hasItem(allOf(
@@ -127,23 +126,24 @@ class AirportRepositoryTest extends AbstractBaseTest {
 	
 	@Test
 	void testFindAll_ByCountry_Success() {
-		entityManager.persist(AIRPORT3);
-		entityManager.persist(AIRPORT4);
-		SearchCriteria searchCriteria = new SearchCriteria("country", "=", "Canada");
-		EntitySpecificationsBuilder<Airport> airportSpecificationsBuilder = new EntitySpecificationsBuilder<>();
-		Specification<Airport> spec = airportSpecificationsBuilder.with(Arrays.asList(searchCriteria)).build();
+		testEntityManager.persist(AIRPORT3);
+		testEntityManager.persist(AIRPORT4);
+
+		var<Airport> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(Airport.class);
+
+		var<Airport> spec = new EntitySpecification<Airport>(entityMetamodel, "country|equals|Canada");
 		List<Airport> results = airportRepository.findAll(spec);
 		assertThat(results, hasSize(2));
 	}
 
 	@Test
 	void testFindAll_ByProvinceAndCountry_Success() {
-		entityManager.persist(AIRPORT5);
-		entityManager.persist(AIRPORT6);
-		SearchCriteria searchCriteria1 = new SearchCriteria("province", "=", "Ontario");
-		SearchCriteria searchCriteria2 = new SearchCriteria("country", "=", "Canada");
-		EntitySpecificationsBuilder<Airport> airportSpecificationsBuilder = new EntitySpecificationsBuilder<>();
-		Specification<Airport> spec = airportSpecificationsBuilder.with(Arrays.asList(searchCriteria1, searchCriteria2)).build();
+		testEntityManager.persist(AIRPORT5);
+		testEntityManager.persist(AIRPORT6);
+
+		var<Airport> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(Airport.class);
+
+		var<Airport> spec = new EntitySpecification<Airport>(entityMetamodel, "province|equals|Ontario,country|equals|Canada");
 		List<Airport> results = airportRepository.findAll(spec);
 		assertThat(results, hasSize(2));
 	}

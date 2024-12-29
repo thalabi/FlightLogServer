@@ -22,7 +22,7 @@ import com.kerneldc.flightlogserver.domain.AbstractEntity;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class EntitySpecificationNew<T> implements Specification<T> {
+public class EntitySpecification<T> implements Specification<T> {
 
 	private static final long serialVersionUID = 1L;
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -42,18 +42,18 @@ public class EntitySpecificationNew<T> implements Specification<T> {
 		}
 		public static QueryOperatorEnum fromName(String name) {
 			for (QueryOperatorEnum e : QueryOperatorEnum.values()) {
-				if (e.getOperator().equals(name)) {
+				if (e.getOperator().equalsIgnoreCase(name)) {
 					return e;
 				}
 			}
-			return null;
+			throw new IllegalArgumentException(String.format("Invalid operator [%s]", name));
 		}
 	}
 	record Filter(String field, QueryOperatorEnum operator, String value) {};
 	private transient List<Filter> filterList = new ArrayList<>();
 	private transient EntityType<? extends AbstractEntity> entityMetamodel;
 
-	public EntitySpecificationNew(EntityType<? extends AbstractEntity> entityMetaModel, String searchCriteria) {
+	public EntitySpecification(EntityType<? extends AbstractEntity> entityMetaModel, String searchCriteria) {
 		if (StringUtils.isEmpty(searchCriteria)) {
 			return;
 		}

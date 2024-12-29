@@ -1,63 +1,53 @@
 package com.kerneldc.flightlogserver.controller;
 
-import java.lang.invoke.MethodHandles;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 
-import org.hibernate.Session;
-import org.hibernate.jdbc.Work;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kerneldc.flightlogserver.domain.flightLog.FlightLogModelAssembler;
 import com.kerneldc.flightlogserver.repository.FlightLogRepository;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @RestController
 @RequestMapping("/protected/flightLogController")
 //@Import(HateoasAwareSpringDataWebConfiguration.class)
 //@ExposesResourceFor(FlightLog.class) // needed for unit test to create entity links
+@RequiredArgsConstructor
 public class FlightLogController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	//private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private FlightLogRepository flightLogRepository;
+    private final FlightLogRepository flightLogRepository;
     
 //	private FlightLogModelAssembler flightLogModelAssembler;
 	
-	private EntityManager flightLogEntityManager;
+	private final EntityManager flightLogEntityManager;
 
-    public FlightLogController(FlightLogRepository flightLogRepository, FlightLogModelAssembler flightLogModelAssembler) {
-        this.flightLogRepository = flightLogRepository;
-//        this.flightLogModelAssembler = flightLogModelAssembler;
-    }
+//    public FlightLogController(FlightLogRepository flightLogRepository/*, FlightLogModelAssembler flightLogModelAssembler*/) {
+//        this.flightLogRepository = flightLogRepository;
+////        this.flightLogModelAssembler = flightLogModelAssembler;
+//    }
 
 //    @GetMapping("/count")
 //	public Count count() {
 //    	return new Count(flightLogRepository.count());
 //    }
 
-    @GetMapping("/getLastXDaysSum")
-    @Transactional
-	public Count getLastXDaysSum() {
-		Session session = flightLogEntityManager.unwrap(Session.class);
-		session.doWork(new Work() {
-			@Override
-			public void execute(Connection connection) throws SQLException {
-				PreparedStatement preparedStatement = connection.prepareStatement("set @day_dual_sum = 0.0");
-				preparedStatement.execute();
-			}
-		});
-		return new Count(flightLogRepository.count());
-	}
+//    @GetMapping("/getLastXDaysSum")
+//    @Transactional
+//	public Count getLastXDaysSum() {
+//		Session session = flightLogEntityManager.unwrap(Session.class);
+//		session.doWork(new Work() {
+//			@Override
+//			public void execute(Connection connection) throws SQLException {
+//				PreparedStatement preparedStatement = connection.prepareStatement("set @day_dual_sum = 0.0");
+//				preparedStatement.execute();
+//			}
+//		});
+//		return new Count(flightLogRepository.count());
+//	}
 
 //    @GetMapping("/findAll")
 //	public HttpEntity<PagedModel<FlightLogModel>> findAll(

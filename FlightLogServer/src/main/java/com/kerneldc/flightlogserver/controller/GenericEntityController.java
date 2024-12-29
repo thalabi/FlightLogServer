@@ -19,7 +19,7 @@ import com.kerneldc.flightlogserver.domain.AbstractEntity;
 import com.kerneldc.flightlogserver.domain.EntityEnumUtilities;
 import com.kerneldc.flightlogserver.domain.IEntityEnum;
 import com.kerneldc.flightlogserver.repository.EntityRepositoryFactory;
-import com.kerneldc.flightlogserver.search.EntitySpecificationNew;
+import com.kerneldc.flightlogserver.search.EntitySpecification;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class GenericEntityController {
 
 	private final EntityRepositoryFactory<?, ?> entityRepositoryFactory;
 	private final EntityRepresentationModelAssembler entityRepresentationModelAssembler;
-	private final EntityManager em;
+	private final EntityManager entityManager;
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping("/findAll")
@@ -45,9 +45,9 @@ public class GenericEntityController {
     	LOGGER.info("pageable: {}", pageable);
     	
     	var entityRepository = entityRepositoryFactory.getRepository(entityEnum);
-    	var entityMetamodel = em.getMetamodel().entity(entityEnum.getEntity());
+    	var entityMetamodel = entityManager.getMetamodel().entity(entityEnum.getEntity());
     	
-    	var entitySpecification = new EntitySpecificationNew<>(entityMetamodel, search);
+    	var entitySpecification = new EntitySpecification<>(entityMetamodel, search);
     	
 		var page = entityRepository.findAll((Specification)entitySpecification, pageable);
         PagedModel<?> pagedModel; 

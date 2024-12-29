@@ -6,12 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.Component;
+import com.kerneldc.flightlogserver.domain.FlightLogEntityEnum;
+import com.kerneldc.flightlogserver.domain.IEntityEnum;
+import com.kerneldc.flightlogserver.repository.BaseTableRepository;
 
-public interface ComponentRepository extends JpaRepository<Component, Long>, JpaSpecificationExecutor<Component> {
+public interface ComponentRepository extends BaseTableRepository<Component, Long> {
 
 //	@EntityGraph("componentPartGraph")
 //	List<Component> findAllByOrderByName();
@@ -21,4 +22,10 @@ public interface ComponentRepository extends JpaRepository<Component, Long>, Jpa
 	Page<Component> findAll(Specification<Component> spec, Pageable pageable);
 	
 	List<Component> findByNameOrderByName(String name);
+	
+	@Override
+	default IEntityEnum canHandle() {
+		return FlightLogEntityEnum.COMPONENT;
+	}
+
 }

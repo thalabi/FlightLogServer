@@ -3,9 +3,9 @@ package com.kerneldc.flightlogserver.aircraftmaintenance.controller;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
@@ -30,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.kerneldc.flightlogserver.aircraftmaintenance.bean.ComponentRequest;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.Component;
@@ -40,37 +40,50 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepository;
 import com.kerneldc.flightlogserver.aircraftmaintenance.service.ComponentPersistenceService;
-import com.kerneldc.flightlogserver.controller.ControllerHelper;
-import com.kerneldc.flightlogserver.domain.EntitySpecificationsBuilder;
-import com.kerneldc.flightlogserver.domain.SearchCriteria;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
+import com.kerneldc.flightlogserver.search.EntitySpecification;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/protected/componentController")
 //@ExposesResourceFor(Component.class) // needed for unit test to create entity links
+@RequiredArgsConstructor
 public class ComponentController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 //	private static final UriTemplate PART_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/parts/{id}");
 //	private static final UriTemplate COMPONENT_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/components/{id}");
 
-    private ComponentRepository componentRepository;
-    private ComponentPersistenceService componentPersistenceService;
-	private ComponentModelAssembler componentModelAssembler;
+    private final ComponentRepository componentRepository;
+    private final ComponentPersistenceService componentPersistenceService;
+	private final ComponentModelAssembler componentModelAssembler;
+	private final EntityManager entityManager;
 
-    public ComponentController(ComponentRepository componentRepository, /*PartRepository partRepository,*/ ComponentPersistenceService componentPersistenceService, ComponentModelAssembler componentModelAssembler) throws JsonProcessingException {
-        this.componentRepository = componentRepository;
-//        this.partRepository = partRepository;
-        this.componentPersistenceService = componentPersistenceService;
-        this.componentModelAssembler = componentModelAssembler;
-    }
+//    public ComponentController(ComponentRepository componentRepository, /*PartRepository partRepository,*/ ComponentPersistenceService componentPersistenceService, ComponentModelAssembler componentModelAssembler) throws JsonProcessingException {
+//        this.componentRepository = componentRepository;
+////        this.partRepository = partRepository;
+//        this.componentPersistenceService = componentPersistenceService;
+//        this.componentModelAssembler = componentModelAssembler;
+//    }
 
+//    @GetMapping("/findAllOld")
+//	public PagedModel<ComponentModel> findAllOld(
+//			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<Component> pagedResourcesAssembler) {
+//    	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
+//    	EntitySpecificationsBuilder<Component> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
+//        Page<Component> componentPage = componentRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);
+//        Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ComponentController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
+//		return pagedResourcesAssembler.toModel(componentPage, componentModelAssembler, link);
+//    }
     @GetMapping("/findAll")
 	public PagedModel<ComponentModel> findAll(
 			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<Component> pagedResourcesAssembler) {
-    	List<SearchCriteria> searchCriteriaList = ControllerHelper.searchStringToSearchCriteriaList(search);
-    	EntitySpecificationsBuilder<Component> entitySpecificationsBuilder = new EntitySpecificationsBuilder<>();
-        Page<Component> componentPage = componentRepository.findAll(entitySpecificationsBuilder.with(searchCriteriaList).build(), pageable);
+    	
+    	var entityMetamodel = entityManager.getMetamodel().entity(Component.class);
+    	Specification<Component> entitySpecification = new EntitySpecification<>(entityMetamodel, search);
+    	
+        Page<Component> componentPage = componentRepository.findAll(entitySpecification, pageable);
         Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ComponentController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
 		return pagedResourcesAssembler.toModel(componentPage, componentModelAssembler, link);
     }

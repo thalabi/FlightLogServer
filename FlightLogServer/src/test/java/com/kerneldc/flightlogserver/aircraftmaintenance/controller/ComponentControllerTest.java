@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Date;
 
+import javax.persistence.EntityManager;
+
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -65,6 +67,8 @@ class ComponentControllerTest {
 	private ComponentPersistenceService componentPersistenceService;
 	@MockBean
 	private ComponentModelAssembler componentModelAssembler;
+	@MockBean
+	private EntityManager entityManager;
 	
     
 	

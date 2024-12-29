@@ -13,7 +13,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
-import javax.persistence.NamedEntityGraphs;
 import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -33,18 +32,19 @@ import lombok.Setter;
 
 @Entity
 @SequenceGenerator(name = "default_seq_gen", sequenceName = "component_seq", allocationSize = 1)
-@NamedEntityGraphs({
-	@NamedEntityGraph(
-		name = "componentPartGraph",
-		attributeNodes = @NamedAttributeNode(value = "part")),
-	@NamedEntityGraph(
-		name = "componentFullGraph",
-		attributeNodes = {
-			@NamedAttributeNode(value = "part"),
-			@NamedAttributeNode(value = "componentHistorySet", subgraph = "componentHistoryPart")},
-		subgraphs = @NamedSubgraph(name = "componentHistoryPart", attributeNodes = @NamedAttributeNode("part"))
-	)
-})
+@NamedEntityGraph(
+	name = "componentPartGraph",
+	attributeNodes = @NamedAttributeNode(value = "part")
+)
+@NamedEntityGraph(
+	name = "componentFullGraph",
+	attributeNodes = {
+		@NamedAttributeNode(value = "part"),
+		@NamedAttributeNode(value = "componentHistorySet", subgraph = "componentHistoryPart")
+	},
+	subgraphs = @NamedSubgraph(name = "componentHistoryPart", attributeNodes = @NamedAttributeNode("part"))
+)
+
 @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
 @Builder
