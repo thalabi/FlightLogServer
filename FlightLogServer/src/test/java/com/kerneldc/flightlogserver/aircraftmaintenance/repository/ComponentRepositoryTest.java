@@ -64,7 +64,7 @@ class ComponentRepositoryTest {
 	}
 	
 	@Test
-	void test1() {
+	void testGetRepository_Component_Success() {
 		var entityRepositoryFactory = new EntityRepositoryFactory<>(List.of(componentRepository));
 		BaseEntityRepository<Component, Long> repository = entityRepositoryFactory.getRepository(FlightLogEntityEnum.COMPONENT);
 		assertThat(repository, notNullValue());
@@ -112,7 +112,9 @@ class ComponentRepositoryTest {
 		testEntityManager.persist(component1);
 		testEntityManager.flush();
 		var entityRepositoryFactory = new EntityRepositoryFactory<>(List.of(componentRepository));
+		
 		List<Component> componentList = entityRepositoryFactory.getRepository(FlightLogEntityEnum.COMPONENT).findAll();
+		
 		assertThat(componentList, hasSize(1));
 		System.out.println(String.format("component: [%s]", componentList.get(0)));
 		assertThat(componentList.get(0).getComponentHistorySet(), hasSize(2));
