@@ -21,9 +21,9 @@ public class EntityRepresentationModelAssembler implements SimpleRepresentationM
 
 	@Override
 	public void addLinks(EntityModel<AbstractEntity> resource) {
-		var content = resource.getContent();
-		Objects.requireNonNull(content, "Entity can not be null");
-		Link link = repositoryEntityLinks.linkToItemResource(content, AbstractEntity.idExtractor);
+		var entity = resource.getContent();
+		Objects.requireNonNull(entity, "Entity can not be null");
+		Link link = repositoryEntityLinks.linkToItemResource(entity, AbstractEntity.idExtractor);
 		resource.add(link);
 		resource.add(link.withSelfRel());
 	}
