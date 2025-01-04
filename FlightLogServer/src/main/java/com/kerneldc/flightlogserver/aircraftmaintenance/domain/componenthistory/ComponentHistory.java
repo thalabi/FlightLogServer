@@ -4,9 +4,6 @@ import java.util.Date;
 import java.util.function.Function;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
@@ -23,11 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-//@NamedEntityGraphs({
-//	@NamedEntityGraph(
-//		name = "componentPartGraph",
-//		attributeNodes = @NamedAttributeNode(value = "part"))
-//})
+@SequenceGenerator(name = "component_history_seq_gen", sequenceName = "component_history_seq", allocationSize = 1)
 @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
 @Builder
@@ -38,11 +31,6 @@ public class ComponentHistory extends AbstractPersistableEntity {
 	public static final String PROPERTY_PART = "part";
 
 	public static final Function<ComponentHistory, Object> idExtractor = ComponentHistory::getId;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "component_history_seq_gen")
-	@SequenceGenerator(name = "component_history_seq_gen", sequenceName = "component_history_seq", allocationSize = 1)
-	private Long id;
 
     private String name;
     private String description;
