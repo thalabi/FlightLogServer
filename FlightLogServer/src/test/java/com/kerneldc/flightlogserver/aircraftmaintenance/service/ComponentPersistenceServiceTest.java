@@ -160,9 +160,10 @@ class ComponentPersistenceServiceTest {
 		// Create old component with one history record
 		Component oldComponent = Component.builder().part(oldPart).name("old name").build();
 		oldComponent.setId(7l);
-		ComponentHistory oldComponentHistory = ComponentHistory.builder().id(24l).name("OilFilter")
+		ComponentHistory oldComponentHistory = ComponentHistory.builder()/*.id(24l)*/.name("OilFilter")
 				.description("Tempest CH48110").workPerformed("replaced").datePerformed(new Date())
 				.hoursPerformed(1000f).part(oldHistoryPart).build();
+		oldComponentHistory.setId(24l);
 		oldComponent.getComponentHistorySet().add(oldComponentHistory);
 
 		Optional<Component> optionalComponent = Optional.of(oldComponent);
@@ -203,9 +204,10 @@ class ComponentPersistenceServiceTest {
 		// Create old component with one history record
 		Component oldComponent = Component.builder().part(oldPart).name("old name").build();
 		oldComponent.setId(7l);
-		ComponentHistory oldComponentHistory = ComponentHistory.builder().id(24l).name("OilFilter")
+		ComponentHistory oldComponentHistory = ComponentHistory.builder()/*.id(24l)*/.name("OilFilter")
 				.description("Tempest CH48110").workPerformed("replaced").datePerformed(new Date())
 				.hoursPerformed(1000f).part(oldHistoryPart).build();
+		oldComponentHistory.setId(24l);
 		oldComponent.getComponentHistorySet().add(oldComponentHistory);
 
 		Optional<Component> optionalComponent = Optional.of(oldComponent);
