@@ -5,8 +5,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +30,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GenericEntityController {
 
-	private final EntityRepositoryFactory<?, ?> entityRepositoryFactory;
+	private final EntityRepositoryFactory<AbstractEntity, Long> entityRepositoryFactory;
 	private final EntityRepresentationModelAssembler entityRepresentationModelAssembler;
 	private final EntityManager entityManager;
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("unchecked")
 	@GetMapping("/findAll")
-	public ResponseEntity<PagedModel<AbstractEntity>> findAll(
+	public ResponseEntity<PagedModel<EntityModel<AbstractEntity>>> findAll(
 			@RequestParam @NotBlank String tableName, @RequestParam String search,
 			Pageable pageable, @NotNull PagedResourcesAssembler<AbstractEntity> pagedResourcesAssembler) {
 
@@ -44,15 +44,23 @@ public class GenericEntityController {
     	LOGGER.info("search: {}", search);
     	LOGGER.info("pageable: {}", pageable);
     	
+    	// Retrieve the repository with proper typing
     	var entityRepository = entityRepositoryFactory.getRepository(entityEnum);
+    	
+    	// Retrieve entity metamodel with proper typing
     	var entityMetamodel = entityManager.getMetamodel().entity(entityEnum.getEntity());
     	
-    	var entitySpecification = new EntitySpecification<>(entityMetamodel, search);
+    	// Create a typed specification
+    	var entitySpecification = new EntitySpecification<AbstractEntity>(entityMetamodel, search);
     	
-		var page = entityRepository.findAll((Specification)entitySpecification, pageable);
-        PagedModel<?> pagedModel; 
+    	// Perform the query
+		var page = entityRepository.findAll(entitySpecification, pageable);
+		
+		// Build the PagedModel
+        PagedModel<EntityModel<AbstractEntity>> pagedModel;
+        
         if (! /* not */ page.hasContent()) {
-        	pagedModel = pagedResourcesAssembler.toEmptyModel(page, entityEnum.getEntity());
+        	pagedModel = (PagedModel<EntityModel<AbstractEntity>>) pagedResourcesAssembler.toEmptyModel(page, entityEnum.getEntity());
         } else {
         	var link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GenericEntityController.class).findAll(tableName, search, pageable, pagedResourcesAssembler)).withSelfRel();
         	pagedModel = pagedResourcesAssembler.toModel(page, entityRepresentationModelAssembler, link);
@@ -60,7 +68,7 @@ public class GenericEntityController {
 
 		LOGGER.debug("pagedModel: {}", pagedModel);
 		
-		var response = ResponseEntity.ok((PagedModel<AbstractEntity>)pagedModel);
+		var response = ResponseEntity.ok(pagedModel);
 		
 		LOGGER.debug("r: {}", response);
 		return response;	
