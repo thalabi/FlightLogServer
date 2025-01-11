@@ -3,31 +3,27 @@ package com.kerneldc.flightlogserver.aircraftmaintenance.domain.component;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.server.LinkBuilder;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
-import com.kerneldc.flightlogserver.aircraftmaintenance.controller.ComponentController;
+import com.kerneldc.flightlogserver.aircraftmaintenance.domain.IComplexEntityRepresentationModelAssembler;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistory;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistoryModel;
+import com.kerneldc.flightlogserver.domain.AbstractEntity;
+import com.kerneldc.flightlogserver.domain.AbstractEntityModel;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
-@Slf4j
 @org.springframework.stereotype.Component
-public class ComponentModelAssembler extends RepresentationModelAssemblerSupport<Component, ComponentModel> {
+@RequiredArgsConstructor
+public class ComponentModelAssembler implements IComplexEntityRepresentationModelAssembler {
 
-	@Autowired
-	private RepositoryEntityLinks repositoryEntityLinks;
+	private final RepositoryEntityLinks repositoryEntityLinks;
 	
-	public ComponentModelAssembler() {
-		super(ComponentController.class, ComponentModel.class);
-	}
-
 	@Override
-	public ComponentModel toModel(Component component) {
-		LinkBuilder componentLinkBuilder = repositoryEntityLinks.linkForItemResource(component, Component.idExtractor);
+	public AbstractEntityModel toModel(AbstractEntity entity) {
+		LinkBuilder componentLinkBuilder = repositoryEntityLinks.linkForItemResource(entity, AbstractEntity.idExtractor);
+		Component component = (Component)entity;
 		ComponentModel componentModel = new ComponentModel();
 		componentModel.setComponent(component);
 		
@@ -51,4 +47,10 @@ public class ComponentModelAssembler extends RepresentationModelAssemblerSupport
 		componentModel.add(componentLinkBuilder.slash(Component.PROPERTY_COMPONENT_HISTORY_SET).withRel(Component.PROPERTY_COMPONENT_HISTORY_SET));
 		return componentModel;
 	}
+
+	@Override
+	public boolean canHandle(Class<? extends AbstractEntity> entityType) {
+		return entityType.equals(Component.class);
+	}
+
 }

@@ -6,7 +6,6 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kerneldc.flightlogserver.domain.AbstractEntity;
+import com.kerneldc.flightlogserver.domain.AbstractEntityModel;
 import com.kerneldc.flightlogserver.domain.EntityEnumUtilities;
 import com.kerneldc.flightlogserver.domain.IEntityEnum;
 import com.kerneldc.flightlogserver.repository.EntityRepositoryFactory;
@@ -36,7 +36,7 @@ public class GenericEntityController {
 
 	@SuppressWarnings("unchecked")
 	@GetMapping("/findAll")
-	public ResponseEntity<PagedModel<EntityModel<AbstractEntity>>> findAll(
+	public ResponseEntity<PagedModel<AbstractEntityModel>> findAll(
 			@RequestParam @NotBlank String tableName, @RequestParam String search,
 			Pageable pageable, @NotNull PagedResourcesAssembler<AbstractEntity> pagedResourcesAssembler) {
 
@@ -57,10 +57,10 @@ public class GenericEntityController {
 		var page = entityRepository.findAll(entitySpecification, pageable);
 		
 		// Build the PagedModel
-        PagedModel<EntityModel<AbstractEntity>> pagedModel;
+        PagedModel<AbstractEntityModel> pagedModel;
         
         if (! /* not */ page.hasContent()) {
-        	pagedModel = (PagedModel<EntityModel<AbstractEntity>>) pagedResourcesAssembler.toEmptyModel(page, entityEnum.getEntity());
+        	pagedModel = (PagedModel<AbstractEntityModel>) pagedResourcesAssembler.toEmptyModel(page, entityEnum.getEntity());
         } else {
         	var link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GenericEntityController.class).findAll(tableName, search, pageable, pagedResourcesAssembler)).withSelfRel();
         	pagedModel = pagedResourcesAssembler.toModel(page, entityRepresentationModelAssembler, link);

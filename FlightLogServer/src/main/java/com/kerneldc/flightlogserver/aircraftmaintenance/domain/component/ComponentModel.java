@@ -2,20 +2,20 @@ package com.kerneldc.flightlogserver.aircraftmaintenance.domain.component;
 
 import java.util.Set;
 
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistoryModel;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
+import com.kerneldc.flightlogserver.domain.AbstractEntityModel;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@Relation(collectionRelation = "components")
-public class ComponentModel extends RepresentationModel<ComponentModel> {
+@Relation(collectionRelation = "componentModels")
+public class ComponentModel extends AbstractEntityModel {
 
 	@JsonUnwrapped
 	private Component component;

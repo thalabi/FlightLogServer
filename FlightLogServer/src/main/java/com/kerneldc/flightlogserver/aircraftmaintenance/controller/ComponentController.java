@@ -14,13 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.PagedModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,14 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.kerneldc.flightlogserver.aircraftmaintenance.bean.ComponentRequest;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.Component;
-import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.ComponentModel;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.ComponentModelAssembler;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistory;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepository;
 import com.kerneldc.flightlogserver.aircraftmaintenance.service.ComponentPersistenceService;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
-import com.kerneldc.flightlogserver.search.EntitySpecification;
 
 import lombok.RequiredArgsConstructor;
 
@@ -76,17 +67,17 @@ public class ComponentController {
 //        Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ComponentController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
 //		return pagedResourcesAssembler.toModel(componentPage, componentModelAssembler, link);
 //    }
-    @GetMapping("/findAll")
-	public PagedModel<ComponentModel> findAll(
-			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<Component> pagedResourcesAssembler) {
-    	
-    	var entityMetamodel = entityManager.getMetamodel().entity(Component.class);
-    	Specification<Component> entitySpecification = new EntitySpecification<>(entityMetamodel, search);
-    	
-        Page<Component> componentPage = componentRepository.findAll(entitySpecification, pageable);
-        Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ComponentController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
-		return pagedResourcesAssembler.toModel(componentPage, componentModelAssembler, link);
-    }
+//    @GetMapping("/findAll")
+//	public PagedModel<ComponentModel> findAll(
+//			@RequestParam(value = "search") String search, Pageable pageable, PagedResourcesAssembler<Component> pagedResourcesAssembler) {
+//    	
+//    	var entityMetamodel = entityManager.getMetamodel().entity(Component.class);
+//    	Specification<Component> entitySpecification = new EntitySpecification<>(entityMetamodel, search);
+//    	
+//        Page<Component> componentPage = componentRepository.findAll(entitySpecification, pageable);
+//        Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ComponentController.class).findAll(search, pageable, pagedResourcesAssembler)).withSelfRel();
+//		return pagedResourcesAssembler.toModel(componentPage, componentModelAssembler, link);
+//    }
     
     @Transactional
     @PostMapping("/add")
