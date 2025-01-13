@@ -25,9 +25,10 @@ public class EntityRepresentationModelAssembler extends RepresentationModelAssem
 		this.repositoryEntityLinks = repositoryEntityLinks;
 		this.iComplexEntityRepresentationModelAssemblers = complexEntityRepresentationModelAssemblerss;
 		
+		LOGGER.info("Loading complex entities model assemblers:");
 		for (IComplexEntityRepresentationModelAssembler iComplexEntityRepresentationModelAssembler: complexEntityRepresentationModelAssemblerss) {
 			
-			LOGGER.info("complexEntityRepresentationModelAssembler: [{}]", iComplexEntityRepresentationModelAssembler.getClass().getSimpleName());
+			LOGGER.info("[{}]", iComplexEntityRepresentationModelAssembler.getClass().getSimpleName());
 		}
 	}
 
