@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GenericEntityController {
 
 	private final EntityRepositoryFactory<AbstractEntity, Long> entityRepositoryFactory;
-	private final EntityRepresentationModelAssembler entityRepresentationModelAssembler;
+	private final EntityRepresentationModelAssemblerAdapter entityRepresentationModelAssemblerAdapter;
 	private final EntityManager entityManager;
 
 	@SuppressWarnings("unchecked")
@@ -63,7 +63,7 @@ public class GenericEntityController {
         	pagedModel = (PagedModel<AbstractEntityModel>) pagedResourcesAssembler.toEmptyModel(page, entityEnum.getEntity());
         } else {
         	var link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GenericEntityController.class).findAll(tableName, search, pageable, pagedResourcesAssembler)).withSelfRel();
-        	pagedModel = pagedResourcesAssembler.toModel(page, entityRepresentationModelAssembler, link);
+        	pagedModel = pagedResourcesAssembler.toModel(page, entityRepresentationModelAssemblerAdapter, link);
         }
 
 		LOGGER.debug("pagedModel: {}", pagedModel);

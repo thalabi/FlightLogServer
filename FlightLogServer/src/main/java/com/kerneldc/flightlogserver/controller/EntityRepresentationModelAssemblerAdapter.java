@@ -14,12 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @org.springframework.stereotype.Component
 @Slf4j
-public class EntityRepresentationModelAssembler extends RepresentationModelAssemblerSupport<AbstractEntity, AbstractEntityModel> {
+public class EntityRepresentationModelAssemblerAdapter extends RepresentationModelAssemblerSupport<AbstractEntity, AbstractEntityModel> {
 
 	private final RepositoryEntityLinks repositoryEntityLinks;
 	private final Collection<IComplexEntityRepresentationModelAssembler> iComplexEntityRepresentationModelAssemblers;
 	
-	public EntityRepresentationModelAssembler(RepositoryEntityLinks repositoryEntityLinks, Collection<IComplexEntityRepresentationModelAssembler> complexEntityRepresentationModelAssemblerss) {
+	public EntityRepresentationModelAssemblerAdapter(RepositoryEntityLinks repositoryEntityLinks, Collection<IComplexEntityRepresentationModelAssembler> complexEntityRepresentationModelAssemblerss) {
 		super(GenericEntityController.class, AbstractEntityModel.class);
 		
 		this.repositoryEntityLinks = repositoryEntityLinks;
