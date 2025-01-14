@@ -39,13 +39,18 @@ public class EntityRepresentationModelAssemblerAdapter extends RepresentationMod
 		for (IComplexEntityRepresentationModelAssembler iComplexEntityRepresentationModelAssembler: iComplexEntityRepresentationModelAssemblers) {
 			
 			if (iComplexEntityRepresentationModelAssembler.canHandle(entity.getClass())) {
-				LOGGER.info("handling complex entity: [{}]", entity.getClass().getSimpleName());
-				return iComplexEntityRepresentationModelAssembler.toModel(entity);
+				
+				return complexEntityToModel(entity, iComplexEntityRepresentationModelAssembler);
 			}
 			
 		}
 		
 		// Otherwise handle a simple entity
+		return simpleEntityToModel(entity);
+	}
+
+	private AbstractEntityModel simpleEntityToModel(AbstractEntity entity) {
+		
 		LOGGER.info("handling simple entity: [{}]", entity.getClass().getSimpleName());
 		AbstractEntityModel model = new AbstractEntityModel();
 		model.setAbstractEntity(entity);
@@ -55,41 +60,11 @@ public class EntityRepresentationModelAssemblerAdapter extends RepresentationMod
 		
 		return model;
 	}
-//	@Override
-//	public AbstractEntityModel toModel(AbstractEntity entity) {
-//		
-//		LOGGER.info("resource getTypeName: [{}]", getResourceType().getTypeName());
-//		
-//		AbstractEntityModel model = new AbstractEntityModel();
-//		model.setAbstractEntity(entity);
-//
-//		
-//		if (entity instanceof Airport airport) {
-//			LOGGER.info("airport mame: [{}]", airport.getName());
-//		}
-//		if (entity instanceof Component component) {
-//			LOGGER.info("component mame: [{}]", component.getName());
-//			LOGGER.info("history size: [{}]", component.getComponentHistorySet().size());
-//			for (IComplexEntityRepresentationModelAssembler complexEntityRepresentationModelAssembler: iComplexEntityRepresentationModelAssemblers) {
-//				
-//				if (complexEntityRepresentationModelAssembler.canHandle(entity.getClass())) {
-//					LOGGER.info("handling component");
-//					return complexEntityRepresentationModelAssembler.toModel(entity);
-//				}
-//				
-//			}
-//		}
-//		if (entity instanceof FlightLogTotalsV flightLogtotalsV) {
-//			LOGGER.info("component route from: [{}]", flightLogtotalsV.getRouteFrom());
-//		}
-//		
-//		Link link = repositoryEntityLinks.linkToItemResource(entity, AbstractEntity.idExtractor);
-//		model.add(link);
-//		model.add(link.withSelfRel());
-//
-//		
-//		
-//		return model;
-//	}
 
+	private AbstractEntityModel complexEntityToModel(AbstractEntity entity,
+			IComplexEntityRepresentationModelAssembler iComplexEntityRepresentationModelAssembler) {
+		
+		LOGGER.info("handling complex entity: [{}]", entity.getClass().getSimpleName());
+		return iComplexEntityRepresentationModelAssembler.toModel(entity);
+	}
 }
