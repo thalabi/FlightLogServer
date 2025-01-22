@@ -1,5 +1,6 @@
 package com.kerneldc.flightlogserver.domain;
 
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.function.Function;
@@ -22,6 +23,7 @@ public abstract class AbstractEntity {
             .appendInstant(3) // milliseconds
             .toFormatter();
 	protected static final DateTimeFormatter LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_FORMAT);
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	
 	public static final Function<AbstractEntity, Object> idExtractor = AbstractEntity::getId;
 

@@ -9,10 +9,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
+import com.kerneldc.flightlogserver.domain.LogicalKeyHolder;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,12 +37,19 @@ public class ComponentHistory extends AbstractPersistableEntity {
 
 	public static final Function<ComponentHistory, Object> idExtractor = ComponentHistory::getId;
 
+	@Setter(AccessLevel.NONE)
+	@NotNull
     private String name;
     private String description;
     @ManyToOne
     @JoinColumn(name = "part_id")
+	@Setter(AccessLevel.NONE)
     private Part part;
+	@Setter(AccessLevel.NONE)
+	@NotNull
     private String workPerformed;
+	@Setter(AccessLevel.NONE)
+	@NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date datePerformed;
     private Float hoursPerformed;
@@ -50,9 +62,31 @@ public class ComponentHistory extends AbstractPersistableEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
 
+	public void setName(String name) {
+		this.name = name;
+		setLogicalKeyHolder();
+	}
+
+	public void setPart(Part part) {
+		this.part = part;
+		setLogicalKeyHolder();
+	}
+
+	public void setWorkPerformed(String workPerformed) {
+		this.workPerformed = workPerformed;
+		setLogicalKeyHolder();
+	}
+
+	public void setDatePerformed(Date datePerformed) {
+		this.datePerformed = datePerformed;
+		setLogicalKeyHolder();
+	}
+
 	@Override
 	protected void setLogicalKeyHolder() {
-		// TODO need to add lk column to table and implement this method
+		var logicalKeyHolder = LogicalKeyHolder.build(name, datePerformed, workPerformed,
+				part != null ? part.getId() : StringUtils.EMPTY);
+		setLogicalKeyHolder(logicalKeyHolder);
 	}
 
 }

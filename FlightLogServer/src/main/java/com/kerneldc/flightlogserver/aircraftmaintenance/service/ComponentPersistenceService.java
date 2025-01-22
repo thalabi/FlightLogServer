@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -43,23 +42,14 @@ public class ComponentPersistenceService {
 
 	public void updateComponentAndHistory(ComponentRequest componentRequest)
 			throws ApplicationException {
-//    	LOGGER.debug("componentRequest: {}", componentRequest);
-//		String componentUri = componentRequest.getComponentUri();
-//    	LOGGER.debug("component description: {}, componentUri(): {}, componentId: {}, partUri: {}, datePerformed: {}",
-//    			componentRequest.getDescription(), componentRequest.getComponentUri(), parseId(componentUri, COMPONENT_URI_TEMPLATE), componentRequest.getPartUri(), componentRequest.getDatePerformed());
-//    	componentRequest.getHistoryRequestSet().forEach(historyRequest -> {
-//    		String historyUri = historyRequest.getHistoryUri();
-//    		Long historyId = StringUtils.isNotEmpty(historyUri) ? parseId(historyUri, COMPONENT_HISTORY_URI_TEMPLATE) : null;
-//    		LOGGER.debug("history description: {}, historyUri(): {}, historyId: {}, partUri: {}, datePerformed: {}",
-//    				historyRequest.getDescription(), historyRequest.getHistoryUri(), historyId, historyRequest.getPartUri(), historyRequest.getDatePerformed());
-//    	});
     	
     	List<Long> requestHistoryIdList = componentRequest.getHistoryRequestSet().stream()
     		.map(historyRequest -> {
     			String historyUri = historyRequest.getHistoryUri();
     			LOGGER.info("BASE_URI: [{}]", historyUri);
     			return StringUtils.isNotEmpty(historyUri) ? parseId(historyUri, COMPONENT_HISTORY_URI_TEMPLATE) : null;
-    		}).collect(Collectors.toList());
+    		}).toList();
+	
     	LOGGER.debug("requestHistoryIdList: {}", requestHistoryIdList);
     	
 		Component component = parseAndFindComponent(componentRequest.getComponentUri());
@@ -69,7 +59,7 @@ public class ComponentPersistenceService {
 		component.setPart(parseAndFindPart(componentRequest.getPartUri()));
 		
     	List<Long> existingHistoryIdList = component.getComponentHistorySet().stream()
-        		.map(ComponentHistory::getId).collect(Collectors.toList());
+        		.map(ComponentHistory::getId).toList();
     	LOGGER.debug("existingHistoryIdList: {}", existingHistoryIdList);
     	
     	// Get the list of componentHistory ids to be deleted

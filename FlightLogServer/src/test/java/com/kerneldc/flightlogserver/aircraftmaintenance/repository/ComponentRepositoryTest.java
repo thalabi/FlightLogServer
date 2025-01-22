@@ -57,7 +57,7 @@ class ComponentRepositoryTest {
 		Part part1 = new Part();
 		part1.setName(PART1_NAME);
 		Part savedPart1 = testEntityManager.persist(part1);
-		Component component1 = Component.builder().name(COMPONENT_NAME).deleted(false).part(savedPart1).build();
+		Component component1 = Component.builder().name(COMPONENT_NAME).datePerformed(new Date()).workPerformed("Replaced New").deleted(false).part(savedPart1).build();
 		testEntityManager.persist(component1);
 		List<Component> componentList = componentRepository.findAll();
 		assertThat(componentList, hasSize(1));
@@ -74,9 +74,9 @@ class ComponentRepositoryTest {
 		Part part1 = new Part();
 		part1.setName(PART1_NAME);
 		Part savedPart1 = testEntityManager.persist(part1);
-		Component component1 = Component.builder().name(COMPONENT_NAME).deleted(false).part(savedPart1).build();
+		Component component1 = Component.builder().name(COMPONENT_NAME).workPerformed("Replaced New").datePerformed(new Date()).deleted(false).part(savedPart1).build();
 		
-		ComponentHistory ch1 = ComponentHistory.builder().workPerformed("Changed").hoursPerformed(50f)
+		ComponentHistory ch1 = ComponentHistory.builder().name("Component History").workPerformed("Changed").hoursPerformed(50f)
 				.datePerformed(new Date()).build();
 		ComponentHistory savedComponentHistory = testEntityManager.persist(ch1);
 		
@@ -97,12 +97,12 @@ class ComponentRepositoryTest {
 		Part part1 = new Part();
 		part1.setName(PART1_NAME);
 		Part savedPart1 = testEntityManager.persist(part1);
-		Component component1 = Component.builder().name(COMPONENT_NAME).deleted(false).part(savedPart1).build();
+		Component component1 = Component.builder().name(COMPONENT_NAME).workPerformed("Replaced New").datePerformed(new Date()).deleted(false).part(savedPart1).build();
 		
-		ComponentHistory ch1 = ComponentHistory.builder().workPerformed("Changed at 50 hrs").hoursPerformed(50f)
+		ComponentHistory ch1 = ComponentHistory.builder().name("Component History").workPerformed("Changed at 50 hrs").hoursPerformed(50f)
 				.datePerformed(DATE_FORMAT.parse("2024-06-29")).build();
 		ComponentHistory savedComponentHistory1 = testEntityManager.persist(ch1);
-		ComponentHistory ch2 = ComponentHistory.builder().workPerformed("Changed at 100 hrs").hoursPerformed(100f)
+		ComponentHistory ch2 = ComponentHistory.builder().name("Component History").workPerformed("Changed at 100 hrs").hoursPerformed(100f)
 				.datePerformed(DATE_FORMAT.parse("2024-12-29")).build();
 		ComponentHistory savedComponentHistory2 = testEntityManager.persist(ch2);
 		
@@ -131,7 +131,7 @@ class ComponentRepositoryTest {
 		assertThat(part.getId(), notNullValue());
 		Component component = Component.builder().name("Oil Filter").part(part).workPerformed("Replaced")
 				.datePerformed(new Date()).hoursPerformed(1000f).deleted(false).build();
-		ComponentHistory componentHistory = ComponentHistory.builder().workPerformed("Replaced")
+		ComponentHistory componentHistory = ComponentHistory.builder().name("Component History").workPerformed("Replaced")
 				.datePerformed(new Date()).hoursPerformed(9950f).build();
 		component.setComponentHistorySet(Collections.singleton(componentHistory));
 		componentRepository.save(component);

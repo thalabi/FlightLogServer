@@ -6,9 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
+import com.kerneldc.flightlogserver.domain.LogicalKeyHolder;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +25,8 @@ public class Airport extends AbstractPersistableEntity {
 	public Airport() {
 	}
 
+	@Setter(AccessLevel.NONE)
+	@NotNull
 	private String identifier;
 	private String name;
 	private String province;
@@ -34,9 +39,15 @@ public class Airport extends AbstractPersistableEntity {
 	private Date created;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
-
+	
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+		setLogicalKeyHolder();
+	}
+	
 	protected void setLogicalKeyHolder() {
-		// TODO need to add lk column to table and implement this method
+		var logicalKeyHolder = LogicalKeyHolder.build(identifier);
+		setLogicalKeyHolder(logicalKeyHolder);
 	}
 
 }

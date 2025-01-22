@@ -6,9 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
+import com.kerneldc.flightlogserver.domain.LogicalKeyHolder;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,15 +22,22 @@ public class Pilot extends AbstractPersistableEntity {
 
 	private static final long serialVersionUID = 1L;
 
+	@Setter(AccessLevel.NONE)
+	@NotNull
 	private String pilot;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
-
+	
+	public void setPilot(String pilot) {
+		this.pilot = pilot;
+		setLogicalKeyHolder();
+	}
+	
 	@Override
 	protected void setLogicalKeyHolder() {
-		// TODO need to add lk column to table and implement this method
+		var logicalKeyHolder = LogicalKeyHolder.build(pilot);
+		super.setLogicalKeyHolder(logicalKeyHolder);
 	}
-
 }

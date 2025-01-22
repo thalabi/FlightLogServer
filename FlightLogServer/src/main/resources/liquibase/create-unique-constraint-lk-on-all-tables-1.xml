@@ -1,0 +1,44 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="create-unique-constraint-lk-on-all-tables-1" author="thalabi">
+
+        <!-- addUniqueConstraint columnNames="lk" constraintName="airport_unique_lk" tableName="airport"/ -->
+
+		<sql>
+		<![CDATA[
+		update make_model set lk=make_model
+		]]>         
+		</sql>
+        <addUniqueConstraint columnNames="lk" constraintName="make_model_unique_lk" tableName="make_model"/>
+
+		<sql>
+		<![CDATA[
+		update pilot set lk=pilot
+		]]>         
+		</sql>
+        <addUniqueConstraint columnNames="lk" constraintName="pilot_unique_lk" tableName="pilot"/>
+
+		<sql>
+		<![CDATA[
+		update registration set lk=registration
+		]]>         
+		</sql>
+        <addUniqueConstraint columnNames="lk" constraintName="registration_unique_lk" tableName="registration"/>
+
+		<sql>
+		<![CDATA[
+		update significant_event set lk=event_description
+		]]>         
+		</sql>
+        <addUniqueConstraint columnNames="lk" constraintName="significant_event_unique_lk" tableName="significant_event"/>
+
+    
+    </changeSet>
+</databaseChangeLog>

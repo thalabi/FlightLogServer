@@ -3,9 +3,10 @@ package com.kerneldc.flightlogserver.domain;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,10 +19,7 @@ public class LogicalKeyHolder implements Serializable, ILogicallyKeyed {
 	private static final long serialVersionUID = 1L;
 	private static final String KEY_SEPERATOR = "|";
 
-	//@Column(name = COLUMN_LK)
-	
-	// Temprary until column is added to tables
-	@Transient
+	@Column(name = COLUMN_LK)
 	private String logicalKey;
 	
 	public static LogicalKeyHolder build(Object... keyParts) {
@@ -48,8 +46,10 @@ public class LogicalKeyHolder implements Serializable, ILogicallyKeyed {
 					stringKeyParts[i++] = ((LocalDateTime)keyPart).format(AbstractEntity.LOCAL_DATE_TIME_FORMATTER);
 				case "OffsetDateTime" ->
 					stringKeyParts[i++] = ((OffsetDateTime)keyPart).format(AbstractEntity.OFFSET_DATE_TIME_UTC_FORMATTER); // to UTC
+				case "Date", "Timestamp" ->
+					stringKeyParts[i++] = AbstractEntity.DATE_FORMAT.format((Date)keyPart);
 				default ->
-					throw new IllegalArgumentException(String.format("Unsupported data type in logical key: %s", keyPart.getClass().getSimpleName()));
+					throw new IllegalArgumentException(String.format("Logical key part [%s] is of unsupported data type [%s]", keyPart, keyPart.getClass().getSimpleName()));
 			}
 		}
 		lk.setLogicalKey(concatLogicalKeyParts(stringKeyParts));

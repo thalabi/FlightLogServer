@@ -7,10 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
+import com.kerneldc.flightlogserver.domain.LogicalKeyHolder;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,6 +30,8 @@ public class Part extends AbstractPersistableEntity {
 
 	private static final long serialVersionUID = 1L;
 
+	@Setter(AccessLevel.NONE)
+	@NotNull
 	@Column(unique = true)
     private String name;
     private String description;
@@ -36,9 +41,15 @@ public class Part extends AbstractPersistableEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
 
+	public void setName(String name) {
+		this.name = name;
+		setLogicalKeyHolder();
+	}
+
 	@Override
 	protected void setLogicalKeyHolder() {
-		// TODO need to add lk column to table and implement this method
+		var logicalKeyHolder = LogicalKeyHolder.build(name);
+		setLogicalKeyHolder(logicalKeyHolder);
 	}
 
 }

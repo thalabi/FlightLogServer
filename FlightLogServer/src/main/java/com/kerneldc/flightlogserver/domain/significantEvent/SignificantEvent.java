@@ -6,9 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
+import com.kerneldc.flightlogserver.domain.LogicalKeyHolder;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,16 +23,30 @@ public class SignificantEvent extends AbstractPersistableEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Temporal(TemporalType.DATE)
+	@Setter(AccessLevel.NONE)
+	@NotNull
 	private Date eventDate;
+	@Setter(AccessLevel.NONE)
+	@NotNull
 	private String eventDescription;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
 
-	@Override
-	protected void setLogicalKeyHolder() {
-		// TODO need to add lk column to table and implement this method
+	public void setEventDate(Date eventDate) {
+		this.eventDate = eventDate;
+		setLogicalKeyHolder();
 	}
 
+	public void setEventDescription(String eventDescription) {
+		this.eventDescription = eventDescription;
+		setLogicalKeyHolder();
+	}
+
+	@Override
+	protected void setLogicalKeyHolder() {
+		var logicalKeyHolder = LogicalKeyHolder.build(eventDate, eventDescription);
+		setLogicalKeyHolder(logicalKeyHolder);
+	}
 }

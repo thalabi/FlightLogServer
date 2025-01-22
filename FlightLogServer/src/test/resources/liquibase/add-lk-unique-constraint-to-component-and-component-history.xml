@@ -7,18 +7,9 @@
 		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
 		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <changeSet author="thalabi" id="insert">
-		<insert tableName="GROUP">
-			<column name="id" valueComputed="group_seq.nextval"/>
-			<column name="version" value="0"/>
-
-			<column name="name" value="flightlog viewer"/>
-		</insert>
-		<insert tableName="GROUP">
-			<column name="id" valueComputed="group_seq.nextval"/>
-			<column name="version" value="0"/>
-
-			<column name="name" value="flightlog admin"/>
-		</insert>
-	</changeSet>
-</databaseChangeLog>	
+    <changeSet id="add-lk-unique-constraint-to-component-and-component-history" author="thalabi">
+        <addUniqueConstraint columnNames="lk" constraintName="component_unique_lk" tableName="component"/>
+        <addUniqueConstraint columnNames="lk" constraintName="component_history_unique_lk" tableName="component_history"/>
+    </changeSet>
+    
+</databaseChangeLog>

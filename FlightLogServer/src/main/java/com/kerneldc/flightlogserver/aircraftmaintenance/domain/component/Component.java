@@ -19,11 +19,16 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistory;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
+import com.kerneldc.flightlogserver.domain.LogicalKeyHolder;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,13 +62,20 @@ public class Component extends AbstractPersistableEntity {
 
 	public static final Function<Component, Object> idExtractor = Component::getId;
 
+	@Setter(AccessLevel.NONE)
+	@NotNull
 	@Column(unique = true)
     private String name;
     private String description;
     @ManyToOne
     @JoinColumn(name = "part_id")
+	@Setter(AccessLevel.NONE)
     private Part part;
+	@Setter(AccessLevel.NONE)
+	@NotNull
     private String workPerformed;
+	@Setter(AccessLevel.NONE)
+	@NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date datePerformed;
     private Float hoursPerformed;
@@ -87,9 +99,32 @@ public class Component extends AbstractPersistableEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
 
+	public void setName(String name) {
+		this.name = name;
+		setLogicalKeyHolder();
+	}
+
+	public void setPart(Part part) {
+		this.part = part;
+		setLogicalKeyHolder();
+	}
+
+	public void setWorkPerformed(String workPerformed) {
+		this.workPerformed = workPerformed;
+		setLogicalKeyHolder();
+	}
+
+	public void setDatePerformed(Date datePerformed) {
+		this.datePerformed = datePerformed;
+		setLogicalKeyHolder();
+	}
+	
 	@Override
 	protected void setLogicalKeyHolder() {
-		// TODO need to add lk column to table and implement this method
+		var logicalKeyHolder = LogicalKeyHolder.build(name, datePerformed, workPerformed,
+				part != null ? part.getId() : StringUtils.EMPTY);
+		setLogicalKeyHolder(logicalKeyHolder);
 	}
+
 
 }

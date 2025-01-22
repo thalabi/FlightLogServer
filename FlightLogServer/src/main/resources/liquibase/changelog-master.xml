@@ -30,24 +30,6 @@
 	<include file="liquibase/flight-log/create-idx-1.xml"/> 
 	<include file="liquibase/flight-log-last-x-days-total-v/create-view.xml"/> 
 
-<!-- security module -->
-	<include file="liquibase/security/user/create-table.xml"/>
-	<include file="liquibase/security/user/create-unique-constraint-1.xml"/>
-	<include file="liquibase/security/user/data/insert.xml"/>
-	
-	<include file="liquibase/security/group/create-table.xml"/>
-	<include file="liquibase/security/group/create-unique-constraint-1.xml"/>
-	<include file="liquibase/security/group/data/insert.xml"/>
-	
-	<include file="liquibase/security/permission/create-table.xml"/>
-	<include file="liquibase/security/permission/create-unique-constraint-1.xml"/>
-	<include file="liquibase/security/permission/data/insert.xml"/>
-  
-	<include file="liquibase/security/user_group/create-table.xml"/>
-	<include file="liquibase/security/user_group/data/insert.xml"/>
-
-	<include file="liquibase/security/group_permission/create-table.xml"/>
-	<include file="liquibase/security/group_permission/data/insert.xml"/>
 
 <!-- aircraft maintenance module	 -->
 	<include file="liquibase/aircraft-maintenance/part/create-table.xml"/>
@@ -78,4 +60,10 @@
 	<include file="liquibase/flight-log-totals-v/create-view-oracle.xml"/>
 	<include file="liquibase/flight-log-monthly-total-v/reorder-solo-and-dual-columns.xml"/>
 	<include file="liquibase/flight-log-yearly-total-v/reorder-solo-and-dual-columns.xml"/>
+	
+	<include file="liquibase/security/drop-security-tables.xml"/>
+	<include file="liquibase/add-lk-to-all-tables.xml"/>
+	<include file="liquibase/create-unique-constraint-lk-on-all-tables-1.xml"/>
+	<include file="liquibase/increase-lk-column-size-of-all-tables.xml"/>
+	<include file="liquibase/create-unique-constraint-lk-on-all-tables-2.xml"/>
 </databaseChangeLog>
