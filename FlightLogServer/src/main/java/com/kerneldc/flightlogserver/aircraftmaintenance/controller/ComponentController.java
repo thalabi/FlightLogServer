@@ -3,16 +3,13 @@ package com.kerneldc.flightlogserver.aircraftmaintenance.controller;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.kerneldc.flightlogserver.aircraftmaintenance.bean.ComponentRequest;
-import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.Component;
-import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistory;
-import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepository;
 import com.kerneldc.flightlogserver.aircraftmaintenance.service.ComponentPersistenceService;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
@@ -48,14 +42,7 @@ public class ComponentController {
     @PostMapping("/add")
     public ResponseEntity<String> add(@Valid @RequestBody ComponentRequest componentRequest) throws ApplicationException {
     	LOGGER.debug("addComponentRequest: {}", componentRequest);
-    	Part part = componentPersistenceService.parseAndFindPart(componentRequest.getPartUri());
-    	 
-    	Component component = new Component();
-    	BeanUtils.copyProperties(componentRequest, component);
-    	component.setPart(part);
-    	component.setDeleted(false);
-    	componentRepository.save(component);
-    	LOGGER.info("component: {}", component);
+    	componentPersistenceService.addComponent(componentRequest);
     	return ResponseEntity.ok(StringUtils.EMPTY);
     }
 
@@ -70,30 +57,10 @@ public class ComponentController {
     @DeleteMapping("/delete")
     public ResponseEntity<String> delete(@RequestParam(value = "componentUri") String componentUri, @RequestParam(value = "deleteHistoryRecords") Boolean deleteHistoryRecords) throws ApplicationException {
     	LOGGER.debug("componentUri: {}, deleteHistoryRecords: {}", deleteHistoryRecords, deleteHistoryRecords);
-    	Component component = componentPersistenceService.parseAndFindComponent(componentUri);
-		Set<ComponentHistory> componentHistorySet = component.getComponentHistorySet();
-    	if (deleteHistoryRecords || CollectionUtils.isEmpty(componentHistorySet)) {
-    		componentRepository.delete(component);
-    	} else {
-    		LOGGER.info("componentHistorySet: {}", componentHistorySet);
-    		component.setName(componentHistorySet.iterator().next().getName());
-    		component.setDescription(componentHistorySet.iterator().next().getDescription());
-    		component.setPart(componentHistorySet.iterator().next().getPart());
-    		component.setWorkPerformed(componentHistorySet.iterator().next().getWorkPerformed());
-    		component.setDatePerformed(componentHistorySet.iterator().next().getDatePerformed());
-    		component.setHoursPerformed(componentHistorySet.iterator().next().getHoursPerformed());
-    		component.setDateDue(componentHistorySet.iterator().next().getDateDue());
-    		component.setHoursDue(componentHistorySet.iterator().next().getHoursDue());
-    		component.setCreated(componentHistorySet.iterator().next().getCreated());
-    		component.setModified(componentHistorySet.iterator().next().getModified());
-    		
-    		componentHistorySet.remove(componentHistorySet.iterator().next());
-
-    		componentRepository.save(component);
-    	}
+    	componentPersistenceService.deleteComponentAndHistory(componentUri, deleteHistoryRecords);
     	return ResponseEntity.ok(StringUtils.EMPTY);
     }
-    
+
     @GetMapping("/testDate")
     public ResponseEntity<String> testDate(@RequestParam(value = "testDate") Date testDate) {
     	LOGGER.debug("testDate: {}", testDate);

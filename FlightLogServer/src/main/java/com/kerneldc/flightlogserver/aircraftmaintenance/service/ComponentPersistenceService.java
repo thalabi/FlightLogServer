@@ -6,7 +6,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,8 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepository;
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.PartRepository;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
+
+import liquibase.repackaged.org.apache.commons.lang3.BooleanUtils;
 
 
 @Service
@@ -99,6 +103,43 @@ public class ComponentPersistenceService {
 		LOGGER.debug("modified component: {}", component);
 		componentRepository.save(component);
 	}
+
+	public void addComponent(ComponentRequest componentRequest) throws ApplicationException {
+		Part part = parseAndFindPart(componentRequest.getPartUri());
+    	 
+    	Component component = new Component();
+    	BeanUtils.copyProperties(componentRequest, component);
+    	component.setPart(part);
+    	component.setDeleted(false);
+    	componentRepository.save(component);
+    	LOGGER.info("component: {}", component);
+	}
+
+	public void deleteComponentAndHistory(String componentUri, Boolean deleteHistoryRecords)
+			throws ApplicationException {
+		Component component = parseAndFindComponent(componentUri);
+		Set<ComponentHistory> componentHistorySet = component.getComponentHistorySet();
+    	if (BooleanUtils.isTrue(deleteHistoryRecords) || CollectionUtils.isEmpty(componentHistorySet)) {
+    		componentRepository.delete(component);
+    	} else {
+    		LOGGER.info("componentHistorySet: {}", componentHistorySet);
+    		component.setName(componentHistorySet.iterator().next().getName());
+    		component.setDescription(componentHistorySet.iterator().next().getDescription());
+    		component.setPart(componentHistorySet.iterator().next().getPart());
+    		component.setWorkPerformed(componentHistorySet.iterator().next().getWorkPerformed());
+    		component.setDatePerformed(componentHistorySet.iterator().next().getDatePerformed());
+    		component.setHoursPerformed(componentHistorySet.iterator().next().getHoursPerformed());
+    		component.setDateDue(componentHistorySet.iterator().next().getDateDue());
+    		component.setHoursDue(componentHistorySet.iterator().next().getHoursDue());
+    		component.setCreated(componentHistorySet.iterator().next().getCreated());
+    		component.setModified(componentHistorySet.iterator().next().getModified());
+    		
+    		componentHistorySet.remove(componentHistorySet.iterator().next());
+
+    		componentRepository.save(component);
+    	}
+	}
+    
 
     public Part parseAndFindPart(String partUri) throws ApplicationException {
     	Long partId;
