@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +30,7 @@ public abstract class AbstractPersistableEntity extends AbstractEntity implement
 	private Long id;
 	
 	@Embedded
-	//@JsonIgnore
+	@JsonIgnore
 	private LogicalKeyHolder logicalKeyHolder;
 	
 	@Version
