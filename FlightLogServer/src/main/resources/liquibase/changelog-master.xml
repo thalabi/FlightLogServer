@@ -66,4 +66,5 @@
 	<include file="liquibase/create-unique-constraint-lk-on-all-tables-1.xml"/>
 	<include file="liquibase/increase-lk-column-size-of-all-tables.xml"/>
 	<include file="liquibase/create-unique-constraint-lk-on-all-tables-2.xml"/>
+	<include file="liquibase/create-unique-constraint-lk-on-all-tables-3.xml"/>
 </databaseChangeLog>
