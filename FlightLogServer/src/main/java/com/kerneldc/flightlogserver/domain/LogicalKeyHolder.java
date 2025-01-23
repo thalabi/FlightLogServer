@@ -46,8 +46,10 @@ public class LogicalKeyHolder implements Serializable, ILogicallyKeyed {
 					stringKeyParts[i++] = ((LocalDateTime)keyPart).format(AbstractEntity.LOCAL_DATE_TIME_FORMATTER);
 				case "OffsetDateTime" ->
 					stringKeyParts[i++] = ((OffsetDateTime)keyPart).format(AbstractEntity.OFFSET_DATE_TIME_UTC_FORMATTER); // to UTC
-				case "Date", "Timestamp" ->
+				case "Date" ->
 					stringKeyParts[i++] = AbstractEntity.DATE_FORMAT.format((Date)keyPart);
+				case "Timestamp" ->
+					stringKeyParts[i++] = AbstractEntity.DATE_TIME_FORMAT.format((Date)keyPart);
 				default ->
 					throw new IllegalArgumentException(String.format("Logical key part [%s] is of unsupported data type [%s]", keyPart, keyPart.getClass().getSimpleName()));
 			}
