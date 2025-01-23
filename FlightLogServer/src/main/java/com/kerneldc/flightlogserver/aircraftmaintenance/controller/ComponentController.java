@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.kerneldc.flightlogserver.aircraftmaintenance.bean.ComponentRequest;
-import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepository;
 import com.kerneldc.flightlogserver.aircraftmaintenance.service.ComponentPersistenceService;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 
@@ -35,7 +34,6 @@ public class ComponentController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final ComponentRepository componentRepository;
     private final ComponentPersistenceService componentPersistenceService;
     
     @Transactional
