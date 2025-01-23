@@ -8,9 +8,13 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kerneldc.flightlogserver.domain.AbstractEntity;
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
+import com.kerneldc.flightlogserver.domain.LogicalKeyHolder;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,13 +25,16 @@ public class FlightLog extends AbstractPersistableEntity {
 
 	private static final long serialVersionUID = 1L;
 
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.DATE)
 	private Date flightDate;
 	private String makeModel;
 	private String registration;
 	private String pic;
 	private String coPilot;
+	@Setter(AccessLevel.NONE)
 	private String routeFrom;
+	@Setter(AccessLevel.NONE)
 	private String routeTo;
 	private String remarks;
 	private Float dayDual;
@@ -46,14 +53,40 @@ public class FlightLog extends AbstractPersistableEntity {
 	private Integer instrumentNoIfrAppr;
 	private Integer tosLdgsDay;
 	private Integer tosLdgsNight;
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date created;
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date modified;
 	
-	@Override
-	protected void setLogicalKeyHolder() {
-		// TODO need to add lk column to table and implement this method
+	public void setFlightDate(Date flightDate) {
+		this.flightDate = flightDate;
+		
+		if (getId() == null) {
+			created = new Date();
+		}
+		modified = new Date();
+		
+		setLogicalKeyHolder();
 	}
 
+	public void setRouteFrom(String routeFrom) {
+		this.routeFrom = routeFrom;
+		setLogicalKeyHolder();
+	}
+
+	public void setRouteTo(String routeTo) {
+		this.routeTo = routeTo;
+		setLogicalKeyHolder();
+	}
+
+
+	@Override
+	protected void setLogicalKeyHolder() {
+		var logicalKeyHolder = LogicalKeyHolder.build(routeFrom, routeTo, flightDate, AbstractEntity.DATE_TIME_FORMAT.format(modified));
+		setLogicalKeyHolder(logicalKeyHolder);
+	}
 }
