@@ -20,8 +20,8 @@ public class MakeModelRowMapper implements RowMapper<MakeModel> {
 		MakeModel makeModel = new MakeModel();
 		makeModel.setId(rs.getLong(ID_COLUMN));
 		makeModel.setMakeModel(rs.getString(MAKE_MODEL_COLUMN));
-		makeModel.setCreated(rs.getDate(CREATED_COLUMN));
-		makeModel.setModified(rs.getDate(MODIFIED_COLUMN));
+//		makeModel.setCreated(rs.getDate(CREATED_COLUMN));
+//		makeModel.setModified(rs.getDate(MODIFIED_COLUMN));
 		makeModel.setVersion(rs.getLong(VERSION_COLUMN));
 		return makeModel;
 	}

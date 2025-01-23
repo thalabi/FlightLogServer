@@ -38,8 +38,8 @@ public class AirportRowMapper implements RowMapper<Airport> {
 		airport.setLongitude(rs.getFloat(LONGITUDE));
 		airport.setUpperWindsStationId(rs.getString(UPPER_WINDS_STATION_ID));
 
-		airport.setCreated(rs.getDate(CREATED_COLUMN));
-		airport.setModified(rs.getDate(MODIFIED_COLUMN));
+//		airport.setCreated(rs.getDate(CREATED_COLUMN));
+//		airport.setModified(rs.getDate(MODIFIED_COLUMN));
 		airport.setVersion(rs.getLong(VERSION_COLUMN));
 		return airport;
 	}

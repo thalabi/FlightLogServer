@@ -40,7 +40,7 @@ public class FlightLogRowMapper implements RowMapper<FlightLog> {
 		flightLog.setId(rs.getLong(ID_COLUMN));
 		flightLog.setVersion(rs.getLong(VERSION_COLUMN));
 		flightLog.setCoPilot(rs.getString(CO_PILOT_COLUMN));
-		flightLog.setCreated(rs.getDate(CREATED_COLUMN));
+		//flightLog.setCreated(rs.getDate(CREATED_COLUMN));
 		flightLog.setDayDual(rs.getFloat(DAY_DUAL_COLUMN));
 		flightLog.setDaySolo(rs.getFloat(DAY_SOLO_COLUMN));
 		flightLog.setFlightDate(rs.getDate(FLIGHT_DATE_COLUMN));
@@ -49,7 +49,7 @@ public class FlightLogRowMapper implements RowMapper<FlightLog> {
 		flightLog.setInstrumentNoIfrAppr(rs.getInt(INSTRUMENT_NO_IFR_APPR_COLUMN));
 		flightLog.setInstrumentSimulated(rs.getFloat(INSTRUMENT_SIMULATED_COLUMN));
 		flightLog.setMakeModel(rs.getString(MAKE_MODEL_COLUMN));
-		flightLog.setModified(rs.getDate(MODIFIED_COLUMN));
+		//flightLog.setModified(rs.getDate(MODIFIED_COLUMN));
 		flightLog.setNightDual(rs.getFloat(NIGHT_DUAL_COLUMN));
 		flightLog.setNightSolo(rs.getFloat(NIGHT_SOLO_COLUMN));
 		flightLog.setPic(rs.getString(PIC_COLUMN));

@@ -9,6 +9,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
 import com.kerneldc.flightlogserver.domain.LogicalKeyHolder;
@@ -36,13 +37,23 @@ public class Part extends AbstractPersistableEntity {
     private String name;
     private String description;
 
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date created;
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date modified;
 
 	public void setName(String name) {
 		this.name = name;
+		
+		if (getId() == null) {
+			created = new Date();
+		}
+		modified = new Date();
+
 		setLogicalKeyHolder();
 	}
 

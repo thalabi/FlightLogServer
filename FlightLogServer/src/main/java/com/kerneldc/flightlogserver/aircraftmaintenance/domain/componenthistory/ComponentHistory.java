@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
 import com.kerneldc.flightlogserver.domain.LogicalKeyHolder;
@@ -57,13 +58,23 @@ public class ComponentHistory extends AbstractPersistableEntity {
     private Date dateDue;
     private Float hoursDue;
 
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date created;
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date modified;
 
 	public void setName(String name) {
 		this.name = name;
+
+		if (getId() == null) {
+			created = new Date();
+		}
+		modified = new Date();
+		
 		setLogicalKeyHolder();
 	}
 

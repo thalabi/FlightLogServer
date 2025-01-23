@@ -20,8 +20,8 @@ public class PilotRowMapper implements RowMapper<Pilot> {
 		Pilot pilot = new Pilot();
 		pilot.setId(rs.getLong(ID_COLUMN));
 		pilot.setPilot(rs.getString(PILOT_COLUMN));
-		pilot.setCreated(rs.getDate(CREATED_COLUMN));
-		pilot.setModified(rs.getDate(MODIFIED_COLUMN));
+//		pilot.setCreated(rs.getDate(CREATED_COLUMN));
+//		pilot.setModified(rs.getDate(MODIFIED_COLUMN));
 		pilot.setVersion(rs.getLong(VERSION_COLUMN));
 		return pilot;
 	}

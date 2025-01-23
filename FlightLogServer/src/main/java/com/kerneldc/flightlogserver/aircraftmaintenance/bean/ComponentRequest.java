@@ -26,8 +26,8 @@ public class ComponentRequest {
 
     private String partUri;
 
-    private Date created;
-	private Date modified;
+    //private Date created;
+	//private Date modified;
 
 	@Builder.Default
 	private Set<ComponentHistoryVo> historyRequestSet = new LinkedHashSet<>(); 

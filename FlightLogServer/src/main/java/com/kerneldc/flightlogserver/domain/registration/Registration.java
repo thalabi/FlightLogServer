@@ -7,8 +7,11 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
+import com.kerneldc.flightlogserver.domain.LogicalKeyHolder;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,15 +22,34 @@ public class Registration extends AbstractPersistableEntity {
 
 	private static final long serialVersionUID = 1L;
 
+	@Setter(AccessLevel.NONE)
 	private String registration;
+	
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date created;
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date modified;
 
+	public void setRegistration(String registration) {
+		this.registration = registration;
+
+		if (getId() == null) {
+			created = new Date();
+		}
+		modified = new Date();
+
+		
+		setLogicalKeyHolder();
+	}
+	
 	@Override
 	protected void setLogicalKeyHolder() {
-		// TODO need to add lk column to table and implement this method
+		var logicalKeyHolder = LogicalKeyHolder.build(registration);
+		setLogicalKeyHolder(logicalKeyHolder);
 	}
 
 }

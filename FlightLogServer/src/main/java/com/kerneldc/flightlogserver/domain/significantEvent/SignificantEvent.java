@@ -8,6 +8,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
 import com.kerneldc.flightlogserver.domain.LogicalKeyHolder;
 
@@ -29,13 +30,23 @@ public class SignificantEvent extends AbstractPersistableEntity {
 	@Setter(AccessLevel.NONE)
 	@NotNull
 	private String eventDescription;
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date created;
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date modified;
 
 	public void setEventDate(Date eventDate) {
 		this.eventDate = eventDate;
+		
+		if (getId() == null) {
+			created = new Date();
+		}
+		modified = new Date();
+		
 		setLogicalKeyHolder();
 	}
 

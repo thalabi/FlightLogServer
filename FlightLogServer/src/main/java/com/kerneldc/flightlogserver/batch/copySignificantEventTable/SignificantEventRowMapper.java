@@ -22,8 +22,8 @@ public class SignificantEventRowMapper implements RowMapper<SignificantEvent> {
 		significantEvent.setId(rs.getLong(ID_COLUMN));
 		significantEvent.setEventDate(rs.getDate(EVENT_DATE_COLUMN));
 		significantEvent.setEventDescription(rs.getString(EVENT_DESCRIPTION_COLUMN));
-		significantEvent.setCreated(rs.getDate(CREATED_COLUMN));
-		significantEvent.setModified(rs.getDate(MODIFIED_COLUMN));
+//		significantEvent.setCreated(rs.getDate(CREATED_COLUMN));
+//		significantEvent.setModified(rs.getDate(MODIFIED_COLUMN));
 		significantEvent.setVersion(rs.getLong(VERSION_COLUMN));
 		return significantEvent;
 	}

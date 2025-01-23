@@ -20,8 +20,8 @@ public class RegistrationRowMapper implements RowMapper<Registration> {
 		Registration registration = new Registration();
 		registration.setId(rs.getLong(ID_COLUMN));
 		registration.setRegistration(rs.getString(REGISTRATION_COLUMN));
-		registration.setCreated(rs.getDate(CREATED_COLUMN));
-		registration.setModified(rs.getDate(MODIFIED_COLUMN));
+//		registration.setCreated(rs.getDate(CREATED_COLUMN));
+//		registration.setModified(rs.getDate(MODIFIED_COLUMN));
 		registration.setVersion(rs.getLong(VERSION_COLUMN));
 		return registration;
 	}

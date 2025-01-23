@@ -23,6 +23,7 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componenthistory.ComponentHistory;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
@@ -94,13 +95,23 @@ public class Component extends AbstractPersistableEntity {
 	private Set<ComponentHistory> componentHistorySet = new LinkedHashSet<>(); // the no-args constructor won't get this default value
 
 
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date created;
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date modified;
 
 	public void setName(String name) {
 		this.name = name;
+		
+		if (getId() == null) {
+			created = new Date();
+		}
+		modified = new Date();
+		
 		setLogicalKeyHolder();
 	}
 

@@ -131,8 +131,8 @@ public class ComponentPersistenceService {
     		component.setHoursPerformed(componentHistorySet.iterator().next().getHoursPerformed());
     		component.setDateDue(componentHistorySet.iterator().next().getDateDue());
     		component.setHoursDue(componentHistorySet.iterator().next().getHoursDue());
-    		component.setCreated(componentHistorySet.iterator().next().getCreated());
-    		component.setModified(componentHistorySet.iterator().next().getModified());
+    		//component.setCreated(componentHistorySet.iterator().next().getCreated());
+    		//component.setModified(componentHistorySet.iterator().next().getModified());
     		
     		componentHistorySet.remove(componentHistorySet.iterator().next());
 

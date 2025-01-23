@@ -8,6 +8,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
 import com.kerneldc.flightlogserver.domain.LogicalKeyHolder;
 
@@ -35,13 +36,25 @@ public class Airport extends AbstractPersistableEntity {
 	private Float latitude;
 	private Float longitude;
 	private String upperWindsStationId;
+	
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date created;
+	@Setter(AccessLevel.NONE)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date modified;
 	
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
+
+		if (getId() == null) {
+			created = new Date();
+		}
+		modified = new Date();
+
+		
 		setLogicalKeyHolder();
 	}
 	
