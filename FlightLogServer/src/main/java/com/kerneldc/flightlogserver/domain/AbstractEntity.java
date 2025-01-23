@@ -24,6 +24,7 @@ public abstract class AbstractEntity {
             .toFormatter();
 	protected static final DateTimeFormatter LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_FORMAT);
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	public static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	
 	public static final Function<AbstractEntity, Object> idExtractor = AbstractEntity::getId;
 
