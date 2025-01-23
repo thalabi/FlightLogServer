@@ -118,7 +118,8 @@ public class WebSecurityConfig {
 		            .antMatchers(HttpMethod.GET, "/protected/data-rest/"+entityName+"s/**").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
 		            
 		            .antMatchers(HttpMethod.POST, "/protected/data-rest/"+entityName+"s").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
-		            .antMatchers(HttpMethod.PUT, "/protected/data-rest/"+entityName+"s/**").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
+//		            .antMatchers(HttpMethod.PUT, "/protected/data-rest/"+entityName+"s/**").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
+		            .antMatchers(HttpMethod.PATCH, "/protected/data-rest/"+entityName+"s/**").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
 		            .antMatchers(HttpMethod.DELETE, "/protected/data-rest/"+entityName+"s/**").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
 
 		            .antMatchers(HttpMethod.POST, "/protected/"+entityName+"Controller/add").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
