@@ -1,0 +1,621 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-1">
+        <createTable tableName="FLIGHT_LOG">
+            <column name="ID" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_FLIGHT_LOG"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CO_PILOT" type="VARCHAR2(255 BYTE)"/>
+            <column name="CREATED" type="TIMESTAMP(6)"/>
+            <column name="DAY_DUAL" type="NUMBER(4, 1)"/>
+            <column name="DAY_SOLO" type="NUMBER(4, 1)"/>
+            <column name="FLIGHT_DATE" type="date"/>
+            <column name="INSTRUMENT_FLIGHT_SIM" type="NUMBER(4, 1)"/>
+            <column name="INSTRUMENT_IMC" type="NUMBER(4, 1)"/>
+            <column name="INSTRUMENT_NO_IFR_APPR" type="NUMBER(2, 0)"/>
+            <column name="INSTRUMENT_SIMULATED" type="NUMBER(4, 1)"/>
+            <column name="MAKE_MODEL" type="VARCHAR2(255 BYTE)"/>
+            <column name="MODIFIED" type="TIMESTAMP(6)"/>
+            <column name="NIGHT_DUAL" type="NUMBER(4, 1)"/>
+            <column name="NIGHT_SOLO" type="NUMBER(4, 1)"/>
+            <column name="PIC" type="VARCHAR2(255 BYTE)"/>
+            <column name="REGISTRATION" type="VARCHAR2(255 BYTE)"/>
+            <column name="REMARKS" type="VARCHAR2(255 BYTE)"/>
+            <column name="ROUTE_FROM" type="VARCHAR2(255 BYTE)"/>
+            <column name="ROUTE_TO" type="VARCHAR2(255 BYTE)"/>
+            <column name="TOS_LDGS_DAY" type="NUMBER(2, 0)"/>
+            <column name="TOS_LDGS_NIGHT" type="NUMBER(2, 0)"/>
+            <column name="X_COUNTRY_DAY" type="NUMBER(4, 1)"/>
+            <column name="X_COUNTRY_NIGHT" type="NUMBER(4, 1)"/>
+            <column name="LK" type="VARCHAR2(4000 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-37">
+        <addUniqueConstraint columnNames="LK" constraintName="FLIGHT_LOG_UNIQUE_LK" tableName="FLIGHT_LOG"/>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-51">
+        <createIndex indexName="FLIGHT_LOG_IDX_1" tableName="FLIGHT_LOG">
+            <column name="FLIGHT_DATE"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-27">
+        <createTable tableName="AIRPORT">
+            <column name="ID" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_AIRPORT"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CITY" type="VARCHAR2(255 BYTE)"/>
+            <column name="COUNTRY" type="VARCHAR2(255 BYTE)"/>
+            <column name="IDENTIFIER" type="VARCHAR2(255 BYTE)"/>
+            <column name="LATITUDE" type="FLOAT(22)"/>
+            <column name="LONGITUDE" type="FLOAT(22)"/>
+            <column name="NAME" type="VARCHAR2(255 BYTE)"/>
+            <column name="PROVINCE" type="VARCHAR2(255 BYTE)"/>
+            <column name="UPPER_WINDS_STATION_ID" type="VARCHAR2(255 BYTE)"/>
+            <column name="CREATED" type="TIMESTAMP(6)"/>
+            <column name="MODIFIED" type="TIMESTAMP(6)"/>
+            <column name="LK" type="VARCHAR2(4000 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-31">
+        <addUniqueConstraint columnNames="IDENTIFIER" constraintName="AIRPORT_IDX_1" tableName="AIRPORT"/>
+    </changeSet>
+
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-28">
+        <createTable tableName="AIRPORT_ENRICHMENT">
+            <column name="ID" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_AIRPORT_ENRICHMENT"/>
+            </column>
+            <column name="IDENT" type="VARCHAR2(16 BYTE)"/>
+            <column name="TYPE" type="VARCHAR2(32 BYTE)"/>
+            <column name="NAME" type="VARCHAR2(128 BYTE)"/>
+            <column name="LATITUDE_DEG" type="NUMBER"/>
+            <column name="LONGITUDE_DEG" type="NUMBER"/>
+            <column name="ELEVATION_FT" type="int"/>
+            <column name="CONTINENT" type="VARCHAR2(16 BYTE)"/>
+            <column name="ISO_COUNTRY" type="VARCHAR2(16 BYTE)"/>
+            <column name="ISO_REGION" type="VARCHAR2(16 BYTE)"/>
+            <column name="MUNICIPALITY" type="VARCHAR2(128 BYTE)"/>
+            <column name="SCHEDULED_SERVICE" type="VARCHAR2(16 BYTE)"/>
+            <column name="GPS_CODE" type="VARCHAR2(16 BYTE)"/>
+            <column name="IATA_CODE" type="VARCHAR2(16 BYTE)"/>
+            <column name="LOCAL_CODE" type="VARCHAR2(16 BYTE)"/>
+            <column name="HOME_LINK" type="VARCHAR2(256 BYTE)"/>
+            <column name="WIKIPEDIA_LINK" type="VARCHAR2(256 BYTE)"/>
+            <column name="KEYWORDS" type="VARCHAR2(512 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-39">
+        <addUniqueConstraint columnNames="IDENT" constraintName="IDX_1_AIRPORT_ENRICHMENT" tableName="AIRPORT_ENRICHMENT"/>
+    </changeSet>
+
+
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-4">
+        <createTable tableName="MAKE_MODEL">
+            <column name="ID" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_MAKE_MODEL"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MAKE_MODEL" type="VARCHAR2(255 BYTE)"/>
+            <column name="CREATED" type="TIMESTAMP(6)"/>
+            <column name="MODIFIED" type="TIMESTAMP(6)"/>
+            <column name="LK" type="VARCHAR2(4000 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-41">
+        <addUniqueConstraint columnNames="LK" constraintName="MAKE_MODEL_UNIQUE_LK" tableName="MAKE_MODEL"/>
+    </changeSet>
+
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-2">
+        <createTable tableName="PILOT">
+            <column name="ID" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PILOT"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PILOT" type="VARCHAR2(255 BYTE)"/>
+            <column name="CREATED" type="TIMESTAMP(6)"/>
+            <column name="MODIFIED" type="TIMESTAMP(6)"/>
+            <column name="LK" type="VARCHAR2(4000 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-45">
+        <addUniqueConstraint columnNames="LK" constraintName="PILOT_UNIQUE_LK" tableName="PILOT"/>
+    </changeSet>
+
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-3">
+        <createTable tableName="REGISTRATION">
+            <column name="ID" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_REGISTRATION"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REGISTRATION" type="VARCHAR2(255 BYTE)"/>
+            <column name="CREATED" type="TIMESTAMP(6)"/>
+            <column name="MODIFIED" type="TIMESTAMP(6)"/>
+            <column name="LK" type="VARCHAR2(4000 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-47">
+        <addUniqueConstraint columnNames="LK" constraintName="REGISTRATION_UNIQUE_LK" tableName="REGISTRATION"/>
+    </changeSet>
+
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-5">
+        <createTable tableName="SIGNIFICANT_EVENT">
+            <column name="ID" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SIGNIFICANT_EVENT"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EVENT_DATE" type="date"/>
+            <column name="EVENT_DESCRIPTION" type="VARCHAR2(255 BYTE)"/>
+            <column name="CREATED" type="TIMESTAMP(6)"/>
+            <column name="MODIFIED" type="TIMESTAMP(6)"/>
+            <column name="LK" type="VARCHAR2(4000 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-49">
+        <addUniqueConstraint columnNames="LK" constraintName="SIGNIFICANT_EVENT_UNIQUE_LK" tableName="SIGNIFICANT_EVENT"/>
+    </changeSet>
+
+    <changeSet id="flight_log_monthly_total_v" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE" onFailMessage="DBMS type is not postgresql. View not created.">
+	        <dbms type="postgresql" />
+	    </preConditions>
+    	<createView viewName="flight_log_monthly_total_v" replaceIfExists="true">
+			<![CDATA[
+			with
+			flight_log_monthly_total_no_id as (
+			select
+			    date_trunc('month', flight_date) as month,
+			    round(sum(day_dual), 1) day_dual,
+			    round(sum(day_solo), 1) day_solo,
+			    round(sum(night_dual), 1) night_dual,
+			    round(sum(night_solo), 1) night_solo,
+			    round(sum(instrument_simulated), 1) instrument_simulated,
+			    round(sum(instrument_flight_sim), 1) instrument_flight_sim,
+			    round(sum(instrument_imc), 1) instrument_imc,
+			    sum(instrument_no_ifr_appr) instrument_no_ifr_appr,
+			    round(sum(x_country_day), 1) x_country_day,
+			    round(sum(x_country_night), 1) x_country_night,
+			    sum(tos_ldgs_day) tos_ldgs_day,
+			    sum(tos_ldgs_night) tos_ldgs_night,
+			    round(sum(coalesce(day_solo,0)+coalesce(day_dual,0)+coalesce(night_solo,0)+coalesce(night_dual,0)), 1) total_month
+			  from flight_log
+			 group by date_trunc('month', flight_date)
+			)
+				select 
+					row_number() over (order by month) as id,
+					flmtni.month,
+					flmtni.day_dual,
+					flmtni.day_solo,
+					flmtni.night_dual,
+					flmtni.night_solo,
+					flmtni.instrument_simulated,
+					flmtni.instrument_flight_sim,
+					flmtni.instrument_imc,
+					flmtni.instrument_no_ifr_appr,
+					flmtni.x_country_day,
+					flmtni.x_country_night,
+					flmtni.tos_ldgs_day,
+					flmtni.tos_ldgs_night,
+					flmtni.total_month
+				from flight_log_monthly_total_no_id flmtni
+				order by id
+ 			]]>    
+		</createView>
+    </changeSet>
+
+    <changeSet id="flight_log_yearly_total_v" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE" onFailMessage="DBMS type is not postgresql. View not created.">
+	        <dbms type="postgresql" />
+	    </preConditions>
+    	<createView viewName="flight_log_yearly_total_v" replaceIfExists="true">
+			<![CDATA[
+			with
+			flight_log_yearly_total_no_id as (
+			select
+			    date_trunc('year', flight_date) as year,
+			    round(sum(day_dual), 1) day_dual,
+			    round(sum(day_solo), 1) day_solo,
+			    round(sum(night_dual), 1) night_dual,
+			    round(sum(night_solo), 1) night_solo,
+			    round(sum(instrument_simulated), 1) instrument_simulated,
+			    round(sum(instrument_flight_sim), 1) instrument_flight_sim,
+			    round(sum(instrument_imc), 1) instrument_imc,
+			    sum(instrument_no_ifr_appr) instrument_no_ifr_appr,
+			    round(sum(x_country_day), 1) x_country_day,
+			    round(sum(x_country_night), 1) x_country_night,
+			    sum(tos_ldgs_day) tos_ldgs_day,
+			    sum(tos_ldgs_night) tos_ldgs_night,
+			    round(sum(coalesce(day_solo,0)+coalesce(day_dual,0)+coalesce(night_solo,0)+coalesce(night_dual,0)), 1) total_year
+			  from flight_log
+			 group by date_trunc('year', flight_date)
+			)
+				select 
+					row_number() over (order by year) as id,
+					flytni.year,
+					flytni.day_dual,
+					flytni.day_solo,
+					flytni.night_dual,
+					flytni.night_solo,
+					flytni.instrument_simulated,
+					flytni.instrument_flight_sim,
+					flytni.instrument_imc,
+					flytni.instrument_no_ifr_appr,
+					flytni.x_country_day,
+					flytni.x_country_night,
+					flytni.tos_ldgs_day,
+					flytni.tos_ldgs_night,
+					flytni.total_year
+				from flight_log_yearly_total_no_id flytni
+				order by id
+			]]>    
+		</createView>
+    </changeSet>
+
+    <changeSet id="create-flight_log_last_x_days_total_v-h2" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE" onFailMessage="DBMS type is not postgresql. View not created.">
+	        <dbms type="postgresql" />
+	    </preConditions>
+    	<createView viewName="flight_log_last_x_days_total_v" replaceIfExists="true">
+			<![CDATA[
+			select
+				1 id, 
+			    30 as days, 
+			    round(sum(day_dual), 1) as day_dual, 
+			    round(sum(day_solo), 1) as day_solo, 
+			    round(sum(instrument_flight_sim), 1) as instrument_flight_sim, 
+			    round(sum(instrument_imc), 1) as instrument_imc, 
+			    sum(instrument_no_ifr_appr) as instrument_no_ifr_appr, 
+			    round(sum(instrument_simulated), 1) as instrument_simulated, 
+			    round(sum(night_dual), 1) as night_dual, 
+			    round(sum(night_solo), 1) as night_solo, 
+			    sum(tos_ldgs_day) as tos_ldgs_day, 
+			    sum(tos_ldgs_night) as tos_ldgs_night, 
+			    round(sum(x_country_day), 1) as x_country_day, 
+			    round(sum(x_country_night), 1) as x_country_night
+			from flight_log 
+			where flight_date >= current_date-30
+			union
+			select 
+				2 id, 
+			    60 as days, 
+			    round(sum(day_dual), 1) as day_dual, 
+			    round(sum(day_solo), 1) as day_solo, 
+			    round(sum(instrument_flight_sim), 1) as instrument_flight_sim, 
+			    round(sum(instrument_imc), 1) as instrument_imc, 
+			    sum(instrument_no_ifr_appr) as instrument_no_ifr_appr, 
+			    round(sum(instrument_simulated), 1) as instrument_simulated, 
+			    round(sum(night_dual), 1) as night_dual, 
+			    round(sum(night_solo), 1) as night_solo, 
+			    sum(tos_ldgs_day) as tos_ldgs_day, 
+			    sum(tos_ldgs_night) as tos_ldgs_night, 
+			    round(sum(x_country_day), 1) as x_country_day, 
+			    round(sum(x_country_night), 1) as x_country_night
+			from flight_log 
+			where flight_date >= current_date-60
+			union
+			select 
+				3 id, 
+			    90 as days, 
+			    round(sum(day_dual), 1) as day_dual, 
+			    round(sum(day_solo), 1) as day_solo, 
+			    round(sum(instrument_flight_sim), 1) as instrument_flight_sim, 
+			    round(sum(instrument_imc), 1) as instrument_imc, 
+			    sum(instrument_no_ifr_appr) as instrument_no_ifr_appr, 
+			    round(sum(instrument_simulated), 1) as instrument_simulated, 
+			    round(sum(night_dual), 1) as night_dual, 
+			    round(sum(night_solo), 1) as night_solo, 
+			    sum(tos_ldgs_day) as tos_ldgs_day, 
+			    sum(tos_ldgs_night) as tos_ldgs_night, 
+			    round(sum(x_country_day), 1) as x_country_day, 
+			    round(sum(x_country_night), 1) as x_country_night
+			from flight_log 
+			where flight_date >= current_date-90
+			union
+			select 
+				4 id, 
+			    180 as days, 
+			    round(sum(day_dual), 1) as day_dual, 
+			    round(sum(day_solo), 1) as day_solo, 
+			    round(sum(instrument_flight_sim), 1) as instrument_flight_sim, 
+			    round(sum(instrument_imc), 1) as instrument_imc, 
+			    sum(instrument_no_ifr_appr) as instrument_no_ifr_appr, 
+			    round(sum(instrument_simulated), 1) as instrument_simulated, 
+			    round(sum(night_dual), 1) as night_dual, 
+			    round(sum(night_solo), 1) as night_solo, 
+			    sum(tos_ldgs_day) as tos_ldgs_day, 
+			    sum(tos_ldgs_night) as tos_ldgs_night, 
+			    round(sum(x_country_day), 1) as x_country_day, 
+			    round(sum(x_country_night), 1) as x_country_night
+			from flight_log 
+			where flight_date >= current_date-180
+			union
+			select 
+				5 id, 
+			    360 as days, 
+			    round(sum(day_dual), 1) as day_dual, 
+			    round(sum(day_solo), 1) as day_solo, 
+			    round(sum(instrument_flight_sim), 1) as instrument_flight_sim, 
+			    round(sum(instrument_imc), 1) as instrument_imc, 
+			    sum(instrument_no_ifr_appr) as instrument_no_ifr_appr, 
+			    round(sum(instrument_simulated), 1) as instrument_simulated, 
+			    round(sum(night_dual), 1) as night_dual, 
+			    round(sum(night_solo), 1) as night_solo, 
+			    sum(tos_ldgs_day) as tos_ldgs_day, 
+			    sum(tos_ldgs_night) as tos_ldgs_night, 
+			    round(sum(x_country_day), 1) as x_country_day, 
+			    round(sum(x_country_night), 1) as x_country_night
+			from flight_log 
+			where flight_date >= current_date-360
+			]]>    
+		</createView>
+    </changeSet>
+
+    <changeSet id="create-flight_log_running_total_v" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE" onFailMessage="DBMS type is not postgresql. View not created.">
+	        <dbms type="postgresql" />
+	    </preConditions>
+    	<createView viewName="flight_log_running_total_v" replaceIfExists="true">
+			<![CDATA[
+  select fl.flight_date, fl.id, fl.make_model, fl.registration, fl.pic,
+          fl.co_pilot, fl.route_from, fl.route_to, fl.day_dual, fl.day_solo,
+          fl.night_dual, fl.night_solo, fl.instrument_simulated,
+          fl.instrument_flight_sim, fl.x_country_day, fl.x_country_night,
+          fl.remarks,
+          fl.instrument_imc, fl.instrument_no_ifr_appr, fl.tos_ldgs_day,
+          fl.tos_ldgs_night,
+          sum (fl.day_dual) over (order by fl.flight_date,
+           fl.id range unbounded preceding) total_day_dual,
+          sum (fl.day_solo) over (order by fl.flight_date,
+           fl.id range unbounded preceding) total_day_solo,
+          sum (fl.night_dual) over (order by fl.flight_date,
+           fl.id range unbounded preceding) total_night_dual,
+          sum (fl.night_solo) over (order by fl.flight_date,
+           fl.id range unbounded preceding) total_night_solo,
+          sum (fl.instrument_imc) over (order by fl.flight_date,
+           fl.id range unbounded preceding) total_instrument_imc,
+          sum (fl.instrument_simulated) over (order by fl.flight_date,
+           fl.id range unbounded preceding) total_instrument_simulated,
+          sum (fl.instrument_flight_sim) over (order by fl.flight_date,
+           fl.id range unbounded preceding) total_instrument_flight_sim,
+          sum (fl.instrument_no_ifr_appr) over (order by fl.flight_date,
+           fl.id range unbounded preceding)
+                                                 total_instrument_no_ifr_appr,
+          sum (fl.x_country_day) over (order by fl.flight_date,
+           fl.id range unbounded preceding) total_x_country_day,
+          sum (fl.x_country_night) over (order by fl.flight_date,
+           fl.id range unbounded preceding) total_x_country_night,
+          sum (fl.tos_ldgs_day) over (order by fl.flight_date,
+           fl.id range unbounded preceding) total_tos_ldgs_day,
+          sum (fl.tos_ldgs_night) over (order by fl.flight_date,
+           fl.id range unbounded preceding) total_tos_ldgs_night,
+          sum (coalesce(fl.day_dual, 0) + coalesce(fl.day_solo, 0) + coalesce(fl.night_dual, 0) + coalesce(fl.night_solo, 0)
+              ) over (order by fl.flight_date, fl.id range unbounded preceding)
+                                                                total_to_date
+     from flight_log fl
+     		]]>    
+		</createView>
+    </changeSet>
+
+    <changeSet id="flight_log_totals_v" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE" onFailMessage="DBMS type is not postgresql. View not created.">
+	        <dbms type="postgresql" />
+	    </preConditions>
+    	<createView viewName="flight_log_totals_v" replaceIfExists="true">
+			<![CDATA[
+with
+last_flight_date_in_month as ( 
+select distinct max(flight_date) over (partition by date_trunc('month', flight_date) order by date_trunc('month', flight_date)) as last_flight_date_in_month
+   from flight_log
+),
+last_flight_date_and_id_in_month as (
+select flight_date as last_flight_date_in_month, max(fl.id) as last_id_in_month from flight_log fl join last_flight_date_in_month lfdim on fl.flight_date = lfdim.last_flight_date_in_month group by flight_date
+),
+last_flight_date_in_year as (
+ select distinct max(flight_date) over (partition by date_trunc('year', flight_date) order by date_trunc('year', flight_date)) as last_flight_date_in_year 
+   from flight_log
+),
+last_flight_date_and_id_in_year as (
+select flight_date as last_flight_date_in_year, max(fl.id) as last_id_in_year from flight_log fl join last_flight_date_in_year lfdiy on fl.flight_date = lfdiy.last_flight_date_in_year group by flight_date
+)
+	select id,flight_date,make_model,registration,pic,co_pilot,route_from,route_to,remarks,
+	       day_dual,day_solo,night_dual,night_solo,
+	       instrument_imc,instrument_simulated,instrument_flight_sim,instrument_no_ifr_appr,
+	       x_country_day,x_country_night,tos_ldgs_day,tos_ldgs_night,
+	       total_day_dual as to_date_day_dual,total_day_solo as to_date_day_solo,total_night_dual as to_date_night_dual,total_night_solo as to_date_night_solo,
+	       total_instrument_imc as to_date_instrument_imc,total_instrument_simulated as to_date_instrument_simulated,total_instrument_flight_sim as to_date_instrument_flight_sim,total_instrument_no_ifr_appr as to_date_instrument_no_ifr_appr,
+	       total_x_country_day as to_date_x_country_day,total_x_country_night as to_date_x_country_night,total_tos_ldgs_day as to_date_tos_ldgs_day,total_tos_ldgs_night as to_date_tos_ldgs_night,
+	       total_to_date as to_date_total,
+	       month_day_dual,month_day_solo,month_night_dual,month_night_solo,
+	       month_instrument_imc,month_instrument_simulated,month_instrument_flight_sim,month_instrument_no_ifr_appr,
+	       month_x_country_day,month_x_country_night,month_tos_ldgs_day,month_tos_ldgs_night,
+	       month_total,
+	       year_day_dual,year_day_solo,year_night_dual,year_night_solo,
+	       year_instrument_imc,year_instrument_simulated,year_instrument_flight_sim,year_instrument_no_ifr_appr,
+	       year_x_country_day,year_x_country_night,year_tos_ldgs_day,year_tos_ldgs_night,
+	       year_total
+	  from flight_log_running_total_v flrt
+	       left join
+		   (
+			select lfdaiim.last_flight_date_in_month				month_flight_date,
+			       lfdaiim.last_id_in_month				month_id,
+				   flm.month					"month",
+			       flm.day_dual                 month_day_dual,
+			       flm.day_solo                 month_day_solo,
+				   flm.night_dual				month_night_dual,
+				   flm.night_solo				month_night_solo,
+			       flm.instrument_imc			month_instrument_imc,
+			       flm.instrument_simulated		month_instrument_simulated,
+			       flm.instrument_flight_sim	month_instrument_flight_sim,
+			       flm.instrument_no_ifr_appr	month_instrument_no_ifr_appr,
+			       flm.x_country_day			month_x_country_day,
+			       flm.x_country_night			month_x_country_night,
+			       flm.tos_ldgs_day				month_tos_ldgs_day,
+			       flm.tos_ldgs_night			month_tos_ldgs_night,
+				   flm.total_month				month_total
+			  from flight_log_monthly_total_v flm join last_flight_date_and_id_in_month lfdaiim
+			 on date_trunc('month', lfdaiim.last_flight_date_in_month) = flm.month
+		   ) flmt
+		   on flrt.flight_date = flmt.month_flight_date and
+		      flrt.id = flmt.month_id
+		   left join
+		   (
+			select lfdaiiy.last_flight_date_in_year			   year_flight_date,
+			       lfdaiiy.last_id_in_year			   year_id,
+				   fly.year					   "year",
+			       fly.day_dual				   year_day_dual,
+			       fly.day_solo				   year_day_solo,
+				   fly.night_dual			   year_night_dual,
+				   fly.night_solo			   year_night_solo,
+			       fly.instrument_imc		   year_instrument_imc,
+			       fly.instrument_simulated	   year_instrument_simulated,
+			       fly.instrument_flight_sim   year_instrument_flight_sim,
+			       fly.instrument_no_ifr_appr  year_instrument_no_ifr_appr,
+			       fly.x_country_day		   year_x_country_day,
+			       fly.x_country_night		   year_x_country_night,
+			       fly.tos_ldgs_day			   year_tos_ldgs_day,
+			       fly.tos_ldgs_night		   year_tos_ldgs_night,
+				   fly.total_year			   year_total
+			  from flight_log_yearly_total_v fly join last_flight_date_and_id_in_year lfdaiiy
+			 on date_trunc('year', lfdaiiy.last_flight_date_in_year) = fly.year
+		   ) flyt  
+		   on flrt.flight_date = flyt.year_flight_date and
+		      flrt.id = flyt.year_id
+		   order by 1,2
+ 			]]>    
+		</createView>
+    </changeSet>
+
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-6">
+        <createTable tableName="PART">
+            <column name="ID" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PART"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(64 BYTE)"/>
+            <column name="DESCRIPTION" type="VARCHAR2(256 BYTE)"/>
+            <column name="CREATED" type="TIMESTAMP(6)"/>
+            <column name="MODIFIED" type="TIMESTAMP(6)"/>
+            <column name="LK" type="VARCHAR2(4000 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-43">
+        <addUniqueConstraint columnNames="LK" constraintName="PART_UNIQUE_LK" tableName="PART"/>
+    </changeSet>
+
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-7">
+        <createTable tableName="COMPONENT">
+            <column name="ID" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPONENT"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(64 BYTE)"/>
+            <column name="DESCRIPTION" type="VARCHAR2(256 BYTE)"/>
+            <column name="PART_ID" type="bigint"/>
+            <column name="WORK_PERFORMED" type="VARCHAR2(256 BYTE)"/>
+            <column name="DATE_PERFORMED" type="date"/>
+            <column name="HOURS_PERFORMED" type="NUMBER(5, 1)"/>
+            <column name="DATE_DUE" type="date"/>
+            <column name="HOURS_DUE" type="NUMBER(5, 1)"/>
+            <column name="DELETED" type="VARCHAR2(1 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED" type="TIMESTAMP(6)"/>
+            <column name="MODIFIED" type="TIMESTAMP(6)"/>
+            <column name="LK" type="VARCHAR2(4000 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-35">
+        <addUniqueConstraint columnNames="LK" constraintName="COMPONENT_UNIQUE_LK" tableName="COMPONENT"/>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-55">
+        <addForeignKeyConstraint baseColumnNames="PART_ID" baseTableName="COMPONENT" constraintName="COMPONENT_FK_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="PART" validate="true"/>
+    </changeSet>
+
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-8">
+        <createTable tableName="COMPONENT_HISTORY">
+            <column name="ID" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPONENT_HISTORY"/>
+            </column>
+            <column name="VERSION" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(64 BYTE)"/>
+            <column name="DESCRIPTION" type="VARCHAR2(256 BYTE)"/>
+            <column name="PART_ID" type="bigint"/>
+            <column name="WORK_PERFORMED" type="VARCHAR2(256 BYTE)"/>
+            <column name="DATE_PERFORMED" type="date"/>
+            <column name="HOURS_PERFORMED" type="NUMBER(5, 1)"/>
+            <column name="DATE_DUE" type="date"/>
+            <column name="HOURS_DUE" type="NUMBER(5, 1)"/>
+            <column name="CREATED" type="TIMESTAMP(6)"/>
+            <column name="MODIFIED" type="TIMESTAMP(6)"/>
+            <column name="LK" type="VARCHAR2(4000 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-33">
+        <addUniqueConstraint columnNames="LK" constraintName="COMPONENT_HISTORY_UNIQUE_LK" tableName="COMPONENT_HISTORY"/>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-56">
+        <addForeignKeyConstraint baseColumnNames="PART_ID" baseTableName="COMPONENT_HISTORY" constraintName="COMPONENT_HISTORY_FK_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="PART" validate="true"/>
+    </changeSet>
+
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-29">
+        <createTable tableName="COMPONENT_COMPONENT_HISTORY">
+            <column name="COMPONENT_ID" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPONENT_COMPONENT_HISTORY"/>
+            </column>
+            <column name="COMPONENT_HISTORY_ID" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COMPONENT_COMPONENT_HISTORY"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-53">
+        <addForeignKeyConstraint baseColumnNames="COMPONENT_ID" baseTableName="COMPONENT_COMPONENT_HISTORY" constraintName="COMPONENT_COMPONENT_HIST_FK_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="COMPONENT" validate="true"/>
+    </changeSet>
+    <changeSet author="Tarif Halabi (generated)" id="1737732842610-54">
+        <addForeignKeyConstraint baseColumnNames="COMPONENT_HISTORY_ID" baseTableName="COMPONENT_COMPONENT_HISTORY" constraintName="COMPONENT_COMPONENT_HIST_FK_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="COMPONENT_HISTORY" validate="true"/>
+    </changeSet>
+
+    <changeSet id="component_and_history_v" author="Tarif Halabi">
+	    <preConditions onFail="CONTINUE" onFailMessage="DBMS type is not postgresql. View not created.">
+	        <dbms type="postgresql" />
+	    </preConditions>
+    	<createView viewName="component_and_history_v" replaceIfExists="true">
+			<![CDATA[
+			select row_number() over() id, t.* from (
+				select ch.name component_name, ch.description component_description, p.name part_name, p.description part_description, ch.work_performed, ch.date_performed, ch.hours_performed, ch.date_due, ch.hours_due from component ch join part p on ch.part_id=p.id 
+				union
+				select ch.name component_name, ch.description component_description, p.name part_name, p.description part_description, ch.work_performed, ch.date_performed, ch.hours_performed, ch.date_due, ch.hours_due from component_history ch join part p on ch.part_id=p.id
+				) t
+			]]>    
+		</createView>
+    </changeSet>
+
+</databaseChangeLog>
