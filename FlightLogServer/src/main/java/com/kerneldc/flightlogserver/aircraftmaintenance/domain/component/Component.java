@@ -16,7 +16,6 @@ import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -37,7 +36,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@SequenceGenerator(name = "default_seq_gen", sequenceName = "component_seq", allocationSize = 1)
+//@SequenceGenerator(name = "default_seq_gen", sequenceName = "component_seq", allocationSize = 1)
 @NamedEntityGraph(
 	name = "componentPartGraph",
 	attributeNodes = @NamedAttributeNode(value = "part")
