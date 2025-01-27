@@ -4,7 +4,6 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +35,6 @@ public class ComponentController {
 
     private final ComponentPersistenceService componentPersistenceService;
     
-    @Transactional
     @PostMapping("/add")
     public ResponseEntity<String> add(@Valid @RequestBody ComponentRequest componentRequest) throws ApplicationException {
     	LOGGER.debug("addComponentRequest: {}", componentRequest);
@@ -44,14 +42,12 @@ public class ComponentController {
     	return ResponseEntity.ok(StringUtils.EMPTY);
     }
 
-    @Transactional
     @PutMapping("/modifyComponentAndHistory")
     public ResponseEntity<String> modifyComponentAndHistory(@Valid @RequestBody ComponentRequest componentRequest) throws ApplicationException, IllegalAccessException, InvocationTargetException {
     	componentPersistenceService.updateComponentAndHistory(componentRequest);
     	return ResponseEntity.ok(StringUtils.EMPTY);
     }
     
-    @Transactional
     @DeleteMapping("/delete")
     public ResponseEntity<String> delete(@RequestParam(value = "componentUri") String componentUri, @RequestParam(value = "deleteHistoryRecords") Boolean deleteHistoryRecords) throws ApplicationException {
     	LOGGER.debug("componentUri: {}, deleteHistoryRecords: {}", deleteHistoryRecords, deleteHistoryRecords);

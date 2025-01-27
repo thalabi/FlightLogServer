@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,9 +29,11 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.repository.PartRepositor
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 
 import liquibase.repackaged.org.apache.commons.lang3.BooleanUtils;
+import lombok.RequiredArgsConstructor;
 
 
 @Service
+@RequiredArgsConstructor
 public class ComponentPersistenceService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -37,13 +41,14 @@ public class ComponentPersistenceService {
 	private static final UriTemplate COMPONENT_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/protected/data-rest/components/{id}");
 	private static final UriTemplate COMPONENT_HISTORY_URI_TEMPLATE = new UriTemplate("{protocol}://{host}:{port}/protected/data-rest/componentHistories/{id}");
 
-	private PartRepository partRepository;
-	private ComponentRepository componentRepository;
-	public ComponentPersistenceService(PartRepository partRepository, ComponentRepository componentRepository) {
-		this.partRepository = partRepository;
-		this.componentRepository = componentRepository;
-	}
+	private final PartRepository partRepository;
+	private final ComponentRepository componentRepository;
+//	public ComponentPersistenceService(PartRepository partRepository, ComponentRepository componentRepository) {
+//		this.partRepository = partRepository;
+//		this.componentRepository = componentRepository;
+//	}
 
+    @Transactional
 	public void updateComponentAndHistory(ComponentRequest componentRequest)
 			throws ApplicationException {
     	
@@ -104,6 +109,7 @@ public class ComponentPersistenceService {
 		componentRepository.save(component);
 	}
 
+    @Transactional
 	public void addComponent(ComponentRequest componentRequest) throws ApplicationException {
 		Part part = parseAndFindPart(componentRequest.getPartUri());
     	 
@@ -115,6 +121,7 @@ public class ComponentPersistenceService {
     	LOGGER.info("component: {}", component);
 	}
 
+    @Transactional
 	public void deleteComponentAndHistory(String componentUri, Boolean deleteHistoryRecords)
 			throws ApplicationException {
 		Component component = parseAndFindComponent(componentUri);
