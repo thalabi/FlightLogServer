@@ -16,13 +16,12 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.kerneldc.flightlogserver.batch.bean.JobExecutionBean;
 import com.kerneldc.flightlogserver.batch.bean.StepExecutionBean;
 import com.kerneldc.flightlogserver.batch.util.JobUtil;
 
-@Service
+//@Service
 public class JobExecutionService {
 
     @Autowired

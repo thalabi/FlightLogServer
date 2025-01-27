@@ -12,16 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.kerneldc.flightlogserver.batch.bean.TriggerStatus;
 import com.kerneldc.flightlogserver.batch.util.ReplicationUtil;
 import com.kerneldc.flightlogserver.domain.EntityEnum;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 
-@RestController
-@RequestMapping("/protected/replicationController")
+//@RestController
+//@RequestMapping("/protected/replicationController")
 public class ReplicationController {
 	
 	@Autowired

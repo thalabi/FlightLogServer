@@ -4,11 +4,10 @@ import org.springframework.batch.core.Job;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
 import com.kerneldc.flightlogserver.batch.JobEnum;
 
-@Component
+//@Component
 public class JobUtil {
 
     @Autowired

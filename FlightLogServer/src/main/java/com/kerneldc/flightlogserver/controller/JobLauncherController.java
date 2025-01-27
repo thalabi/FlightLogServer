@@ -6,15 +6,13 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.kerneldc.flightlogserver.batch.JobEnum;
 import com.kerneldc.flightlogserver.batch.JobExecutionService;
 import com.kerneldc.flightlogserver.batch.bean.JobExecutionBean;
 
-@RestController
-@RequestMapping("/protected/jobLauncherController")
+//@RestController
+//@RequestMapping("/protected/jobLauncherController")
 public class JobLauncherController {
 
 	@Autowired
