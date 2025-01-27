@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 import lombok.extern.slf4j.Slf4j;
-import oracle.jdbc.OracleDatabaseException;
 
 @ControllerAdvice
 @Slf4j
@@ -25,7 +24,8 @@ public class RestControllerExceptionHandler /*extends ResponseEntityExceptionHan
 		illegalArgumentException.printStackTrace();
 
 		LOGGER.info(LOG_MESSAGE_PREFIX + "handleIllegalArgumentException()");
-		return new ResponseEntity<>(new ErrorBody(illegalArgumentException.getMessage(), ExceptionUtils.getStackTrace(illegalArgumentException)), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ErrorBody(illegalArgumentException.getMessage(),
+				ExceptionUtils.getStackTrace(illegalArgumentException)), HttpStatus.BAD_REQUEST);
 	}
 	@ExceptionHandler(ApplicationException.class)
 	protected ResponseEntity<ErrorBody> handleApplicationException(ApplicationException applicationException) {
@@ -42,17 +42,17 @@ public class RestControllerExceptionHandler /*extends ResponseEntityExceptionHan
 
 		LOGGER.info(LOG_MESSAGE_PREFIX + "handleSqlException()");
 		ErrorBody eb;
-		if (sqlException.getCause() instanceof OracleDatabaseException oracleDatabaseException) {
-			//enrichSqlExceptionBean(exceptionBean, (OracleDatabaseException)sqlException.getCause());
-			eb = new ErrorBody(String.join(MESSAGE_SEPERATOR, 
-					sqlException.getMessage(),
-					"OracleErrorNumber: " + oracleDatabaseException.getOracleErrorNumber()+"",
-					"OracleSqlMessage: " + oracleDatabaseException.getMessage(),
-					"OriginalSqlStatement: " + oracleDatabaseException.getOriginalSql(),
-					"SqlStatement" + oracleDatabaseException.getSql()), ExceptionUtils.getStackTrace(sqlException));
-		} else {
+//		if (sqlException.getCause() instanceof OracleDatabaseException oracleDatabaseException) {
+//			//enrichSqlExceptionBean(exceptionBean, (OracleDatabaseException)sqlException.getCause());
+//			eb = new ErrorBody(String.join(MESSAGE_SEPERATOR, 
+//					sqlException.getMessage(),
+//					"OracleErrorNumber: " + oracleDatabaseException.getOracleErrorNumber()+"",
+//					"OracleSqlMessage: " + oracleDatabaseException.getMessage(),
+//					"OriginalSqlStatement: " + oracleDatabaseException.getOriginalSql(),
+//					"SqlStatement" + oracleDatabaseException.getSql()), ExceptionUtils.getStackTrace(sqlException));
+//		} else {
 			eb = new ErrorBody(sqlException.getMessage(), ExceptionUtils.getStackTrace(sqlException));			
-		}
+//		}
 		//return handleExceptionInternal(sqlException, exceptionBean, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 		return new ResponseEntity<>(eb, HttpStatus.INTERNAL_SERVER_ERROR);
 		//return null;
@@ -65,7 +65,9 @@ public class RestControllerExceptionHandler /*extends ResponseEntityExceptionHan
 //		return handleExceptionInternal(nullPointerException, exceptionBean, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 
 		LOGGER.info(LOG_MESSAGE_PREFIX + "handleNullPointerException()");
-		return new ResponseEntity<>(new ErrorBody(nullPointerException.getMessage(), ExceptionUtils.getStackTrace(nullPointerException)), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(
+				new ErrorBody(nullPointerException.getMessage(), ExceptionUtils.getStackTrace(nullPointerException)),
+				HttpStatus.BAD_REQUEST);
 	}
 
 //	@Override
@@ -89,7 +91,7 @@ public class RestControllerExceptionHandler /*extends ResponseEntityExceptionHan
 	protected ResponseEntity<ErrorBody> handleRuntimeException(RuntimeException runtimeException) {
 		runtimeException.printStackTrace();
 
-		LOGGER.info(LOG_MESSAGE_PREFIX + "handleNullPointerException()");
+		LOGGER.info(LOG_MESSAGE_PREFIX + "handleRuntimeException()");
 		return new ResponseEntity<>(
 				new ErrorBody(runtimeException.getMessage(), ExceptionUtils.getStackTrace(runtimeException)),
 				HttpStatus.INTERNAL_SERVER_ERROR);
