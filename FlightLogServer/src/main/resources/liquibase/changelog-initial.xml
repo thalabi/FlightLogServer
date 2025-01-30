@@ -72,15 +72,16 @@
             <column name="LK" type="VARCHAR2(4000 BYTE)"/>
         </createTable>
     </changeSet>
+    <changeSet author="Tarif Halabi" id="airport_UNIQUE_LK">
+        <addUniqueConstraint columnNames="LK" constraintName="AIRPORT_UNIQUE_LK" tableName="airport"/>
+    </changeSet>
     <changeSet author="Tarif Halabi (generated)" id="1737732842610-31">
         <addUniqueConstraint columnNames="IDENTIFIER" constraintName="AIRPORT_IDX_1" tableName="AIRPORT"/>
     </changeSet>
 
     <changeSet author="Tarif Halabi (generated)" id="1737732842610-28">
         <createTable tableName="AIRPORT_ENRICHMENT">
-            <column name="ID" type="bigint">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_AIRPORT_ENRICHMENT"/>
-            </column>
+            <column name="ID" type="bigint"/>
             <column name="IDENT" type="VARCHAR2(16 BYTE)"/>
             <column name="TYPE" type="VARCHAR2(32 BYTE)"/>
             <column name="NAME" type="VARCHAR2(128 BYTE)"/>
@@ -100,10 +101,6 @@
             <column name="KEYWORDS" type="VARCHAR2(512 BYTE)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Tarif Halabi (generated)" id="1737732842610-39">
-        <addUniqueConstraint columnNames="IDENT" constraintName="IDX_1_AIRPORT_ENRICHMENT" tableName="AIRPORT_ENRICHMENT"/>
-    </changeSet>
-
 
     <changeSet author="Tarif Halabi (generated)" id="1737732842610-4">
         <createTable tableName="MAKE_MODEL">
