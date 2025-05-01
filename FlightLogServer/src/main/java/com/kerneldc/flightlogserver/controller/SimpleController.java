@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kerneldc.flightlogserver.domain.pilot.Pilot;
 import com.kerneldc.flightlogserver.repository.PilotRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/protected/simpleController")
+@RequiredArgsConstructor
 public class SimpleController {
 
-	private PilotRepository pilotRepository;
-	
-    public SimpleController(PilotRepository repository) {
-        this.pilotRepository = repository;
-    }
+	private final PilotRepository pilotRepository;
 
     @GetMapping("/findAll")
 	public List<Pilot> findAll() {
     	return pilotRepository.findAll();
     }
+    
 }

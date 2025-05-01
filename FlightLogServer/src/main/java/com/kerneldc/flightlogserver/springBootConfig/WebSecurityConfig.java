@@ -88,7 +88,7 @@ public class WebSecurityConfig {
 	private void defineHttpAuthorizedRequests(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 				// spring security 5.6
-				.antMatchers("/appInfoController/getBuildInfo", "/appInfoController/*", "/pingController/*", "/actuator/*").permitAll()
+				.antMatchers("/appInfoController/getBuildInfo", "/appInfoController/*", "/pingController/*", "/externalAirportController/*", "/actuator/*").permitAll()
 				.antMatchers("/protected/securityController/getUserInfo").authenticated()
 				.antMatchers(HttpMethod.GET, "/protected/simpleController/findAll").hasAuthority(AUTHORITY_PREFIX + "pilot" + READ_TABLE_SUFFIX)
 				// spring security 6.1
