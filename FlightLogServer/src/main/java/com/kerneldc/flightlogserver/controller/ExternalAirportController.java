@@ -13,7 +13,7 @@ import com.kerneldc.flightlogserver.repository.AirportRepository;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/externalAirportController")
+@RequestMapping("/protected/externalAirportController")
 @RequiredArgsConstructor
 public class ExternalAirportController {
 
