@@ -1,0 +1,56 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+	<changeSet author="Tarif Halabi" id="flight-log-pending-create-table">
+		<createTable tableName="flight_log_pending">
+			<column name="id" type="bigserial">
+				<constraints nullable="false" primaryKey="true"
+					primaryKeyName="pk" />
+			</column>
+			<column name="lk" type="varchar(4000)">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="flight_date" type="date">
+				<constraints nullable="false" />
+			</column>
+            <column name="route_from" type="varchar(4)">
+				<constraints nullable="false" />
+            </column>
+            <column name="route_to" type="varchar(4)">
+				<constraints nullable="false" />
+            </column>
+            <column name="flight_time" type="numeric(2, 1)">
+				<constraints nullable="false" />
+            </column>
+
+			<column name="registration" type="varchar(6)">
+				<constraints nullable="false" />
+			</column>
+			<column name="make_model" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			
+            <column name="created" type="timestamp(6)">
+				<constraints nullable="false" />
+			</column>
+            <column name="modified" type="timestamp(6)">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="version" type="bigint">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<addUniqueConstraint columnNames="lk" constraintName="lk"
+			tableName="flight_log_pending" />
+	</changeSet>
+</databaseChangeLog>

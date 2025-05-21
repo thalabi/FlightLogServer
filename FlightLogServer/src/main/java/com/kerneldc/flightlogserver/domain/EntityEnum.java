@@ -21,7 +21,8 @@ public enum EntityEnum {
 	PART("part", "part", "acm_bu_%s_%s_part"),
 	COMPONENT("component", "component", "acm_bu_%s_%s_component"),
 	COMPONENT_HISTORY("componentHistory", "component_history", "acm_bu_%s_%s_comp_hist"),
-	COMPONENT_COMPONENT_HISTORY("componentComponentHistory", "component_component_history", "acm_bu_%s_%s_c_c_h");
+	COMPONENT_COMPONENT_HISTORY("componentComponentHistory", "component_component_history", "acm_bu_%s_%s_c_c_h"),
+	FLIGHT_LOG_PENDING("flightLogPending", "flight_log_pending", null);
 	
 	@Getter
 	private String entityName;
