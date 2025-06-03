@@ -6,6 +6,7 @@ import com.google.common.base.Enums;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.component.Component;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.part.Part;
 import com.kerneldc.flightlogserver.domain.airport.Airport;
+import com.kerneldc.flightlogserver.domain.flightlogpending.FlightLogPending;
 import com.kerneldc.flightlogserver.domain.makeModel.MakeModel;
 import com.kerneldc.flightlogserver.domain.pilot.Pilot;
 import com.kerneldc.flightlogserver.domain.registration.Registration;
@@ -37,7 +38,7 @@ public enum FlightLogEntityEnum implements IEntityEnum {
 //	INSTRUMENT_BY_ACCOUNT_V(InstrumentByAccountV.class, true, new String[] {"TICKER_EXCHANGE", "INSTRUMENT_NAME", "QUANTITY", "ACCOUNT_NUMBER", "ACCOUNT_NAME"}),
 //	INSTRUMENT_DUE_V(InstrumentDueV.class, true, new String[] {}),
 //	FIXED_INCOME_AUDIT(FixedIncomeAudit.class, false, new String[] {}),
-	
+	FLIGHT_LOG_PENDING(FlightLogPending.class, false),
 	;
 
 	Class<? extends AbstractEntity> entity;

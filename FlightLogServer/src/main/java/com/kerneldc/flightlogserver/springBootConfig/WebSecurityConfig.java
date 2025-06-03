@@ -9,11 +9,17 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.DelegatingJwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.kerneldc.flightlogserver.domain.EntityEnum;
@@ -27,6 +33,10 @@ public class WebSecurityConfig {
 	
 	@Value("${application.security.disableSecurity:false}")
 	private boolean disableSecurity;
+	@Value("${application.security.actuator.username}")
+	private String actuatorUsername;
+	@Value("${application.security.actuator.password}")
+	private String actuatorPassword;
 
 	public static final String AUTHORITY_PREFIX = "ROLE_realm_";
 	public static final String READ_TABLE_SUFFIX = " read";
@@ -88,16 +98,18 @@ public class WebSecurityConfig {
 	private void defineHttpAuthorizedRequests(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 				// spring security 5.6
-				.antMatchers("/appInfoController/getBuildInfo", "/appInfoController/*", "/pingController/*", "/actuator/*").permitAll()
+				.antMatchers("/appInfoController/getBuildInfo", "/appInfoController/*", "/pingController/*").permitAll()
 				.antMatchers("/protected/securityController/getUserInfo", "/protected/externalAirportController/*").authenticated()
 				.antMatchers(HttpMethod.GET, "/protected/simpleController/findAll").hasAuthority(AUTHORITY_PREFIX + "pilot" + READ_TABLE_SUFFIX)
+				);
+		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
+				.antMatchers("/actuator/*").hasRole("ACTUATOR")).httpBasic();
 				// spring security 6.1
 				//.requestMatchers("/appInfoController/*", "/pingController/*", "/actuator/*").permitAll()
 				//.requestMatchers("/protected/securityController/getUserInfo").authenticated()
 		//.antMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll?tableName=flight_log_totals_v**")
-		//.antMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll*/**")
-				
-				);
+		//.antMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll*/**")				
+
 		for (EntityEnum entityEnum : EntityEnum.values()) {
 			var entityName = entityEnum.getEntityName();
 			var tableName = entityEnum.getTableName();
@@ -143,5 +155,21 @@ public class WebSecurityConfig {
 		
 		httpSecurity.authorizeHttpRequests().anyRequest().denyAll();
 	}
+
+	@Bean
+	public UserDetailsService userDetailsService() {
+	    UserDetails admin = User.withUsername(actuatorUsername)
+	        .password(passwordEncoder().encode(actuatorPassword))
+	        .roles("ACTUATOR")  // this adds ROLE_ADMIN
+	        .build();
+
+	    return new InMemoryUserDetailsManager(admin);
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+	    return new BCryptPasswordEncoder(); // or NoOpPasswordEncoder for testing only
+	}	
+	
 	
 }
