@@ -154,7 +154,7 @@ public class WebSecurityConfig {
 			.antMatchers(HttpMethod.GET, "/protected/aircraftMaintenancePrintController/*").hasAuthority(AUTHORITY_PREFIX + "component read"));
 		
 		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-				.antMatchers(HttpMethod.POST, "/protected/flightLogPendingController/addFlightLogPending/*").hasAuthority(AUTHORITY_PREFIX + "flight_log_pending write"));
+				.antMatchers(HttpMethod.POST, "/protected/flightLogPendingController/addFlightLogPending").hasAuthority(AUTHORITY_PREFIX + "flight_log_pending write"));
 
 		httpSecurity.authorizeHttpRequests().anyRequest().denyAll();
 	}
