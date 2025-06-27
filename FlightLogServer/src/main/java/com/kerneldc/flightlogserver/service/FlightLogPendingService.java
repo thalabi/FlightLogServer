@@ -2,8 +2,6 @@ package com.kerneldc.flightlogserver.service;
 
 import java.util.Map;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriTemplate;
 
@@ -11,6 +9,7 @@ import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
 import com.kerneldc.flightlogserver.repository.FlightLogPendingRepository;
 import com.kerneldc.flightlogserver.repository.FlightLogRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

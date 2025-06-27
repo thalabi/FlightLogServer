@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.hasSize;
 
 import java.util.List;
 
-import javax.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.EntityType;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;

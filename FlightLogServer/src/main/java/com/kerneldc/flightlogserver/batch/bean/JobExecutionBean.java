@@ -1,6 +1,6 @@
 package com.kerneldc.flightlogserver.batch.bean;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.Builder;
@@ -13,7 +13,7 @@ public class JobExecutionBean {
 
 	private String jobName;
 	private String jobExitStatus;
-	private Date startTime;
-	private Date endTime;
+	private LocalDateTime startTime;
+	private LocalDateTime endTime;
 	private List<StepExecutionBean> stepExecutionList;
 }

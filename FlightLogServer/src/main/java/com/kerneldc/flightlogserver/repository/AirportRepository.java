@@ -16,6 +16,9 @@ public interface AirportRepository extends BaseTableRepository<Airport, Long> {
 	
 	@Query(value = "select identifier from airport", nativeQuery = true)
 	List<String> getListOfIdentifiers();
+
+	@Query(value = "select identifier, name from airport", nativeQuery = true)
+	List<AirportIdentfierName> getListOfIdsAndNames();
 	
 	@Override
 	default IEntityEnum canHandle() {

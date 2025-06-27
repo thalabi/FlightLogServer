@@ -98,12 +98,12 @@ public class WebSecurityConfig {
 	private void defineHttpAuthorizedRequests(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 				// spring security 5.6
-				.antMatchers("/appInfoController/getBuildInfo", "/appInfoController/*", "/pingController/*").permitAll()
-				.antMatchers("/protected/securityController/getUserInfo", "/protected/externalAirportController/*").authenticated()
-				.antMatchers(HttpMethod.GET, "/protected/simpleController/findAll").hasAuthority(AUTHORITY_PREFIX + "pilot" + READ_TABLE_SUFFIX)
+				.requestMatchers("/appInfoController/getBuildInfo", "/appInfoController/*", "/pingController/*").permitAll()
+				.requestMatchers("/protected/securityController/getUserInfo", "/protected/externalAirportController/*").authenticated()
+				.requestMatchers(HttpMethod.GET, "/protected/simpleController/findAll").hasAuthority(AUTHORITY_PREFIX + "pilot" + READ_TABLE_SUFFIX)
 				);
 		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-				.antMatchers("/actuator/*").hasRole("ACTUATOR")).httpBasic();
+				.requestMatchers("/actuator/*").hasRole("ACTUATOR")).httpBasic();
 				// spring security 6.1
 				//.requestMatchers("/appInfoController/*", "/pingController/*", "/actuator/*").permitAll()
 				//.requestMatchers("/protected/securityController/getUserInfo").authenticated()
@@ -117,44 +117,46 @@ public class WebSecurityConfig {
 			LOGGER.info("entityName: [{}], tableName: [{}], tableAuthorityPrefix: [{}]", entityName, tableName, tableAuthorityPrefix);
 			httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 					
-					.regexMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll\\?tableName="+tableName+".*")
+//					.regexMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll\\?tableName="+tableName+".*")
+					.requestMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll\\?tableName="+tableName+".*")
 						.hasAuthority(AUTHORITY_PREFIX+tableName+READ_TABLE_SUFFIX)
-					.regexMatchers(HttpMethod.GET, "/protected/genericEntityController/countAll\\?tableName="+tableName)
+//					.regexMatchers(HttpMethod.GET, "/protected/genericEntityController/countAll\\?tableName="+tableName)
+					.requestMatchers(HttpMethod.GET, "/protected/genericEntityController/countAll\\?tableName="+tableName)
 						.hasAuthority(AUTHORITY_PREFIX+tableName+READ_TABLE_SUFFIX)
 
 					
-					.antMatchers(HttpMethod.GET, "/protected/"+entityName+"Controller/findAll/**").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
+					.requestMatchers(HttpMethod.GET, "/protected/"+entityName+"Controller/findAll/**").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
 		            
-		            .antMatchers(HttpMethod.GET, "/protected/"+entityName+"Controller/count").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
-		            .antMatchers(HttpMethod.GET, "/protected/data-rest/"+entityName+"s").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
-		            .antMatchers(HttpMethod.GET, "/protected/data-rest/"+entityName+"s/**").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
+		            .requestMatchers(HttpMethod.GET, "/protected/"+entityName+"Controller/count").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
+		            .requestMatchers(HttpMethod.GET, "/protected/data-rest/"+entityName+"s").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
+		            .requestMatchers(HttpMethod.GET, "/protected/data-rest/"+entityName+"s/**").hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
 		            
-		            .antMatchers(HttpMethod.POST, "/protected/data-rest/"+entityName+"s").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
+		            .requestMatchers(HttpMethod.POST, "/protected/data-rest/"+entityName+"s").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
 //		            .antMatchers(HttpMethod.PUT, "/protected/data-rest/"+entityName+"s/**").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
-		            .antMatchers(HttpMethod.PATCH, "/protected/data-rest/"+entityName+"s/**").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
-		            .antMatchers(HttpMethod.DELETE, "/protected/data-rest/"+entityName+"s/**").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
+		            .requestMatchers(HttpMethod.PATCH, "/protected/data-rest/"+entityName+"s/**").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
+		            .requestMatchers(HttpMethod.DELETE, "/protected/data-rest/"+entityName+"s/**").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
 
-		            .antMatchers(HttpMethod.POST, "/protected/"+entityName+"Controller/add").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
-		            .antMatchers(HttpMethod.PUT, "/protected/"+entityName+"Controller/modify*").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
-		            .antMatchers(HttpMethod.DELETE, "/protected/"+entityName+"Controller/delete").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
+		            .requestMatchers(HttpMethod.POST, "/protected/"+entityName+"Controller/add").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
+		            .requestMatchers(HttpMethod.PUT, "/protected/"+entityName+"Controller/modify*").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
+		            .requestMatchers(HttpMethod.DELETE, "/protected/"+entityName+"Controller/delete").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
 
-		            .antMatchers(HttpMethod.GET, "/protected/replicationController/getTableReplicationStatus/"+entityName).hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
-		            .antMatchers(HttpMethod.PUT, "/protected/replicationController/setTableReplicationStatus/"+entityName).hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
-		            .antMatchers(HttpMethod.GET, "/protected/jobLauncherController/copy"+StringUtils.capitalize(entityName+"Table")).hasAuthority(tableAuthorityPrefix+" sync")
+		            .requestMatchers(HttpMethod.GET, "/protected/replicationController/getTableReplicationStatus/"+entityName).hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
+		            .requestMatchers(HttpMethod.PUT, "/protected/replicationController/setTableReplicationStatus/"+entityName).hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
+		            .requestMatchers(HttpMethod.GET, "/protected/jobLauncherController/copy"+StringUtils.capitalize(entityName+"Table")).hasAuthority(tableAuthorityPrefix+" sync")
 		            );
 		}
 		
 		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-				.antMatchers(HttpMethod.GET, "/protected/data-rest/flightLogMonthlyTotalVs/**",
+				.requestMatchers(HttpMethod.GET, "/protected/data-rest/flightLogMonthlyTotalVs/**",
 						"/protected/data-rest/flightLogYearlyTotalVs/**",
 						"/protected/data-rest/flightLogLastXDaysTotalVs/**")
 				.hasAuthority(AUTHORITY_PREFIX + "summary"));
 
 		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-			.antMatchers(HttpMethod.GET, "/protected/aircraftMaintenancePrintController/*").hasAuthority(AUTHORITY_PREFIX + "component read"));
+			.requestMatchers(HttpMethod.GET, "/protected/aircraftMaintenancePrintController/*").hasAuthority(AUTHORITY_PREFIX + "component read"));
 		
 		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-				.antMatchers(HttpMethod.POST, "/protected/flightLogPendingController/addFlightLogPending").hasAuthority(AUTHORITY_PREFIX + "flight_log_pending write"));
+				.requestMatchers(HttpMethod.POST, "/protected/flightLogPendingController/addFlightLogPending").hasAuthority(AUTHORITY_PREFIX + "flight_log_pending write"));
 
 		httpSecurity.authorizeHttpRequests().anyRequest().denyAll();
 	}

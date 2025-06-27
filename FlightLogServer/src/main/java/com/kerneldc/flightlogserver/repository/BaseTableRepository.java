@@ -3,12 +3,12 @@ package com.kerneldc.flightlogserver.repository;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.data.repository.NoRepositoryBean;
 
 import com.kerneldc.flightlogserver.domain.AbstractPersistableEntity;
 import com.kerneldc.flightlogserver.domain.LogicalKeyHolder;
+
+import jakarta.transaction.Transactional;
 
 @NoRepositoryBean
 public interface BaseTableRepository<T extends AbstractPersistableEntity, ID extends Serializable> extends BaseEntityRepository<T, ID> {	

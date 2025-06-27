@@ -46,14 +46,17 @@ public class JobExecutionService {
 
 	private JobExecutionBean getJobExecutionBean(JobExecution jobExecution) {
 
-		JobExecutionBean jobExecutionBean = JobExecutionBean.builder().jobName(jobExecution.getJobInstance().getJobName()).jobExitStatus(jobExecution.getExitStatus().getExitCode()).stepExecutionList(new ArrayList<>())
-				.startTime(jobExecution.getStartTime()).endTime(jobExecution.getEndTime())
-				.build();
+		JobExecutionBean jobExecutionBean = JobExecutionBean.builder()
+				.jobName(jobExecution.getJobInstance().getJobName())
+				.jobExitStatus(jobExecution.getExitStatus().getExitCode()).stepExecutionList(new ArrayList<>())
+				.startTime(jobExecution.getStartTime()).endTime(jobExecution.getEndTime()).build();
         Collection<StepExecution> stepExecutions = jobExecution.getStepExecutions();
         for (StepExecution stepExecution: stepExecutions) {
-        	StepExecutionBean stepExecutionBean = StepExecutionBean.builder().stepName(stepExecution.getStepName()).stepExitStatus(stepExecution.getExitStatus().getExitCode())
-        			.readCount(stepExecution.getReadCount()).readSkipCount(stepExecution.getReadSkipCount()).writeCount(stepExecution.getWriteCount()).writeSkipCount(stepExecution.getWriteSkipCount())
-        			.startTime(stepExecution.getStartTime()).endTime(stepExecution.getStartTime()).failureExceptionList(new ArrayList<>()).build();
+			StepExecutionBean stepExecutionBean = StepExecutionBean.builder().stepName(stepExecution.getStepName())
+					.stepExitStatus(stepExecution.getExitStatus().getExitCode()).readCount((int) stepExecution.getReadCount())
+					.readSkipCount((int) stepExecution.getReadSkipCount()).writeCount((int) stepExecution.getWriteCount())
+					.writeSkipCount((int) stepExecution.getWriteSkipCount()).startTime(stepExecution.getStartTime())
+					.endTime(stepExecution.getStartTime()).failureExceptionList(new ArrayList<>()).build();
         	stepExecution.getStartTime();
 //        	if (! /* not */ stepExecution.getExitStatus().equals(ExitStatus.COMPLETED)) {
         		List<String> failureExceptionList = stepExecutionBean.getFailureExceptionList();

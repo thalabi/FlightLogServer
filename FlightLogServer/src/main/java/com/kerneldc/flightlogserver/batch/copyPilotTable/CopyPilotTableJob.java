@@ -4,9 +4,10 @@ import javax.sql.DataSource;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
@@ -15,7 +16,6 @@ import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuild
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 
 import com.kerneldc.flightlogserver.batch.tasklet.AfterCopyTableTasklet;
 import com.kerneldc.flightlogserver.batch.tasklet.BeforeCopyTableTasklet;
@@ -33,13 +33,15 @@ public class CopyPilotTableJob {
 	@Qualifier("outputDataSource")
 	public DataSource outputDataSource;
 	
-    @Autowired
-    @Lazy
-    public JobBuilderFactory jobBuilderFactory;
-
-    @Autowired
-    @Lazy
-    public StepBuilderFactory stepBuilderFactory;
+	@Autowired
+	private JobRepository jobRepository;
+//    @Autowired
+//    @Lazy
+//    public JobBuilderFactory jobBuilderFactory;
+//
+//    @Autowired
+//    @Lazy
+//    public StepBuilderFactory stepBuilderFactory;
     
     //
     // pilot
@@ -66,7 +68,7 @@ public class CopyPilotTableJob {
 // tag::jobstep[]
     @Bean
     public Job copyPilotTable(Step pilotTableStep1, Step pilotTableStep2, Step pilotTableStep3) {
-        return jobBuilderFactory.get("copyPilotTable")
+        return new JobBuilder("copyPilotTable", jobRepository)
             .incrementer(new RunIdIncrementer())
             .start(pilotTableStep1)
             .next(pilotTableStep2)
@@ -76,14 +78,14 @@ public class CopyPilotTableJob {
     
     @Bean
     public Step pilotTableStep1() {
-        return stepBuilderFactory.get("pilotTableStep1")
+        return new StepBuilder("pilotTableStep1", jobRepository)
         	.tasklet(new BeforeCopyTableTasklet(outputDataSource, "pilot"))
             .build();
     }
 
     @Bean
     public Step pilotTableStep2(JdbcCursorItemReader<Pilot> pilotReader, JdbcBatchItemWriter<Pilot> pilotWriter) {
-        return stepBuilderFactory.get("pilotTableStep2")
+        return new StepBuilder("pilotTableStep2", jobRepository)
             .<Pilot, Pilot> chunk(10)
             .reader(pilotReader)
             .processor(new PilotItemProcessor())
@@ -93,7 +95,7 @@ public class CopyPilotTableJob {
 
     @Bean
     public Step pilotTableStep3() {
-        return stepBuilderFactory.get("pilotTableStep3")
+        return new StepBuilder("pilotTableStep3", jobRepository)
         	.tasklet(new AfterCopyTableTasklet(outputDataSource, "pilot"))
             .build();
     }

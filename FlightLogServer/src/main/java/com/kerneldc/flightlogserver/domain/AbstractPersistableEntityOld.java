@@ -2,9 +2,9 @@ package com.kerneldc.flightlogserver.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Version;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

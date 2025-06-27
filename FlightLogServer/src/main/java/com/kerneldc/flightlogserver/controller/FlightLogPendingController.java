@@ -1,7 +1,6 @@
 package com.kerneldc.flightlogserver.controller;
 
-import javax.validation.Valid;
-
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kerneldc.flightlogserver.service.FlightLogPendingService;
 import com.kerneldc.flightlogserver.service.FlightLogPendingService.FlightLogPendingAddRequest;
 
-import liquibase.repackaged.org.apache.commons.lang3.StringUtils;
+import jakarta.validation.Valid;
+//import liquibase.repackaged.org.apache.commons.lang3.StringUtils;
 import lombok.RequiredArgsConstructor;
 
 @RestController

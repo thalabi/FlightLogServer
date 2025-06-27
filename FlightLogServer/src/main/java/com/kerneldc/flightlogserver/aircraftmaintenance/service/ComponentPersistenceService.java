@@ -8,9 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.transaction.Transactional;
-
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,8 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepo
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.PartRepository;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 
-import liquibase.repackaged.org.apache.commons.lang3.BooleanUtils;
+import jakarta.transaction.Transactional;
+//import liquibase.repackaged.org.apache.commons.lang3.BooleanUtils;
 import lombok.RequiredArgsConstructor;
 
 

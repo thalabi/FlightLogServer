@@ -4,9 +4,10 @@ import javax.sql.DataSource;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
@@ -15,7 +16,6 @@ import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuild
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 
 import com.kerneldc.flightlogserver.batch.tasklet.AfterCopyTableTasklet;
 import com.kerneldc.flightlogserver.batch.tasklet.BeforeCopyTableTasklet;
@@ -33,13 +33,15 @@ public class CopySignificantEventTableJob {
 	@Qualifier("outputDataSource")
 	public DataSource outputDataSource;
 	
-    @Autowired
-    @Lazy
-    public JobBuilderFactory jobBuilderFactory;
-
-    @Autowired
-    @Lazy
-    public StepBuilderFactory stepBuilderFactory;
+	@Autowired
+	private JobRepository jobRepository;
+//    @Autowired
+//    @Lazy
+//    public JobBuilderFactory jobBuilderFactory;
+//
+//    @Autowired
+//    @Lazy
+//    public StepBuilderFactory stepBuilderFactory;
     
     //
     // significantEvent
@@ -66,7 +68,7 @@ public class CopySignificantEventTableJob {
 // tag::jobstep[]
     @Bean
     public Job copySignificantEventTable(Step significantEventTableStep1, Step significantEventTableStep2, Step significantEventTableStep3) {
-        return jobBuilderFactory.get("copySignificantEventTable")
+        return new JobBuilder("copySignificantEventTable", jobRepository)
             .incrementer(new RunIdIncrementer())
             .start(significantEventTableStep1)
             .next(significantEventTableStep2)
@@ -76,14 +78,14 @@ public class CopySignificantEventTableJob {
     
     @Bean
     public Step significantEventTableStep1() {
-        return stepBuilderFactory.get("significantEventTableStep1")
+        return new StepBuilder("significantEventTableStep1", jobRepository)
         	.tasklet(new BeforeCopyTableTasklet(outputDataSource, "significant_event"))
             .build();
     }
 
     @Bean
     public Step significantEventTableStep2(JdbcCursorItemReader<SignificantEvent> significantEventReader, JdbcBatchItemWriter<SignificantEvent> significantEventWriter) {
-        return stepBuilderFactory.get("significantEventTableStep2")
+        return new StepBuilder("significantEventTableStep2", jobRepository)
             .<SignificantEvent, SignificantEvent> chunk(10)
             .reader(significantEventReader)
             .processor(new SignificantEventItemProcessor())
@@ -93,7 +95,7 @@ public class CopySignificantEventTableJob {
 
     @Bean
     public Step significantEventTableStep3() {
-        return stepBuilderFactory.get("significantEventTableStep3")
+        return new StepBuilder("significantEventTableStep3", jobRepository)
         	.tasklet(new AfterCopyTableTasklet(outputDataSource, "significant_event"))
             .build();
     }

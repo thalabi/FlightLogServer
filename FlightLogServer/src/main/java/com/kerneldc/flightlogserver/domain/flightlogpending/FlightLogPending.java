@@ -2,9 +2,9 @@ package com.kerneldc.flightlogserver.domain.flightlogpending;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kerneldc.flightlogserver.domain.AbstractEntity;

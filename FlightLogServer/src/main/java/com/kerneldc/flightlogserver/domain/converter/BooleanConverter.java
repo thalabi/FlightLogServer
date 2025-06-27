@@ -2,11 +2,11 @@ package com.kerneldc.flightlogserver.domain.converter;
 
 import java.lang.invoke.MethodHandles;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
 public class BooleanConverter implements AttributeConverter<Boolean, Character> {

@@ -1,6 +1,6 @@
 package com.kerneldc.flightlogserver.batch.bean;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.Builder;
@@ -17,7 +17,7 @@ public class StepExecutionBean {
 	private Integer readSkipCount;
 	private Integer writeCount;
 	private Integer writeSkipCount;
-	private Date startTime;
-	private Date endTime;
+	private LocalDateTime startTime;
+	private LocalDateTime endTime;
 	private List<String> failureExceptionList;
 }
