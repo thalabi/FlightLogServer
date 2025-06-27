@@ -186,55 +186,36 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
+	      <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-compiler-plugin</artifactId>
+	        <configuration>
+	          <annotationProcessorPaths>
+	            <path>
+	              <groupId>org.projectlombok</groupId>
+	              <artifactId>lombok</artifactId>
+	            </path>
+	          </annotationProcessorPaths>
+	        </configuration>
+	      </plugin>
+	      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+					<!-- Make this jar executable -->
 					<executable>true</executable>
-				</configuration>
-			</plugin>
-
-<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>3.0.0-M1</version>
-				<configuration>
-					<tagBase>https://github.com/thalabi/FlightLogServer/releases</tagBase>
-				</configuration>
-			</plugin>
--->
-<!-- 		Added to resolve 'javadoc: error - class file for javax.interceptor.InterceptorBinding not found' error -->
-<!--
-	        <plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-javadoc-plugin</artifactId>
--->
-	            <!-- <version>3.0.0</version> -->
-<!--
-	            <configuration>
--->
-	                <!-- Silence error javax.interceptor.InterceptorBinding not found -->
-<!--
-	                <additionalDependencies>
-	                    <additionalDependency>
-	                        <groupId>javax.interceptor</groupId>
-	                        <artifactId>javax.interceptor-api</artifactId>
-	                        <version>1.2</version>
-	                    </additionalDependency>
-	                </additionalDependencies>
-	            </configuration>
-	        </plugin>
--->
-
+          <excludes>
+            <exclude>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+            </exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+	      
 		</plugins>
 	</build>
 	<distributionManagement>
-		<!-- <repository> -->
-		<!-- <id>localRepo</id> -->
-		<!-- <url>file:${deploy.folder}</url> -->
-		<!-- </repository> -->
-
 		<repository>
 			<id>kerneldc-nexus</id>
 			<name>Releases</name>
