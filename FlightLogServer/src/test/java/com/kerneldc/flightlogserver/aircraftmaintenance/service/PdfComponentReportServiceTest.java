@@ -7,7 +7,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Date;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
