@@ -1,3 +1,5 @@
+set ACTUATOR_PASSWORD=actuator
+set ACTUATOR_USERNAME=actuator
 set CORS_URLS_TO_ALLOW=https://localhost:4200,https://localhost:8081
 set ENC_INPUT_DB_PASSWORD=ENC(LBHmmfdFreYW7P/RKY5PnAkq72ECZeRFzq6ZaAYjW7v3GgJmhUjHEY/BQ9liYckK)
 set ENC_OUTPUT_DB_PASSWORD=ENC(Av8kemJmjXaR8iBuZxaJEwCkzkbxPmbXsGh4ZMjwOrc31P4ZYDw8w5/WkSyMhRma)
