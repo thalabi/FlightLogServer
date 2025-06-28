@@ -6,21 +6,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-//import javax.xml.transform.Result;
-//import javax.xml.transform.Source;
-//import javax.xml.transform.Transformer;
-//import javax.xml.transform.TransformerFactory;
-//import javax.xml.transform.sax.SAXResult;
-//import javax.xml.transform.stream.StreamSource;
-//import javax.xml.transform.Result;
-//import javax.xml.transform.Source;
-//import javax.xml.transform.Transformer;
-//import javax.xml.transform.TransformerFactory;
-//import javax.xml.transform.sax.SAXResult;
-//import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -37,6 +22,10 @@ import org.springframework.stereotype.Service;
 
 import com.kerneldc.flightlogserver.aircraftmaintenance.bean.ComponentAndHistoryVS;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 
 
 @Service
