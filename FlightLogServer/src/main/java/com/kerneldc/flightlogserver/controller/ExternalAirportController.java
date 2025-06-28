@@ -26,8 +26,8 @@ public class ExternalAirportController {
     }
 
 	@GetMapping("/getListOfAirportIdentifiersAndNames")
-	public ResponseEntity<List<AirportIdentfierName>> getListOfAirportIdentifiersAndNames() {
-		return ResponseEntity.ok(airportRepository.getListOfIdsAndNames());
+	public ResponseEntity<Map<String, List<AirportIdentfierName>>> getListOfAirportIdentifiersAndNames() {
+		return ResponseEntity.ok(Map.of("identifiersAndNames", airportRepository.getListOfIdsAndNames()));
     }
 
 }

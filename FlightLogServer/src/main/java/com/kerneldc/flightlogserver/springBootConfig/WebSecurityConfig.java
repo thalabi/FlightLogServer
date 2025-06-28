@@ -97,18 +97,12 @@ public class WebSecurityConfig {
 
 	private void defineHttpAuthorizedRequests(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-				// spring security 5.6
 				.requestMatchers("/appInfoController/getBuildInfo", "/appInfoController/*", "/pingController/*").permitAll()
 				.requestMatchers("/protected/securityController/getUserInfo", "/protected/externalAirportController/*").authenticated()
 				.requestMatchers(HttpMethod.GET, "/protected/simpleController/findAll").hasAuthority(AUTHORITY_PREFIX + "pilot" + READ_TABLE_SUFFIX)
 				);
 		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-				.requestMatchers("/actuator/*").hasRole("ACTUATOR")).httpBasic();
-				// spring security 6.1
-				//.requestMatchers("/appInfoController/*", "/pingController/*", "/actuator/*").permitAll()
-				//.requestMatchers("/protected/securityController/getUserInfo").authenticated()
-		//.antMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll?tableName=flight_log_totals_v**")
-		//.antMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll*/**")				
+				.requestMatchers("/actuator/*").hasRole("ACTUATOR")).httpBasic(Customizer.withDefaults());
 
 		for (EntityEnum entityEnum : EntityEnum.values()) {
 			var entityName = entityEnum.getEntityName();
@@ -117,11 +111,13 @@ public class WebSecurityConfig {
 			LOGGER.info("entityName: [{}], tableName: [{}], tableAuthorityPrefix: [{}]", entityName, tableName, tableAuthorityPrefix);
 			httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 					
-//					.regexMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll\\?tableName="+tableName+".*")
-					.requestMatchers(HttpMethod.GET, "/protected/genericEntityController/findAll\\?tableName="+tableName+".*")
-						.hasAuthority(AUTHORITY_PREFIX+tableName+READ_TABLE_SUFFIX)
-//					.regexMatchers(HttpMethod.GET, "/protected/genericEntityController/countAll\\?tableName="+tableName)
-					.requestMatchers(HttpMethod.GET, "/protected/genericEntityController/countAll\\?tableName="+tableName)
+					.requestMatchers(request -> HttpMethod.GET.toString().equals(request.getMethod()) &&
+							"/protected/genericEntityController/findAll".equals(request.getRequestURI()) &&
+							tableName.equals(request.getParameter("tableName")))
+							.hasAuthority(AUTHORITY_PREFIX+tableName+READ_TABLE_SUFFIX)
+					.requestMatchers(request -> HttpMethod.GET.toString().equals(request.getMethod()) &&
+							"/protected/genericEntityController/countAll".equals(request.getRequestURI()) &&
+							tableName.equals(request.getParameter("tableName")))
 						.hasAuthority(AUTHORITY_PREFIX+tableName+READ_TABLE_SUFFIX)
 
 					
@@ -158,7 +154,7 @@ public class WebSecurityConfig {
 		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 				.requestMatchers(HttpMethod.POST, "/protected/flightLogPendingController/addFlightLogPending").hasAuthority(AUTHORITY_PREFIX + "flight_log_pending write"));
 
-		httpSecurity.authorizeHttpRequests().anyRequest().denyAll();
+		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests.anyRequest().denyAll());
 	}
 
 	@Bean
