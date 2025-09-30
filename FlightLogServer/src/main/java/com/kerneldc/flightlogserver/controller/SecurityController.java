@@ -3,8 +3,10 @@ package com.kerneldc.flightlogserver.controller;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -25,16 +27,16 @@ public class SecurityController {
 
 	@GetMapping("/getUserInfo")
 	public UserInfo getUserInfo() {
-		if (SecurityContextHolder.getContext().getAuthentication() instanceof JwtAuthenticationToken jwtAuthenticationToken
-				&& jwtAuthenticationToken.getPrincipal() instanceof Jwt jwt) {
+		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Jwt) {
 			
+			var jwtAuthenticationToken= (JwtAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
 			LOGGER.info("jwtAuthenticationToken: {}" ,jwtAuthenticationToken);
 			LOGGER.info("jwtAuthenticationToken.name: {}" ,jwtAuthenticationToken.getName());
 			
-			//LOGGER.info("jwt id: {}, claims: {}", jwt.getId(), jwt.getClaims());
-			LOGGER.info("jwt id: {}, claims: ", jwt.getId());
+			var jwt = (Jwt)jwtAuthenticationToken.getPrincipal();
+			LOGGER.info("jwt id: {}, claims: {}", jwt.getId(), jwt.getClaims());
 			for (Entry<String, Object> entry : jwt.getClaims().entrySet()) {
-				LOGGER.info("\t{} = {}", entry.getKey(), entry.getValue());
+				LOGGER.debug("jwt, {} = {}", entry.getKey(), entry.getValue());
 				
 			}
 			Map<String, List<String>> realmAccess = jwt.getClaim("realm_access");
@@ -45,14 +47,19 @@ public class SecurityController {
 			var backEndAuthorities = authorities.stream().map(auth -> auth.getAuthority()).collect(Collectors.toList());
 			backEndAuthorities.sort(null);
 			
-			var userInfo = new UserInfo(jwt.getClaims().get("preferred_username").toString(),
-					jwt.getClaims().get("given_name").toString(), jwt.getClaims().get("family_name").toString(),
-					jwt.getClaims().get("email").toString(), roles, backEndAuthorities);
+			var userInfo = new UserInfo(getClaim(jwt, "preferred_username"),
+					getClaim(jwt, "given_name"), getClaim(jwt, "family_name"),
+					getClaim(jwt, "email"), roles, backEndAuthorities);
+			
 			LOGGER.info("userInfo: {}", userInfo);
 			
 			return userInfo;
 		} else {
 			return new UserInfo("", "","","", List.of(""), List.of(""));
 		}
+	}
+	
+	private String getClaim(Jwt jwt, String claimKey) {
+		return Objects.toString(jwt.getClaims().get(claimKey), StringUtils.EMPTY);
 	}
 }
