@@ -20,7 +20,7 @@ pipeline {
             steps {
                 sh '''
                 cd FlightLogServer
-                mvn clean package
+                mvn clean package -Djava.xml.config.file="src/main/resources/jaxp-strict.properties"
                 '''
             }
 			post {
