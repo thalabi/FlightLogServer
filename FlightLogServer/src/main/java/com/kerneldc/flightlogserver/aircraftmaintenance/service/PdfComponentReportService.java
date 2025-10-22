@@ -76,10 +76,11 @@ public class PdfComponentReportService {
 			Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, pdfByteArrayOutputStream);
 
 			// Setup XSLT
-			TransformerFactory factory = TransformerFactory.newInstance();
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			//factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			transformerFactory.setFeature("jdk.xml.enableExtensionFunctions", true); // Added for Java 25
 			
-			Transformer transformer = factory.newTransformer(new StreamSource(Thread.currentThread()
+			Transformer transformer = transformerFactory.newTransformer(new StreamSource(Thread.currentThread()
 					.getContextClassLoader().getResourceAsStream(xsltFile)));
 
 			// Set the value of a <param> in the stylesheet
