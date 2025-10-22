@@ -11,4 +11,4 @@ set OUTPUT_DB_URL=jdbc:oracle:thin:@192.168.2.5:1521:sr22
 set PORT=8441
 set spring.profiles.active=dev
 
-java -jar ..\..\..\target\FlightLogServer-2.1.2-SNAPSHOT.jar
+java -jar ..\..\..\target\FlightLogServer-2.2.0-SNAPSHOT.jar
