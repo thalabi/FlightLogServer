@@ -12,8 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Date;
 
-import jakarta.persistence.EntityManager;
-
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -23,11 +21,11 @@ import org.mockito.InOrder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -43,6 +41,8 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.service.ComponentPersist
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 import com.kerneldc.flightlogserver.springBootConfig.WebSecurityConfig;
 
+import jakarta.persistence.EntityManager;
+
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = ComponentController.class)
 @Import(WebSecurityConfig.class)
@@ -56,22 +56,22 @@ class ComponentControllerTest {
 	
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
+    @MockitoBean
     private JwtDecoder jwtDecoder;
     @Autowired
     private ObjectMapper objectMapper;
     
-	@MockBean
+	@MockitoBean
     private ComponentRepository componentRepository;
-	@MockBean
+	@MockitoBean
     private ComponentHistoryRepository componentHistoryRepository;
-	@MockBean
+	@MockitoBean
     private PartRepository partRepository;
-	@MockBean
+	@MockitoBean
 	private ComponentPersistenceService componentPersistenceService;
-	@MockBean
+	@MockitoBean
 	private ComponentModelAssembler componentModelAssembler;
-	@MockBean
+	@MockitoBean
 	private EntityManager entityManager;
 	
     
