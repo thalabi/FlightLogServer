@@ -8,17 +8,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import jakarta.persistence.metamodel.EntityType;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.kerneldc.flightlogserver.domain.AbstractEntity;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.metamodel.EntityType;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -74,7 +73,7 @@ public class EntitySpecification<T> implements Specification<T> {
 		if (filterList.isEmpty()) {
 			return Specification.where(null);
 		}
-		Specification<T> specification = Specification.where(createSpecification(filterList.get(0)));
+		Specification<T> specification = createSpecification(filterList.get(0));
 		for (int i = 1; i < filterList.size(); i++) {
 			specification = specification.and(createSpecification(filterList.get(i)));
 		}
