@@ -43,7 +43,8 @@ public class WebSecurityConfig {
 	public static final String WRITE_TABLE_SUFFIX = " write";
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, /* CorsConfigurationSource corsConfigurationSource, */ KeycloakJwtRolesConverter keycloakJwtRolesConverter) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, KeycloakJwtRolesConverter keycloakJwtRolesConverter)
+			throws Exception {
 
 		DelegatingJwtGrantedAuthoritiesConverter authoritiesConverter =
 				// Using the delegating converter multiple converters can be combined
@@ -57,25 +58,14 @@ public class WebSecurityConfig {
 		httpSecurity.oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> jwt
 		.jwtAuthenticationConverter(jwtConv -> new JwtAuthenticationToken(jwtConv, authoritiesConverter.convert(jwtConv), keycloakJwtRolesConverter.getUsername(jwtConv)))));
 
-		//return httpSecurity.authorizeRequests(authorizeRequests -> authorizeRequests.anyRequest().permitAll())
-				// .authorizeRequests(authorizeRequests ->
-				// authorizeRequests.anyRequest().authenticated())
-				// .authorizeRequests(authorizeRequests ->
-				// authorizeRequests.anyRequest().hasRole("kerneldc-realm-user-role"))
-				// .authorizeRequests(authorizeRequests ->
-				// authorizeRequests.anyRequest().hasRole("SCOPE_PROFILE"))
-
-//		httpSecurity.authorizeRequests()
-//		.mvcMatchers("/sandboxController/noBearerTokenPing", "/actuator/*").permitAll()
-//		.mvcMatchers("/protected/sandboxController/getUserInfo").hasRole("realm_sso-app-user-role")
-//		//.mvcMatchers("/noBearerTokenPing").hasRole("realm_sso2-app-admin-role")
-//		;
 		if (disableSecurity) {
 			LOGGER.warn("*** appliction security is currently disabled ***");
 			LOGGER.warn("*** to enable set application.security.disableSecurity to false ***");
 			httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests.anyRequest().permitAll());
 			// to allow h2 console to display using frames
-			httpSecurity.headers().frameOptions().sameOrigin();
+			httpSecurity.headers(headers -> headers
+	            .frameOptions(frameOptions -> frameOptions.sameOrigin())
+	        );
 		} else {
 			
 			defineHttpAuthorizedRequests(httpSecurity);
