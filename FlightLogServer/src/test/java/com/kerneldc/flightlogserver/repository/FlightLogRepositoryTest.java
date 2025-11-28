@@ -8,8 +8,6 @@ import static org.hamcrest.Matchers.hasSize;
 
 import java.util.List;
 
-import jakarta.persistence.metamodel.EntityType;
-
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.domain.flightLog.FlightLog;
-import com.kerneldc.flightlogserver.search.EntitySpecification;
+import com.kerneldc.searchspecification.EntitySpecification;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -49,8 +47,7 @@ class FlightLogRepositoryTest extends AbstractBaseTest {
 	void testFindAll_Registration_Success() {
 		FlightLog savedFlightLog = testEntityManager.persist(FLIGHT_LOG1);
 		
-		EntityType<FlightLog> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(FlightLog.class);
-		Specification<FlightLog> entitySpecification = new EntitySpecification<FlightLog>(entityMetamodel, "registration|Equals|GYAX");
+		Specification<FlightLog> entitySpecification = new EntitySpecification<>(FlightLog.class, "registration|Equals|GYAX");
 
 		List<FlightLog> results = flightLogRepository.findAll(entitySpecification);
 		assertThat(results, hasSize(1));
@@ -64,8 +61,7 @@ class FlightLogRepositoryTest extends AbstractBaseTest {
 		testEntityManager.persist(FLIGHT_LOG2);
 		FlightLog savedFlightLog = testEntityManager.persist(FLIGHT_LOG3);
 		
-		EntityType<FlightLog> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(FlightLog.class);
-		Specification<FlightLog> entitySpecification = new EntitySpecification<FlightLog>(entityMetamodel, "daySolo|GT|4,instrumentNoIfrAppr|equals|1");
+		Specification<FlightLog> entitySpecification = new EntitySpecification<>(FlightLog.class, "daySolo|GT|4,instrumentNoIfrAppr|equals|1");
 		
 		List<FlightLog> results = flightLogRepository.findAll(entitySpecification);
 		assertThat(results, hasSize(1));

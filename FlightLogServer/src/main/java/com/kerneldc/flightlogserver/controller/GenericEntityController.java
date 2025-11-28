@@ -1,10 +1,7 @@
 package com.kerneldc.flightlogserver.controller;
 
-import jakarta.persistence.EntityManager;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -19,8 +16,10 @@ import com.kerneldc.flightlogserver.domain.AbstractEntityModel;
 import com.kerneldc.flightlogserver.domain.EntityEnumUtilities;
 import com.kerneldc.flightlogserver.domain.IEntityEnum;
 import com.kerneldc.flightlogserver.repository.EntityRepositoryFactory;
-import com.kerneldc.flightlogserver.search.EntitySpecification;
+import com.kerneldc.searchspecification.EntitySpecification;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,9 +31,8 @@ public class GenericEntityController {
 
 	private final EntityRepositoryFactory<AbstractEntity, Long> entityRepositoryFactory;
 	private final EntityRepresentationModelAssemblerAdapter entityRepresentationModelAssemblerAdapter;
-	private final EntityManager entityManager;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping("/findAll")
 	public ResponseEntity<PagedModel<AbstractEntityModel>> findAll(
 			@RequestParam @NotBlank String tableName, @RequestParam String search,
@@ -47,14 +45,11 @@ public class GenericEntityController {
     	// Retrieve the repository with proper typing
     	var entityRepository = entityRepositoryFactory.getRepository(entityEnum);
     	
-    	// Retrieve entity metamodel with proper typing
-    	var entityMetamodel = entityManager.getMetamodel().entity(entityEnum.getEntity());
-    	
     	// Create a typed specification
-    	var entitySpecification = new EntitySpecification<AbstractEntity>(entityMetamodel, search);
+    	var entitySpecification = new EntitySpecification<>(entityEnum.getEntity(), search);
     	
     	// Perform the query
-		var page = entityRepository.findAll(entitySpecification, pageable);
+		var page = entityRepository.findAll((Specification)entitySpecification, pageable);
 		
 		// Build the PagedModel
         PagedModel<AbstractEntityModel> pagedModel;

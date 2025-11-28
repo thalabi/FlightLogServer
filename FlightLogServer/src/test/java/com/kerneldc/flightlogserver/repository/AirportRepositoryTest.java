@@ -8,8 +8,6 @@ import static org.hamcrest.Matchers.hasSize;
 
 import java.util.List;
 
-import jakarta.persistence.metamodel.EntityType;
-
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.kerneldc.flightlogserver.AbstractBaseTest;
 import com.kerneldc.flightlogserver.domain.airport.Airport;
-import com.kerneldc.flightlogserver.search.EntitySpecification;
+import com.kerneldc.searchspecification.EntitySpecification;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -103,9 +101,7 @@ class AirportRepositoryTest extends AbstractBaseTest {
 	void testFindAll_ByIdentifier_Success() {
 		Airport savedAirport = testEntityManager.persist(AIRPORT1);
 
-		EntityType<Airport> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(Airport.class);
-		
-		Specification<Airport> spec = new EntitySpecification<Airport>(entityMetamodel, "identifier|equals|CYOO");
+		Specification<Airport> spec = new EntitySpecification<>(Airport.class, "identifier|equals|CYOO");
 		List<Airport> results = airportRepository.findAll(spec);
 		assertThat(results, hasSize(1));
 		assertThat(results, hasItem(allOf(
@@ -117,9 +113,7 @@ class AirportRepositoryTest extends AbstractBaseTest {
 	void testFindAll_ByName_Success() {
 		Airport savedAirport = testEntityManager.persist(AIRPORT2);
 
-		EntityType<Airport> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(Airport.class);
-
-		Specification<Airport> spec = new EntitySpecification<Airport>(entityMetamodel, "name|equals|Peterborough Municipal Airport");
+		Specification<Airport> spec = new EntitySpecification<>(Airport.class, "name|equals|Peterborough Municipal Airport");
 		List<Airport> results = airportRepository.findAll(spec);
 		assertThat(results, hasSize(1));
 		assertThat(results, hasItem(allOf(
@@ -132,9 +126,7 @@ class AirportRepositoryTest extends AbstractBaseTest {
 		testEntityManager.persist(AIRPORT3);
 		testEntityManager.persist(AIRPORT4);
 
-		EntityType<Airport> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(Airport.class);
-
-		Specification<Airport> spec = new EntitySpecification<Airport>(entityMetamodel, "country|equals|Canada");
+		Specification<Airport> spec = new EntitySpecification<>(Airport.class, "country|equals|Canada");
 		List<Airport> results = airportRepository.findAll(spec);
 		assertThat(results, hasSize(2));
 	}
@@ -144,9 +136,7 @@ class AirportRepositoryTest extends AbstractBaseTest {
 		testEntityManager.persist(AIRPORT5);
 		testEntityManager.persist(AIRPORT6);
 
-		EntityType<Airport> entityMetamodel = testEntityManager.getEntityManager().getMetamodel().entity(Airport.class);
-
-		Specification<Airport> spec = new EntitySpecification<Airport>(entityMetamodel, "province|equals|Ontario,country|equals|Canada");
+		Specification<Airport> spec = new EntitySpecification<>(Airport.class, "province|equals|Ontario,country|equals|Canada");
 		List<Airport> results = airportRepository.findAll(spec);
 		assertThat(results, hasSize(2));
 	}
