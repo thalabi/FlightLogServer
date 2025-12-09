@@ -1,0 +1,3 @@
+Search on Part does not work. Exception:
+	2025-12-09T12:31:36.427-05:00 ERROR 163071 --- [https-jsse-nio-6001-exec-2] c.k.s.EntitySpecification                : Field name [part.name] not found.
+	2025-12-09T12:31:36.427-05:00 ERROR 163071 --- [https-jsse-nio-6001-exec-2] c.k.s.EntitySpecification                : Due to exception(s), returning null Specification.
