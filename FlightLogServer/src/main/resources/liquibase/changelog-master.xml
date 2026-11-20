@@ -13,6 +13,7 @@
 	
 	<include file="liquibase/flight-log-pending/create-table.xml"/>
 	
-	<include file="liquibase/flight-log-monthly-totalv/sort-descending.xml"/>
+	<include file="liquibase/flight-log-monthly-total-v/sort-descending.xml"/>
+	<include file="liquibase/flight-log-yearly-total-v/sort-descending.xml"/>
 
 </databaseChangeLog>
