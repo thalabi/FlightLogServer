@@ -12,5 +12,7 @@
 	<include file="liquibase/changelog-initial.xml"/>
 	
 	<include file="liquibase/flight-log-pending/create-table.xml"/>
+	
+	<include file="liquibase/flight-log-monthly-totalv/sort-descending.xml"/>
 
 </databaseChangeLog>
