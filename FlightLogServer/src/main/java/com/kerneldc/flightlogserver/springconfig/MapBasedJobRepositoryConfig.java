@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.springBootConfig;
+package com.kerneldc.flightlogserver.springconfig;
 
 import javax.sql.DataSource;
 

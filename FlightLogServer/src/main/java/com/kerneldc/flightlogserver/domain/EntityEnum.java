@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import lombok.Getter;
 
+
+// TODO deprecate and replace refrences with FlightLogEntityEnum
 public enum EntityEnum {
 	FLIGHT_LOG("flightLog", "flight_log", null),
 	FLIGHT_LOG_TOTALS_V("flightLogTotalsV", "flight_log_totals_v", null),
@@ -22,7 +24,10 @@ public enum EntityEnum {
 	COMPONENT("component", "component", "acm_bu_%s_%s_component"),
 	COMPONENT_HISTORY("componentHistory", "component_history", "acm_bu_%s_%s_comp_hist"),
 	COMPONENT_COMPONENT_HISTORY("componentComponentHistory", "component_component_history", "acm_bu_%s_%s_c_c_h"),
-	FLIGHT_LOG_PENDING("flightLogPending", "flight_log_pending", null);
+	FLIGHT_LOG_PENDING("flightLogPending", "flight_log_pending", null),
+	REMOTE_API_CALL_LOG("remoteApiCallLog", "remote_api_call_log", null),
+	REMOTE_API_CALL_DETAIL("remoteApiCall", "remote_api_call", null)
+	;
 	
 	@Getter
 	private String entityName;

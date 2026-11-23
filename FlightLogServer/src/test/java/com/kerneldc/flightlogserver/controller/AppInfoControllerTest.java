@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.kerneldc.flightlogserver.AbstractBaseTest;
-import com.kerneldc.flightlogserver.springBootConfig.WebSecurityConfig;
+import com.kerneldc.flightlogserver.springconfig.WebSecurityConfig;
 
 import lombok.extern.slf4j.Slf4j;
 

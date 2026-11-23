@@ -43,7 +43,7 @@ public class ComponentController {
     }
 
     @PutMapping("/modifyComponentAndHistory")
-    public ResponseEntity<String> modifyComponentAndHistory(@Valid @RequestBody ComponentRequest componentRequest) throws ApplicationException, IllegalAccessException, InvocationTargetException {
+    public ResponseEntity<String> modifyComponentAndHistory(@Valid @RequestBody ComponentRequest componentRequest) throws ApplicationException {
     	componentPersistenceService.updateComponentAndHistory(componentRequest);
     	return ResponseEntity.ok(StringUtils.EMPTY);
     }

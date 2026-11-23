@@ -10,6 +10,8 @@ import com.kerneldc.flightlogserver.domain.flightlogpending.FlightLogPending;
 import com.kerneldc.flightlogserver.domain.makeModel.MakeModel;
 import com.kerneldc.flightlogserver.domain.pilot.Pilot;
 import com.kerneldc.flightlogserver.domain.registration.Registration;
+import com.kerneldc.flightlogserver.domain.remoteapicall.RemoteApiCall;
+import com.kerneldc.flightlogserver.domain.remoteapicalllog.RemoteApiCallLog;
 import com.kerneldc.flightlogserver.domain.significantEvent.SignificantEvent;
 
 public enum FlightLogEntityEnum implements IEntityEnum {
@@ -39,6 +41,9 @@ public enum FlightLogEntityEnum implements IEntityEnum {
 //	INSTRUMENT_DUE_V(InstrumentDueV.class, true, new String[] {}),
 //	FIXED_INCOME_AUDIT(FixedIncomeAudit.class, false, new String[] {}),
 	FLIGHT_LOG_PENDING(FlightLogPending.class, false),
+	REMOTE_API_CALL_LOG(RemoteApiCallLog.class, false),
+	REMOTE_API_CALL(RemoteApiCall.class, false)
+
 	;
 
 	Class<? extends AbstractEntity> entity;

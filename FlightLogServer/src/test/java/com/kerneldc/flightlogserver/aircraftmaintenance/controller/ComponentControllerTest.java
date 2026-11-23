@@ -39,7 +39,7 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentRepo
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.PartRepository;
 import com.kerneldc.flightlogserver.aircraftmaintenance.service.ComponentPersistenceService;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
-import com.kerneldc.flightlogserver.springBootConfig.WebSecurityConfig;
+import com.kerneldc.flightlogserver.springconfig.WebSecurityConfig;
 
 import jakarta.persistence.EntityManager;
 

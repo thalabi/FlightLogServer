@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.springBootConfig;
+package com.kerneldc.flightlogserver.springconfig;
 
 import java.util.ArrayList;
 import java.util.Collection;

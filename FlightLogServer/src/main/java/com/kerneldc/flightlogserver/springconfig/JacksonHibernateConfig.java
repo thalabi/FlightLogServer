@@ -1,4 +1,4 @@
-package com.kerneldc.flightlogserver.springBootConfig;
+package com.kerneldc.flightlogserver.springconfig;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

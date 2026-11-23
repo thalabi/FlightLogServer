@@ -1,6 +1,5 @@
-package com.kerneldc.flightlogserver.springBootConfig;
+package com.kerneldc.flightlogserver.springconfig;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -126,9 +125,9 @@ public class WebSecurityConfig {
 		            .requestMatchers(HttpMethod.PUT, "/protected/"+entityName+"Controller/modify*").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
 		            .requestMatchers(HttpMethod.DELETE, "/protected/"+entityName+"Controller/delete").hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
 
-		            .requestMatchers(HttpMethod.GET, "/protected/replicationController/getTableReplicationStatus/"+entityName).hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
-		            .requestMatchers(HttpMethod.PUT, "/protected/replicationController/setTableReplicationStatus/"+entityName).hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
-		            .requestMatchers(HttpMethod.GET, "/protected/jobLauncherController/copy"+StringUtils.capitalize(entityName+"Table")).hasAuthority(tableAuthorityPrefix+" sync")
+//		            .requestMatchers(HttpMethod.GET, "/protected/replicationController/getTableReplicationStatus/"+entityName).hasAuthority(tableAuthorityPrefix+READ_TABLE_SUFFIX)
+//		            .requestMatchers(HttpMethod.PUT, "/protected/replicationController/setTableReplicationStatus/"+entityName).hasAuthority(tableAuthorityPrefix+WRITE_TABLE_SUFFIX)
+//		            .requestMatchers(HttpMethod.GET, "/protected/jobLauncherController/copy"+StringUtils.capitalize(entityName+"Table")).hasAuthority(tableAuthorityPrefix+" sync")
 		            );
 		}
 		
@@ -139,7 +138,8 @@ public class WebSecurityConfig {
 				.hasAuthority(AUTHORITY_PREFIX + "summary"));
 
 		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-			.requestMatchers(HttpMethod.GET, "/protected/aircraftMaintenancePrintController/*").hasAuthority(AUTHORITY_PREFIX + "component read"));
+			.requestMatchers(HttpMethod.GET, "/protected/aircraftMaintenancePrintController/*").hasAuthority(AUTHORITY_PREFIX + "component read")
+			.requestMatchers(HttpMethod.GET, "/protected/upcomingDueComponentController/*").hasAuthority(AUTHORITY_PREFIX + "component read"));
 		
 		httpSecurity.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 				.requestMatchers(HttpMethod.POST, "/protected/flightLogPendingController/addFlightLogPending").hasAuthority(AUTHORITY_PREFIX + "flight_log_pending write"));

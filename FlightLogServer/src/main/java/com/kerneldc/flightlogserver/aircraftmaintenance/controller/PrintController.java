@@ -26,7 +26,10 @@ import com.kerneldc.flightlogserver.aircraftmaintenance.bean.ComponentAndHistory
 import com.kerneldc.flightlogserver.aircraftmaintenance.bean.ComponentNameVo;
 import com.kerneldc.flightlogserver.aircraftmaintenance.domain.componentandhistoryview.ComponentAndHistoryV;
 import com.kerneldc.flightlogserver.aircraftmaintenance.repository.ComponentAndHistoryVRepository;
+import com.kerneldc.flightlogserver.aircraftmaintenance.service.AircrafDetailsService;
+import com.kerneldc.flightlogserver.aircraftmaintenance.service.AircrafDetailsService.Tsn;
 import com.kerneldc.flightlogserver.aircraftmaintenance.service.PdfComponentReportService;
+import com.kerneldc.flightlogserver.aircraftmaintenance.service.UpcomingDueComponentService;
 import com.kerneldc.flightlogserver.exception.ApplicationException;
 
 import jakarta.validation.Valid;
@@ -35,7 +38,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/protected/aircraftMaintenancePrintController")
 //@ExposesResourceFor(Component.class) // needed for unit test to create entity links
-public class AircraftMaintenancePrintController {
+public class PrintController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private static final String LOG_BEGIN = "Begin ...";
@@ -48,7 +51,8 @@ public class AircraftMaintenancePrintController {
 	private ComponentAndHistoryVRepository componentAndHistoryVRepository;
 	private PdfComponentReportService pdfComponentReportService;
 
-	public AircraftMaintenancePrintController(ComponentAndHistoryVRepository componentAndHistoryVRepository, PdfComponentReportService pdfComponentReportService) {
+	public PrintController(ComponentAndHistoryVRepository componentAndHistoryVRepository,
+			PdfComponentReportService pdfComponentReportService) {
 		this.componentAndHistoryVRepository = componentAndHistoryVRepository;
 		this.pdfComponentReportService = pdfComponentReportService;
 	}
@@ -58,7 +62,7 @@ public class AircraftMaintenancePrintController {
 
 		LOGGER.debug(LOG_BEGIN);
 		LOGGER.debug(LOG_END);
-		return ResponseEntity.ok("AircraftMaintenancePrintController is up and running.");
+		return ResponseEntity.ok("PrintController is up and running.");
 	}
     
 	@GetMapping(value = "/printComponentHistoryByDatePerformedDesc", produces = MediaType.APPLICATION_PDF_VALUE)
