@@ -41,19 +41,13 @@ public class EmailService {
 	private String failureNotificationFrom;
 	@Value("${application.email.failureNotificationTo}")
 	private String failureNotificationTo;
-
 	
 	private static final String UPCOMING_DUE_COMPONENTS_NOTIFICATION_SUBJECT = "Upcoming Due Component(s)";
 	private static final String UPCOMING_DUE_COMPONENTS_NOTIFICATION_TEMPLATE = "upcomingDueComponentsNotification.ftlh";
 	
 	private static final String FAILURE_TEMPLATE = "processingFailure.ftlh";
 	private static final String RERMOTE_API_FAILURE_SUBJECT = "Remote API Failure";
-
-	
-//	public EmailService(JavaMailSender emailSender, Configuration freeMarkerConfiguration) {
-//		this.javaMailSender = emailSender;
-//		this.freeMarkerConfiguration = freeMarkerConfiguration;
-//	}
+	private static final String FAILURE_SUBJECT = "Failure";
 	
 	public void emailUpcomingDueComponentsNotification(List<Component> upcominDueComponents, Date dateDue, Float hoursDue) throws ApplicationException {
 		LOGGER.info("Sending upcoming due components notification email");
@@ -73,10 +67,10 @@ public class EmailService {
 		}
 	}
 
-	public void emailUpcomingDueComponentsFailure(ApplicationException priceHoldingsExceptions) {
+	public void emailUpcomingDueComponentsFailure(ApplicationException applicationExceptions) {
 		LOGGER.info("Sending upcoming due components notification failure email");
 		try {
-			sendFailureEmail(priceHoldingsExceptions, upcomingDueComponentsNotificationFrom,
+			sendFailureEmail(applicationExceptions, upcomingDueComponentsNotificationFrom,
 					upcomingDueComponentsNotificationTo, UPCOMING_DUE_COMPONENTS_NOTIFICATION_SUBJECT);
 			LOGGER.info("Sent failure email to: {}", upcomingDueComponentsNotificationTo);
 		} catch (ApplicationException e) {
@@ -89,6 +83,19 @@ public class EmailService {
 		LOGGER.info("Sending remote api call failure email");
 		try {
 			var subject = RERMOTE_API_FAILURE_SUBJECT + "(" + httpRequestTypeEnum + ")";
+			sendFailureEmail(remoteCallApiException, failureNotificationFrom,
+					failureNotificationTo, subject);
+			LOGGER.info("Sent failure email to: {}", failureNotificationTo);
+		} catch (ApplicationException e) {
+			e.printStackTrace();
+			LOGGER.error("Failed to send failure email.", e);
+		}
+	}
+
+	public void sendFailureEmail(String description, ApplicationException remoteCallApiException) {
+		LOGGER.info("Sending failure email");
+		try {
+			var subject = FAILURE_SUBJECT + "(" + description + ")";
 			sendFailureEmail(remoteCallApiException, failureNotificationFrom,
 					failureNotificationTo, subject);
 			LOGGER.info("Sent failure email to: {}", failureNotificationTo);
@@ -124,9 +131,9 @@ public class EmailService {
 			
 		}
 	}
-	private String processFailureTemplate(ApplicationException priceHoldingsExceptions) throws IOException, TemplateException {
+	private String processFailureTemplate(ApplicationException applicationException) throws IOException, TemplateException {
 		Map<String, Object> templateModelMap = new HashMap<>();
-		templateModelMap.put("priceHoldingsExceptions", priceHoldingsExceptions);
+		templateModelMap.put("applicationException", applicationException);
 		return FreeMarkerTemplateUtils.processTemplateIntoString(freeMarkerConfiguration.getTemplate(FAILURE_TEMPLATE), templateModelMap);
 	}
 

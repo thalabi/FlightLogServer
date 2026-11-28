@@ -11,7 +11,7 @@
 	  <#if (upcominDueComponents?size > 1)>
 	  ${upcominDueComponents?size} components
 	  </#if>
-  will be due by ${dateDue?date} or ${hoursDue} hrs:</h3>
+  will be due by ${dateDue?date} or by ${hoursDue} hours:</h3>
 
 
 <#--

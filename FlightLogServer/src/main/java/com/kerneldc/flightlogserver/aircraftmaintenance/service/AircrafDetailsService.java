@@ -1,6 +1,7 @@
 package com.kerneldc.flightlogserver.aircraftmaintenance.service;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,7 +48,7 @@ public class AircrafDetailsService extends AbstractRemoteApiCallBase {
 	private Map<String, Float> tsnCache = new ConcurrentHashMap<>();
 	
 	public Tsn getAircraftTsn(String registration) throws ApplicationException {
-		var now = OffsetDateTime.now();
+		var now = OffsetDateTime.now(ZoneId.systemDefault());
 
 		var remoteApiCall = new RemoteApiCall();
 		var payload = Map.of(REGISTRATION, registration);

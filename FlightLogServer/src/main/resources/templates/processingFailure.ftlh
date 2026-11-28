@@ -4,9 +4,9 @@
 </head>
 <body>
 
-  <#if (priceHoldingsExceptions.messageList?size gt 0)>
+  <#if (applicationException.messageList?size gt 0)>
      <span style="font-style: underline;">Processing failed with the following exceptions:</span>
-	  <#list priceHoldingsExceptions.messageList as message>
+	  <#list applicationException.messageList as message>
 		  <ul style="font-style: italic;">
 		    <li>${message}</li>
 		  </ul>

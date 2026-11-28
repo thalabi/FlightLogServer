@@ -38,7 +38,7 @@ public class UpcomingDueComponentService {
 		} catch (ApplicationException applicationException) {
 			LOGGER.error("checkUpcomingDueComponentsNotification failed", applicationException);
 			emailService.emailUpcomingDueComponentsFailure(applicationException);
-			return null;
+			return Boolean.FALSE;
 		}
 	}
 }
